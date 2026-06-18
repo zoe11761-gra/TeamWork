@@ -297,6 +297,20 @@ body {
 }
 .sop-img { width: 100%; display: block; }
 
+/* ─── Scroll to Top ─── */
+.scroll-top-btn {
+  position: fixed; bottom: 28px; right: 22px; z-index: 150;
+  width: 44px; height: 44px; border-radius: 10px;
+  background: var(--gold-glow); border: 1px solid rgba(201,168,76,0.4);
+  color: var(--gold); font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; visibility: hidden;
+  transition: opacity 0.25s, visibility 0.25s, transform 0.2s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.scroll-top-btn.show { opacity: 1; pointer-events: auto; visibility: visible; }
+.scroll-top-btn:hover { transform: translateY(-3px); background: rgba(201,168,76,0.2); }
+
 /* ─── Toggle Group ─── */
 .toggle-groups { margin-top: 10px; }
 .toggle-group-btn {
@@ -743,6 +757,39 @@ body {
         </div>
       </div>
 
+      <!-- ④ 新手大禮包 -->
+      <div class="sop-tab-content" id="scontent-gift" style="display:none;">
+        <div class="sop-card">
+          <div class="sop-header">
+            <div class="sop-title">🎁 新手大禮包</div>
+          </div>
+          <!-- Gift Step 01 -->
+          <div class="sop-step">
+            <span class="sop-step-num" style="color:var(--teal);font-weight:700;font-size:12px;min-width:40px;">Step 1</span>
+            <div class="sop-body">
+              <div class="sop-step-title">信安寶寶手冊</div>
+              <a class="sop-link" href="https://reurl.cc/Em3KX0" target="_blank">🔗 前往查看</a>
+            </div>
+          </div>
+          <!-- Gift Step 02 -->
+          <div class="sop-step">
+            <span class="sop-step-num" style="color:var(--teal);font-weight:700;font-size:12px;min-width:40px;">Step 2</span>
+            <div class="sop-body">
+              <div class="sop-step-title">產險快速報件</div>
+              <a class="sop-link" href="https://reurl.cc/qpxDZq" target="_blank">🔗 前往查看</a>
+            </div>
+          </div>
+          <!-- Gift Step 03 -->
+          <div class="sop-step" style="border-bottom:none;">
+            <span class="sop-step-num" style="color:var(--teal);font-weight:700;font-size:12px;min-width:40px;">Step 3</span>
+            <div class="sop-body">
+              <div class="sop-step-title">完成「壽險分紅保單銷售資格」</div>
+              <div class="sop-step-content">※ 完成登錄 + 教育訓練（影片 + 測驗），即可獲得銷售資格</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <!-- ── 課程 ── -->
@@ -897,9 +944,21 @@ const SOP_STEPS = [
   {
     id: 'sop_6',
     title: '加入「信安北四」單位群組',
-    content: '※ 群組記事本有各保險公司群組連結',
+    content: '※ 營運中心事務佈達在這',
     link: 'https://line.me/ti/g/2wVC2QUgF9', linkText: '加入群組',
     hasToggle: true
+  },
+  {
+    id: 'sop_7',
+    title: '加入【信安海川＠元宇宙辦公室】',
+    content: '※ 加入時名稱務必照規定打 → <strong style="color:var(--gold);">單位/名字</strong>',
+    link: 'https://pse.is/4w9yjk', linkText: '加入群組'
+  },
+  {
+    id: 'sop_8',
+    title: '加入 Line@ 機器人【海川KM】',
+    content: '※ 幫助你更有效率的好工具',
+    link: 'https://lin.ee/GL3sxDJ', linkText: '加入好友'
   }
 ];
 
@@ -1473,6 +1532,14 @@ function switchTab(tab) {
 
 // 相容舊版 scroll（保留以防萬一）
 function scrollToSection(id) { }
+
+// 回頂端按鈕顯示控制
+window.addEventListener('scroll', function() {
+  const btn = document.getElementById('scroll-top-btn');
+  if (!btn) return;
+  if (window.scrollY > 200) btn.classList.add('show');
+  else btn.classList.remove('show');
+});
 </script>
 
 </body>
