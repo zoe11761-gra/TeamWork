@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>上岸團隊｜團隊入口</title>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+  import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, serverTimestamp, increment } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+  // ═══════════════════════════════════════════════════
+  // ⚠️ 草草請將這裡換成你自己的 Firebase 設定
+  // 設定好之前管理者帳號仍可正常登入，一般成員功能需要 Firebase
+  // ═══════════════════════════════════════════════════
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+
+  try {
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    window._db = db;
+    window._fsDoc = doc;
+    window._fsSetDoc = setDoc;
+    window._fsGetDoc = getDoc;
+    window._fsCollection = collection;
+    window._fsGetDocs = getDocs;
+    window._fsUpdateDoc = updateDoc;
+    window._fsServerTimestamp = serverTimestamp;
+    window._fsIncrement = increment;
+    window._firebaseReady = true;
+  } catch(e) {
+    console.warn('Firebase 未設定，進入離線模式（管理者仍可登入）', e);
+    window._firebaseReady = false;
+  }
+  window.dispatchEvent(new Event('firebaseReady'));
+</script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500&display=swap');
+
+:root {
+  --bg: #0d0d0d;
+  --surface: #161616;
+  --surface2: #1e1e1e;
+  --border: #2a2a2a;
+  --gold: #c9a84c;
+  --gold-dim: #8a6e2f;
+  --gold-glow: rgba(201,168,76,0.12);
+  --text: #e8e4dc;
+  --text-dim: #8a8680;
+  --text-muted: #4a4846;
+  --green: #4caf7d;
+  --green-glow: rgba(76,175,125,0.12);
+  --red: #e05c5c;
+  --teal: #5ca8c9;
+  --teal-glow: rgba(92,168,201,0.12);
+  --radius: 10px;
+  --font-display: 'Noto Serif TC', serif;
+  --font-body: 'Noto Sans TC', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─── Loading ─── */
+.loading-overlay {
+  position: fixed; inset: 0;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9999; flex-direction: column; gap: 14px;
+}
+.loading-text { font-family: var(--font-display); color: var(--gold); font-size: 15px; letter-spacing: 0.1em; }
+.spinner { width: 28px; height: 28px; border: 2px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── Toast ─── */
+.toast {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 18px;
+  font-size: 13px; color: var(--text);
+  z-index: 9998; transition: transform 0.3s ease;
+  white-space: nowrap; pointer-events: none;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ─── Login ─── */
+#login-screen {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 100vh; padding: 24px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.06) 0%, transparent 70%);
+}
+.login-card {
+  width: 100%; max-width: 400px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; padding: 40px 36px;
+}
+.login-logo { text-align: center; margin-bottom: 32px; }
+.login-logo .brand { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--gold); letter-spacing: 0.08em; display: block; }
+.login-logo .sub { font-size: 12px; color: var(--text-dim); letter-spacing: 0.2em; text-transform: uppercase; margin-top: 6px; display: block; }
+.login-divider { width: 40px; height: 1px; background: var(--gold-dim); margin: 16px auto; }
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; font-size: 11px; letter-spacing: 0.15em; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; }
+.form-group input {
+  width: 100%; background: var(--surface2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 12px 14px;
+  color: var(--text); font-family: var(--font-body); font-size: 14px;
+  outline: none; transition: border-color 0.2s;
+}
+.form-group input:focus { border-color: var(--gold-dim); }
+.btn-primary {
+  width: 100%; background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+  border: none; border-radius: var(--radius); padding: 13px;
+  color: #0d0d0d; font-family: var(--font-body); font-size: 14px;
+  font-weight: 600; letter-spacing: 0.05em; cursor: pointer; margin-top: 8px;
+  transition: opacity 0.2s, transform 0.1s;
+}
+.btn-primary:hover { opacity: 0.9; }
+.btn-primary:active { transform: scale(0.99); }
+.login-toggle { text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-dim); }
+.login-toggle a { color: var(--gold); cursor: pointer; text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.2s; }
+.login-toggle a:hover { border-color: var(--gold); }
+.login-error { background: rgba(224,92,92,0.1); border: 1px solid rgba(224,92,92,0.3); border-radius: 8px; padding: 10px 14px; font-size: 13px; color: var(--red); margin-bottom: 16px; display: none; }
+
+/* ─── App ─── */
+#app { display: none; min-height: 100vh; }
+
+.app-header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(13,13,13,0.92); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; height: 60px;
+}
+.header-brand { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--gold); letter-spacing: 0.06em; }
+.header-right { display: flex; align-items: center; gap: 10px; }
+.header-user { font-size: 13px; color: var(--text-dim); }
+.header-user span { color: var(--gold); font-weight: 500; }
+.role-badge {
+  font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  border-radius: 4px; padding: 2px 7px; font-weight: 500;
+}
+.role-badge.admin { background: var(--gold-glow); border: 1px solid rgba(201,168,76,0.3); color: var(--gold); }
+.role-badge.member { background: var(--green-glow); border: 1px solid rgba(76,175,125,0.3); color: var(--green); }
+.role-badge.general { background: rgba(138,134,128,0.1); border: 1px solid var(--border); color: var(--text-muted); }
+
+.btn-sm {
+  background: transparent; border: 1px solid var(--border); border-radius: 6px;
+  padding: 5px 12px; color: var(--text-dim); font-size: 12px; cursor: pointer;
+  font-family: var(--font-body); transition: border-color 0.2s, color 0.2s;
+}
+.btn-sm:hover { border-color: var(--text-dim); color: var(--text); }
+.btn-sm.gold { border-color: var(--gold-dim); color: var(--gold-dim); }
+.btn-sm.gold:hover { border-color: var(--gold); color: var(--gold); }
+
+.app-main { max-width: 1100px; margin: 0 auto; padding: 32px 24px 80px; }
+
+/* Section label */
+.section-label { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; margin-top: 40px; }
+.section-label:first-child { margin-top: 0; }
+.section-label .tag { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); background: var(--gold-glow); border: 1px solid rgba(201,168,76,0.2); border-radius: 4px; padding: 3px 8px; }
+.section-label .tag.member-tag { color: var(--green); background: var(--green-glow); border-color: rgba(76,175,125,0.2); }
+.section-label .line { flex: 1; height: 1px; background: var(--border); }
+.section-label .lock-icon { font-size: 12px; color: var(--text-muted); }
+
+/* Locked section overlay */
+.locked-section { position: relative; }
+.locked-overlay {
+  position: absolute; inset: 0; z-index: 10;
+  background: rgba(13,13,13,0.82);
+  backdrop-filter: blur(3px);
+  border-radius: var(--radius);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; border: 1px solid var(--border);
+}
+.locked-overlay .lock-msg { font-size: 13px; color: var(--text-muted); letter-spacing: 0.05em; }
+.locked-overlay .lock-icon-big { font-size: 24px; }
+
+/* SOP */
+.sop-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.sop-header { padding: 18px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.sop-title { font-family: var(--font-display); font-size: 16px; font-weight: 600; color: var(--text); }
+.sop-progress { font-size: 12px; color: var(--text-dim); display: flex; align-items: center; gap: 8px; }
+.progress-bar-wrap { width: 80px; height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-dim)); border-radius: 2px; transition: width 0.4s ease; }
+.sop-step { display: flex; align-items: flex-start; gap: 14px; padding: 14px 20px; border-bottom: 1px solid var(--border); transition: background 0.15s; }
+.sop-step:last-child { border-bottom: none; }
+.sop-step:hover { background: var(--surface2); }
+.sop-check { width: 20px; height: 20px; border-radius: 5px; border: 1.5px solid var(--border); background: transparent; cursor: pointer; flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; transition: background 0.2s, border-color 0.2s; }
+.sop-check.done { background: var(--gold); border-color: var(--gold); }
+.sop-check.done::after { content: ''; width: 10px; height: 6px; border-left: 2px solid #0d0d0d; border-bottom: 2px solid #0d0d0d; transform: rotate(-45deg) translate(1px, -1px); display: block; }
+.sop-body { flex: 1; min-width: 0; }
+.sop-step-title { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+.sop-step.done-step .sop-step-title { color: var(--text-muted); text-decoration: line-through; }
+.sop-step-content { font-size: 13px; color: var(--text-dim); line-height: 1.5; margin-bottom: 4px; }
+.sop-link { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--gold-dim); text-decoration: none; border-bottom: 1px solid transparent; transition: color 0.2s, border-color 0.2s; }
+.sop-link:hover { color: var(--gold); border-color: var(--gold); }
+.sop-step-num { font-size: 10px; color: var(--text-muted); letter-spacing: 0.1em; flex-shrink: 0; min-width: 24px; padding-top: 4px; text-align: right; }
+
+/* Link cards */
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+.cards-group { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+.link-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 20px;
+  cursor: pointer; transition: border-color 0.2s, background 0.2s, transform 0.15s;
+  text-decoration: none; display: block; position: relative; overflow: hidden;
+}
+.link-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: linear-gradient(180deg, var(--gold), var(--gold-dim)); opacity: 0; transition: opacity 0.2s; }
+.link-card:hover { border-color: var(--gold-dim); background: var(--surface2); transform: translateY(-1px); }
+.link-card:hover::before { opacity: 1; }
+.link-card.member-card::before { background: linear-gradient(180deg, var(--green), #2e7d5a); }
+.link-card.member-card:hover { border-color: rgba(76,175,125,0.4); }
+.card-icon { font-size: 22px; margin-bottom: 10px; display: block; }
+.card-title { font-family: var(--font-display); font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.card-desc { font-size: 12px; color: var(--text-dim); line-height: 1.5; }
+.card-arrow { position: absolute; top: 20px; right: 16px; color: var(--text-muted); font-size: 14px; transition: color 0.2s, transform 0.2s; }
+.link-card:hover .card-arrow { color: var(--gold); transform: translateX(2px); }
+.link-card.member-card:hover .card-arrow { color: var(--green); }
+
+/* ─── Admin Panel ─── */
+.admin-panel { background: var(--surface); border: 1px solid rgba(201,168,76,0.25); border-radius: var(--radius); padding: 24px; }
+.admin-panel-title { font-family: var(--font-display); font-size: 15px; font-weight: 600; color: var(--gold); margin-bottom: 20px; }
+
+/* Admin tabs */
+.admin-tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 0; }
+.admin-tab { background: transparent; border: none; padding: 8px 16px; font-size: 13px; color: var(--text-dim); cursor: pointer; font-family: var(--font-body); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color 0.2s, border-color 0.2s; }
+.admin-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+.admin-tab-content { display: none; }
+.admin-tab-content.active { display: block; }
+
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.stat-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
+.stat-num { font-family: var(--font-display); font-size: 26px; font-weight: 700; color: var(--gold); line-height: 1; margin-bottom: 4px; }
+.stat-label { font-size: 11px; color: var(--text-dim); letter-spacing: 0.1em; }
+
+.users-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.users-table th { text-align: left; padding: 8px 12px; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid var(--border); }
+.users-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--text-dim); vertical-align: middle; }
+.users-table tr:last-child td { border-bottom: none; }
+.users-table tr:hover td { color: var(--text); }
+
+.click-badge { display: inline-block; background: var(--gold-glow); border: 1px solid rgba(201,168,76,0.2); border-radius: 4px; padding: 2px 7px; font-size: 11px; color: var(--gold); }
+
+/* Toggle member button */
+.toggle-member-btn {
+  background: transparent; border: 1px solid var(--border); border-radius: 5px;
+  padding: 3px 10px; font-size: 11px; cursor: pointer; font-family: var(--font-body);
+  color: var(--text-muted); transition: all 0.2s; white-space: nowrap;
+}
+.toggle-member-btn:hover { border-color: var(--green); color: var(--green); }
+.toggle-member-btn.is-member { background: var(--green-glow); border-color: rgba(76,175,125,0.4); color: var(--green); }
+.toggle-member-btn.is-member:hover { background: rgba(76,175,125,0.05); border-color: var(--red); color: var(--red); }
+
+/* ─── Fade in ─── */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.fade-section { animation: fadeUp 0.4s ease both; }
+.fade-section:nth-child(2) { animation-delay: 0.05s; }
+.fade-section:nth-child(3) { animation-delay: 0.10s; }
+.fade-section:nth-child(4) { animation-delay: 0.15s; }
+.fade-section:nth-child(5) { animation-delay: 0.20s; }
+.fade-section:nth-child(6) { animation-delay: 0.25s; }
+
+/* ─── Responsive ─── */
+@media (max-width: 600px) {
+  .app-header { padding: 0 14px; }
+  .app-main { padding: 20px 14px 80px; }
+  .cards-grid { grid-template-columns: 1fr; }
+  .cards-group { grid-template-columns: 1fr 1fr; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .sop-step { padding: 12px 14px; }
+  .header-user { display: none; }
+  .users-table { font-size: 12px; }
+  .users-table th, .users-table td { padding: 8px 6px; }
+}
+@media (min-width: 601px) and (max-width: 900px) {
+  .cards-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loading-overlay">
+  <div class="spinner"></div>
+  <div class="loading-text">上岸團隊</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ═══ LOGIN ═══ -->
+<div id="login-screen" style="display:none;">
+  <div class="login-card">
+    <div class="login-logo">
+      <span class="brand">上岸團隊</span>
+      <div class="login-divider"></div>
+      <span class="sub">Team Portal</span>
+    </div>
+    <div class="login-error" id="login-error"></div>
+
+    <div id="form-login">
+      <div class="form-group"><label>使用者名稱</label><input type="text" id="login-username" placeholder="輸入名稱" autocomplete="username"></div>
+      <div class="form-group"><label>密碼</label><input type="password" id="login-password" placeholder="輸入密碼" autocomplete="current-password"></div>
+      <button class="btn-primary" onclick="handleLogin()">登入</button>
+      <div class="login-toggle">第一次使用？<a onclick="switchForm('register')">立即註冊</a></div>
+    </div>
+
+    <div id="form-register" style="display:none;">
+      <div class="form-group"><label>設定使用者名稱</label><input type="text" id="reg-username" placeholder="你的名稱（例如：小明）" autocomplete="username"></div>
+      <div class="form-group"><label>設定密碼</label><input type="password" id="reg-password" placeholder="至少 6 個字元" autocomplete="new-password"></div>
+      <div class="form-group"><label>確認密碼</label><input type="password" id="reg-confirm" placeholder="再輸入一次" autocomplete="new-password"></div>
+      <button class="btn-primary" onclick="handleRegister()">建立帳號</button>
+      <div class="login-toggle">已有帳號？<a onclick="switchForm('login')">返回登入</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ APP ═══ -->
+<div id="app">
+  <header class="app-header">
+    <div class="header-brand">上岸團隊</div>
+    <div class="header-right">
+      <span class="header-user">您好，<span id="header-name"></span></span>
+      <span class="role-badge" id="role-badge"></span>
+      <button class="btn-sm gold" id="admin-btn" style="display:none;" onclick="toggleAdminSection()">管理後台</button>
+      <button class="btn-sm" onclick="handleLogout()">登出</button>
+    </div>
+  </header>
+
+  <main class="app-main">
+
+    <!-- ── Admin ── -->
+    <div class="fade-section" id="admin-section" style="display:none;">
+      <div class="section-label">
+        <span class="tag">管理者</span><div class="line"></div>
+      </div>
+      <div class="admin-panel">
+        <div class="admin-panel-title">⚙ 管理後台</div>
+        <div class="admin-tabs">
+          <button class="admin-tab active" onclick="switchAdminTab('stats')">使用統計</button>
+          <button class="admin-tab" onclick="switchAdminTab('members')">夥伴管理</button>
+        </div>
+
+        <!-- Stats tab -->
+        <div class="admin-tab-content active" id="tab-stats">
+          <div class="stats-grid">
+            <div class="stat-box"><div class="stat-num" id="stat-users">—</div><div class="stat-label">總使用者</div></div>
+            <div class="stat-box"><div class="stat-num" id="stat-members">—</div><div class="stat-label">團隊夥伴</div></div>
+            <div class="stat-box"><div class="stat-num" id="stat-logins">—</div><div class="stat-label">總登入次數</div></div>
+            <div class="stat-box"><div class="stat-num" id="stat-clicks">—</div><div class="stat-label">總功能點擊</div></div>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="users-table">
+              <thead><tr><th>使用者</th><th>身份</th><th>最後登入</th><th>登入次</th><th>最常用功能</th></tr></thead>
+              <tbody id="stats-table-body"><tr><td colspan="5" style="color:var(--text-muted);text-align:center;padding:20px;">載入中…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Members tab -->
+        <div class="admin-tab-content" id="tab-members">
+          <p style="font-size:13px;color:var(--text-dim);margin-bottom:16px;line-height:1.7;">
+            將使用者設為「<span style="color:var(--green);">團隊夥伴</span>」後，他們可以使用夥伴限定功能區的工具。<br>
+            點擊下方按鈕可切換身份。
+          </p>
+          <div style="overflow-x:auto;">
+            <table class="users-table">
+              <thead><tr><th>使用者</th><th>目前身份</th><th>操作</th></tr></thead>
+              <tbody id="members-table-body"><tr><td colspan="3" style="color:var(--text-muted);text-align:center;padding:20px;">載入中…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SOP ── -->
+    <div class="fade-section">
+      <div class="section-label"><span class="tag">SOP</span><div class="line"></div></div>
+      <div class="sop-card">
+        <div class="sop-header">
+          <div class="sop-title">新人報聘登錄 SOP</div>
+          <div class="sop-progress">
+            <span id="sop-count">0/0</span>
+            <div class="progress-bar-wrap"><div class="progress-bar-fill" id="sop-bar" style="width:0%"></div></div>
+          </div>
+        </div>
+        <div id="sop-steps-container"></div>
+      </div>
+    </div>
+
+    <!-- ── 課程 ── -->
+    <div class="fade-section">
+      <div class="section-label"><span class="tag">課程</span><div class="line"></div></div>
+      <div class="cards-group">
+        <a class="link-card" href="#" target="_blank" onclick="trackClick('course-new')">
+          <span class="card-icon">📚</span>
+          <div class="card-title">新人帶狀課程</div>
+          <div class="card-desc">新夥伴入職系列培訓</div>
+          <div class="card-arrow">→</div>
+        </a>
+        <a class="link-card" href="#" target="_blank" onclick="trackClick('course-double10')">
+          <span class="card-icon">✕</span>
+          <div class="card-title">雙十字教學</div>
+          <div class="card-desc">核心業務技能訓練</div>
+          <div class="card-arrow">→</div>
+        </a>
+        <a class="link-card" href="#" target="_blank" onclick="trackClick('course-benz')">
+          <span class="card-icon">🎯</span>
+          <div class="card-title">理財觀念引導</div>
+          <div class="card-desc">賓士理論｜財務規劃思維</div>
+          <div class="card-arrow">→</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- ── 活動 ── -->
+    <div class="fade-section">
+      <div class="section-label"><span class="tag">活動</span><div class="line"></div></div>
+      <div class="cards-grid">
+        <a class="link-card" href="#" target="_blank" onclick="trackClick('monthly-meeting')">
+          <span class="card-icon">🗓</span>
+          <div class="card-title">上岸月會</div>
+          <div class="card-desc">每月團隊定期會議連結與資料</div>
+          <div class="card-arrow">→</div>
+        </a>
+        <a class="link-card" href="#" target="_blank" onclick="trackClick('all-courses')">
+          <span class="card-icon">🎓</span>
+          <div class="card-title">上岸團隊課程統整</div>
+          <div class="card-desc">所有課程資源一站集合</div>
+          <div class="card-arrow">→</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- ── 工具（所有人）── -->
+    <div class="fade-section">
+      <div class="section-label"><span class="tag">工具</span><div class="line"></div></div>
+      <div class="cards-grid">
+        <a class="link-card" href="#" target="_blank" onclick="trackClick('chubb-travel')">
+          <span class="card-icon">✈️</span>
+          <div class="card-title">安達產物旅平自助報價</div>
+          <div class="card-desc">CHUBB 旅行平安險快速試算系統</div>
+          <div class="card-arrow">→</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- ── 夥伴限定工具區 ── -->
+    <div class="fade-section" id="member-tools-section">
+      <div class="section-label">
+        <span class="tag member-tag">夥伴限定</span>
+        <div class="line"></div>
+        <span class="lock-icon" id="member-lock-icon">🔒</span>
+      </div>
+      <div style="position:relative;">
+        <!-- Locked overlay (shown for non-members) -->
+        <div class="locked-overlay" id="locked-overlay">
+          <div class="lock-icon-big">🔒</div>
+          <div class="lock-msg">此區域僅供團隊夥伴使用</div>
+          <div style="font-size:12px;color:var(--text-muted);">請聯繫草草申請夥伴權限</div>
+        </div>
+        <!-- Actual cards (blurred until unlocked) -->
+        <div class="cards-grid" id="member-cards" style="filter:blur(4px);pointer-events:none;user-select:none;">
+          <a class="link-card member-card" href="#" target="_blank" onclick="trackClick('accident-claim')">
+            <span class="card-icon">🚗</span>
+            <div class="card-title">車禍求償明細產生器</div>
+            <div class="card-desc">自動整理求償項目與金額明細</div>
+            <div class="card-arrow">→</div>
+          </a>
+          <!-- 草草可在此繼續新增夥伴限定工具卡片 -->
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// CONFIG — 草草可修改
+// ═══════════════════════════════════════
+const ADMIN_USERNAME = 'grass';
+const ADMIN_DISPLAY  = '草草';
+const ADMIN_PASSWORD = 'grass';
+
+const SESSION_KEY = 'shangang_session';
+const SESSION_MS  = 30 * 24 * 60 * 60 * 1000; // 30天
+
+// 工具連結設定（把 '#' 換成真實 URL）
+const LINKS = {
+  'course-new':      { href: '#', label: '新人帶狀課程' },
+  'course-double10': { href: '#', label: '雙十字教學' },
+  'course-benz':     { href: '#', label: '賓士理論' },
+  'monthly-meeting': { href: '#', label: '上岸月會' },
+  'all-courses':     { href: '#', label: '上岸課程統整' },
+  'chubb-travel':    { href: '#', label: '安達旅平報價' },
+  'accident-claim':  { href: '#', label: '車禍求償明細' }
+};
+
+// SOP 步驟（新增步驟請照格式在此填寫）
+const SOP_STEPS = [
+  {
+    id: 'sop_1',
+    title: '步驟一：準備入職文件',
+    content: '身份證正反面、學歷證明、照片…（草草請填入具體內容）',
+    link: '', linkText: ''
+  },
+  {
+    id: 'sop_2',
+    title: '步驟二：填寫報聘申請表',
+    content: '登入系統填寫個人資料及相關聲明…（草草請填入具體內容）',
+    link: '', linkText: '前往申請系統'
+  },
+  {
+    id: 'sop_3',
+    title: '步驟三：繳交證照資料',
+    content: '業務員資格測驗合格證書…（草草請填入具體內容）',
+    link: '', linkText: ''
+  }
+];
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+let currentUser = null;
+let db = null;
+let firebaseReady = false;
+let sopDone = {};
+let allUsers = [];
+
+// ═══════════════════════════════════════
+// FIREBASE INIT
+// ═══════════════════════════════════════
+function initFirebase() {
+  // window._firebaseReady 為 true 表示 Firebase 成功初始化
+  if (window._firebaseReady) {
+    db = window._db;
+    firebaseReady = true;
+  } else {
+    firebaseReady = false;
+    // Firebase 未設定或失敗 — 管理者仍可登入，一般成員功能不可用
+  }
+  bootstrap();
+}
+
+// 永遠等 firebaseReady event（module 是非同步，_firebaseReady 不可靠）
+window.addEventListener('firebaseReady', initFirebase);
+
+// ═══════════════════════════════════════
+// SESSION
+// ═══════════════════════════════════════
+function saveSession(u) { localStorage.setItem(SESSION_KEY, JSON.stringify({ ...u, savedAt: Date.now() })); }
+function loadSession() {
+  try {
+    const d = JSON.parse(localStorage.getItem(SESSION_KEY));
+    if (!d) return null;
+    if (Date.now() - d.savedAt > SESSION_MS) { localStorage.removeItem(SESSION_KEY); return null; }
+    return d;
+  } catch { return null; }
+}
+function clearSession() { localStorage.removeItem(SESSION_KEY); }
+
+// ═══════════════════════════════════════
+// BOOTSTRAP
+// ═══════════════════════════════════════
+function bootstrap() {
+  const s = loadSession();
+  if (s) { currentUser = s; showApp(); }
+  else showLogin();
+  document.getElementById('loading-overlay').style.display = 'none';
+}
+
+// ═══════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════
+function switchForm(t) {
+  document.getElementById('form-login').style.display    = t === 'login'    ? 'block' : 'none';
+  document.getElementById('form-register').style.display = t === 'register' ? 'block' : 'none';
+  document.getElementById('login-error').style.display = 'none';
+}
+function showLoginError(m) { const e = document.getElementById('login-error'); e.textContent = m; e.style.display = 'block'; }
+
+async function handleLogin() {
+  const u = document.getElementById('login-username').value.trim();
+  const p = document.getElementById('login-password').value;
+  if (!u || !p) { showLoginError('請填寫使用者名稱和密碼'); return; }
+
+  if (u === ADMIN_USERNAME && p === ADMIN_PASSWORD) {
+    currentUser = { username: ADMIN_USERNAME, displayName: ADMIN_DISPLAY, isAdmin: true, isMember: true };
+    saveSession(currentUser); showApp(); return;
+  }
+  if (!firebaseReady) { showLoginError('目前無法連線，請稍後再試'); return; }
+  try {
+    const snap = await window._fsGetDoc(window._fsDoc(db, 'users', u));
+    if (!snap.exists()) { showLoginError('此使用者名稱不存在'); return; }
+    const d = snap.data();
+    if (d.password !== btoa(p)) { showLoginError('密碼錯誤'); return; }
+    currentUser = { username: u, displayName: u, isAdmin: false, isMember: d.isMember || false };
+    saveSession(currentUser);
+    await window._fsUpdateDoc(window._fsDoc(db, 'users', u), {
+      loginCount: window._fsIncrement(1), lastLogin: new Date().toISOString()
+    });
+    showApp();
+  } catch (e) { showLoginError('連線失敗，請檢查網路'); console.error(e); }
+}
+
+async function handleRegister() {
+  const u = document.getElementById('reg-username').value.trim();
+  const p = document.getElementById('reg-password').value;
+  const c = document.getElementById('reg-confirm').value;
+  if (!u) { showLoginError('請填寫使用者名稱'); return; }
+  if (u === ADMIN_USERNAME) { showLoginError('此名稱不可使用'); return; }
+  if (p.length < 6) { showLoginError('密碼至少需要 6 個字元'); return; }
+  if (p !== c) { showLoginError('兩次密碼不一致'); return; }
+  if (!firebaseReady) { showLoginError('目前無法連線，請稍後再試'); return; }
+  try {
+    const snap = await window._fsGetDoc(window._fsDoc(db, 'users', u));
+    if (snap.exists()) { showLoginError('此使用者名稱已被使用'); return; }
+    await window._fsSetDoc(window._fsDoc(db, 'users', u), {
+      password: btoa(p), createdAt: new Date().toISOString(),
+      loginCount: 0, featureClicks: {}, sopProgress: {}, isMember: false, lastLogin: null
+    });
+    currentUser = { username: u, displayName: u, isAdmin: false, isMember: false };
+    saveSession(currentUser);
+    showApp();
+    showToast('✓ 帳號建立成功，歡迎加入上岸團隊！');
+  } catch (e) { showLoginError('註冊失敗，請稍後再試'); console.error(e); }
+}
+
+function handleLogout() { clearSession(); location.reload(); }
+
+// ═══════════════════════════════════════
+// SHOW APP
+// ═══════════════════════════════════════
+function showLogin() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+}
+
+function showApp() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+
+  document.getElementById('header-name').textContent = currentUser.displayName || currentUser.username;
+
+  // Role badge
+  const badge = document.getElementById('role-badge');
+  if (currentUser.isAdmin) { badge.textContent = '管理者'; badge.className = 'role-badge admin'; }
+  else if (currentUser.isMember) { badge.textContent = '團隊夥伴'; badge.className = 'role-badge member'; }
+  else { badge.textContent = '一般成員'; badge.className = 'role-badge general'; }
+
+  // Admin
+  if (currentUser.isAdmin) {
+    document.getElementById('admin-btn').style.display = 'inline-block';
+    document.getElementById('admin-section').style.display = 'block';
+    loadAdminData();
+  }
+
+  // Member tools unlock
+  applyMemberAccess();
+  applyLinks();
+  renderSOP();
+  loadSOPProgress();
+}
+
+// ═══════════════════════════════════════
+// MEMBER ACCESS
+// ═══════════════════════════════════════
+function applyMemberAccess() {
+  const overlay = document.getElementById('locked-overlay');
+  const cards   = document.getElementById('member-cards');
+  const lockIcon = document.getElementById('member-lock-icon');
+
+  if (currentUser.isAdmin || currentUser.isMember) {
+    overlay.style.display = 'none';
+    cards.style.filter = 'none';
+    cards.style.pointerEvents = 'auto';
+    cards.style.userSelect = 'auto';
+    if (lockIcon) lockIcon.style.display = 'none';
+  }
+  // else stays locked
+}
+
+// ═══════════════════════════════════════
+// LINKS
+// ═══════════════════════════════════════
+function applyLinks() {
+  document.querySelectorAll('[onclick^="trackClick"]').forEach(el => {
+    const m = el.getAttribute('onclick').match(/trackClick\('(.+?)'\)/);
+    if (m && LINKS[m[1]] && LINKS[m[1]].href !== '#') el.href = LINKS[m[1]].href;
+  });
+}
+
+async function trackClick(key) {
+  if (!firebaseReady || !currentUser || currentUser.isAdmin) return;
+  try {
+    const upd = {};
+    upd[`featureClicks.${key}`] = window._fsIncrement(1);
+    await window._fsUpdateDoc(window._fsDoc(db, 'users', currentUser.username), upd);
+  } catch {}
+}
+
+// ═══════════════════════════════════════
+// SOP
+// ═══════════════════════════════════════
+function renderSOP() {
+  document.getElementById('sop-steps-container').innerHTML = SOP_STEPS.map((s, i) => `
+    <div class="sop-step ${sopDone[s.id] ? 'done-step' : ''}" id="row-${s.id}">
+      <span class="sop-step-num">0${i+1}</span>
+      <div class="sop-check ${sopDone[s.id] ? 'done' : ''}" onclick="toggleSOP('${s.id}')" id="check-${s.id}"></div>
+      <div class="sop-body">
+        <div class="sop-step-title">${s.title}</div>
+        ${s.content ? `<div class="sop-step-content">${s.content}</div>` : ''}
+        ${s.link ? `<a class="sop-link" href="${s.link}" target="_blank">🔗 ${s.linkText||'查看連結'}</a>` : ''}
+      </div>
+    </div>`).join('');
+  updateSOPBar();
+}
+
+function updateSOPBar() {
+  const total = SOP_STEPS.length, done = SOP_STEPS.filter(s => sopDone[s.id]).length;
+  document.getElementById('sop-count').textContent = `${done}/${total}`;
+  document.getElementById('sop-bar').style.width = total ? `${done/total*100}%` : '0%';
+}
+
+async function toggleSOP(id) {
+  sopDone[id] = !sopDone[id];
+  document.getElementById(`check-${id}`).classList.toggle('done', sopDone[id]);
+  document.getElementById(`row-${id}`).classList.toggle('done-step', sopDone[id]);
+  updateSOPBar();
+  showToast(sopDone[id] ? `✓ 已完成：${SOP_STEPS.find(s=>s.id===id)?.title}` : '取消完成標記');
+  if (firebaseReady && currentUser && !currentUser.isAdmin) {
+    try {
+      const upd = {}; upd[`sopProgress.${id}`] = sopDone[id];
+      await window._fsUpdateDoc(window._fsDoc(db, 'users', currentUser.username), upd);
+    } catch {}
+  
+    try { const l = JSON.parse(localStorage.getItem('sop_p')||'{}'); l[id] = sopDone[id]; localStorage.setItem('sop_p', JSON.stringify(l)); } catch {}
+  }
+}
+
+async function loadSOPProgress() {
+  if (firebaseReady && currentUser && !currentUser.isAdmin) {
+    try {
+      const snap = await window._fsGetDoc(window._fsDoc(db, 'users', currentUser.username));
+      if (snap.exists()) { sopDone = snap.data().sopProgress || {}; renderSOP(); }
+    } catch {}
+  
+    try { sopDone = JSON.parse(localStorage.getItem('sop_p')||'{}'); renderSOP(); } catch {}
+  }
+}
+
+// ═══════════════════════════════════════
+// ADMIN
+// ═══════════════════════════════════════
+function toggleAdminSection() {
+  const s = document.getElementById('admin-section');
+  s.style.display = s.style.display === 'none' ? 'block' : 'none';
+}
+
+let adminTabCurrent = 'stats';
+function switchAdminTab(tab) {
+  adminTabCurrent = tab;
+  document.querySelectorAll('.admin-tab').forEach((el, i) => {
+    el.classList.toggle('active', (i === 0 && tab === 'stats') || (i === 1 && tab === 'members'));
+  });
+  document.getElementById('tab-stats').classList.toggle('active', tab === 'stats');
+  document.getElementById('tab-members').classList.toggle('active', tab === 'members');
+}
+
+async function loadAdminData() {
+  if (!firebaseReady) return;
+  try {
+    const snap = await window._fsGetDocs(window._fsCollection(db, 'users'));
+    allUsers = [];
+    let totalLogins = 0, totalClicks = 0, memberCount = 0;
+
+    snap.forEach(doc => {
+      const d = doc.data();
+      const clickSum = Object.values(d.featureClicks||{}).reduce((a,b)=>a+b,0);
+      const top = Object.entries(d.featureClicks||{}).sort((a,b)=>b[1]-a[1])[0];
+      allUsers.push({
+        username: doc.id,
+        isMember: d.isMember || false,
+        loginCount: d.loginCount || 0,
+        lastLogin: d.lastLogin || null,
+        topFeature: top ? `${LINKS[top[0]]?.label||top[0]} (${top[1]})` : '—',
+        clickSum
+      });
+      totalLogins += d.loginCount||0;
+      totalClicks += clickSum;
+      if (d.isMember) memberCount++;
+    });
+
+    document.getElementById('stat-users').textContent   = allUsers.length;
+    document.getElementById('stat-members').textContent = memberCount;
+    document.getElementById('stat-logins').textContent  = totalLogins;
+    document.getElementById('stat-clicks').textContent  = totalClicks;
+
+    renderStatsTable();
+    renderMembersTable();
+  } catch(e) { console.error(e); }
+}
+
+function renderStatsTable() {
+  document.getElementById('stats-table-body').innerHTML = allUsers.length
+    ? allUsers.map(u => `
+      <tr>
+        <td>${u.username}</td>
+        <td><span class="role-badge ${u.isMember?'member':'general'}" style="font-size:10px;">${u.isMember?'夥伴':'一般'}</span></td>
+        <td>${u.lastLogin ? u.lastLogin.slice(0,10) : '—'}</td>
+        <td><span class="click-badge">${u.loginCount}</span></td>
+        <td>${u.topFeature}</td>
+      </tr>`).join('')
+    : '<tr><td colspan="5" style="color:var(--text-muted);text-align:center;padding:20px;">尚無使用者資料</td></tr>';
+}
+
+function renderMembersTable() {
+  document.getElementById('members-table-body').innerHTML = allUsers.length
+    ? allUsers.map(u => `
+      <tr>
+        <td>${u.username}</td>
+        <td><span class="role-badge ${u.isMember?'member':'general'}">${u.isMember?'✓ 團隊夥伴':'一般成員'}</span></td>
+        <td>
+          <button class="toggle-member-btn ${u.isMember?'is-member':''}"
+            onclick="toggleMember('${u.username}', ${u.isMember})">
+            ${u.isMember ? '取消夥伴' : '設為夥伴'}
+          </button>
+        </td>
+      </tr>`).join('')
+    : '<tr><td colspan="3" style="color:var(--text-muted);text-align:center;padding:20px;">尚無使用者資料</td></tr>';
+}
+
+async function toggleMember(username, currentlyMember) {
+  if (!firebaseReady) return;
+  try {
+    const newVal = !currentlyMember;
+    await window._fsUpdateDoc(window._fsDoc(db, 'users', username), { isMember: newVal });
+    const u = allUsers.find(x => x.username === username);
+    if (u) u.isMember = newVal;
+    renderMembersTable();
+    renderStatsTable();
+    // update stat box
+    document.getElementById('stat-members').textContent = allUsers.filter(x=>x.isMember).length;
+    showToast(newVal ? `✓ 已將 ${username} 設為團隊夥伴` : `已移除 ${username} 的夥伴身份`);
+  } catch(e) { showToast('更新失敗，請重試'); console.error(e); }
+}
+
+// ═══════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+// Enter key
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  if (document.getElementById('form-login').style.display !== 'none') handleLogin();
+  else if (document.getElementById('form-register').style.display !== 'none') handleRegister();
+});
+</script>
+</body>
+</html>
