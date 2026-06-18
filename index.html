@@ -270,6 +270,107 @@ body {
 .toggle-member-btn.is-member { background: var(--green-glow); border-color: rgba(76,175,125,0.4); color: var(--green); }
 .toggle-member-btn.is-member:hover { background: rgba(76,175,125,0.05); border-color: var(--red); color: var(--red); }
 
+
+/* ─── Quick Nav Bar ─── */
+.quick-nav {
+  position: sticky; top: 60px; z-index: 98;
+  background: rgba(13,13,13,0.95); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 4px;
+  padding: 0 24px; height: 44px; overflow-x: auto;
+  scrollbar-width: none;
+}
+.quick-nav::-webkit-scrollbar { display: none; }
+.nav-pill {
+  flex-shrink: 0; background: transparent;
+  border: 1px solid var(--border); border-radius: 20px;
+  padding: 4px 14px; font-size: 12px; color: var(--text-dim);
+  cursor: pointer; font-family: var(--font-body);
+  white-space: nowrap; transition: all 0.2s;
+  letter-spacing: 0.03em;
+}
+.nav-pill:hover { border-color: var(--gold-dim); color: var(--gold); }
+.nav-pill.active { background: var(--gold-glow); border-color: rgba(201,168,76,0.4); color: var(--gold); }
+
+/* ─── Course Modal ─── */
+.modal-backdrop {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; opacity: 0; pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.modal-backdrop.open { opacity: 1; pointer-events: auto; }
+.modal-box {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; width: 100%; max-width: 600px;
+  max-height: 85vh; overflow-y: auto;
+  transform: translateY(16px); transition: transform 0.25s ease;
+}
+.modal-backdrop.open .modal-box { transform: translateY(0); }
+.modal-header {
+  position: sticky; top: 0;
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  padding: 18px 24px; display: flex; align-items: center; justify-content: space-between;
+  border-radius: 16px 16px 0 0;
+}
+.modal-title { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--gold); }
+.modal-close {
+  background: transparent; border: none; color: var(--text-muted);
+  font-size: 20px; cursor: pointer; line-height: 1; padding: 4px 8px;
+  border-radius: 6px; transition: color 0.2s, background 0.2s;
+}
+.modal-close:hover { color: var(--text); background: var(--surface2); }
+.modal-body { padding: 24px; }
+.modal-season-tag {
+  display: inline-block; font-size: 10px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--gold); background: var(--gold-glow);
+  border: 1px solid rgba(201,168,76,0.25); border-radius: 4px;
+  padding: 3px 10px; margin-bottom: 16px;
+}
+.course-playlist-row {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 12px 16px; margin-bottom: 16px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.course-playlist-row .pl-label { font-size: 13px; color: var(--text-dim); }
+.course-playlist-row .pl-label span { color: var(--text); font-weight: 500; }
+.btn-playlist {
+  flex-shrink: 0; background: var(--gold-glow);
+  border: 1px solid rgba(201,168,76,0.4); border-radius: 6px;
+  padding: 6px 14px; font-size: 12px; color: var(--gold);
+  cursor: pointer; font-family: var(--font-body);
+  text-decoration: none; display: inline-block;
+  transition: background 0.2s, border-color 0.2s;
+  white-space: nowrap;
+}
+.btn-playlist:hover { background: rgba(201,168,76,0.2); border-color: var(--gold); }
+.course-item {
+  border-bottom: 1px solid var(--border); padding: 14px 0;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.course-item:last-child { border-bottom: none; padding-bottom: 0; }
+.course-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.course-date { font-size: 11px; color: var(--text-muted); letter-spacing: 0.05em; }
+.course-speaker { font-size: 11px; color: var(--teal); background: var(--teal-glow); border: 1px solid rgba(92,168,201,0.2); border-radius: 4px; padding: 2px 7px; }
+.course-name { font-size: 14px; font-weight: 500; color: var(--text); line-height: 1.4; }
+.course-links { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn-video {
+  font-size: 11px; color: var(--text-dim);
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 5px; padding: 4px 10px; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 4px;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-video:hover { border-color: var(--red); color: #ff6b6b; }
+.btn-video.pending { color: var(--text-muted); cursor: default; font-style: italic; }
+
+@media (max-width: 600px) {
+  .quick-nav { padding: 0 14px; }
+  .modal-body { padding: 16px; }
+  .course-playlist-row { flex-direction: column; align-items: flex-start; gap: 10px; }
+}
+
 /* ─── View Mode Banner ─── */
 .view-mode-banner {
   display: none;
@@ -346,7 +447,7 @@ body {
 <!-- ═══ APP ═══ -->
 <div id="app">
   <header class="app-header">
-    <div class="header-brand">上岸團隊</div>
+    <div class="header-brand">上岸團隊｜資源地圖</div>
     <div class="header-right">
       <span class="header-user">您好，<span id="header-name"></span></span>
       <span class="role-badge" id="role-badge"></span>
@@ -360,6 +461,16 @@ body {
   <div class="view-mode-banner" id="view-mode-banner">
     <div class="dot"></div>
     目前為「夥伴視角」預覽模式，點擊右上角按鈕返回管理者視角
+  </div>
+
+
+  <!-- Quick Nav -->
+  <div class="quick-nav" id="quick-nav">
+    <button class="nav-pill" onclick="scrollToSection('sop-section')">新人報聘 SOP</button>
+    <button class="nav-pill" onclick="scrollToSection('course-section')">課程</button>
+    <button class="nav-pill" onclick="scrollToSection('activity-section')">活動</button>
+    <button class="nav-pill" onclick="scrollToSection('tools-section')">工具</button>
+    <button class="nav-pill" onclick="scrollToSection('member-tools-section')">夥伴限定</button>
   </div>
 
   <main class="app-main">
@@ -409,7 +520,7 @@ body {
     </div>
 
     <!-- ── SOP ── -->
-    <div class="fade-section">
+    <div class="fade-section" id="sop-section">
       <div class="section-label"><span class="tag">SOP</span><div class="line"></div></div>
       <div class="sop-card">
         <div class="sop-header">
@@ -424,15 +535,15 @@ body {
     </div>
 
     <!-- ── 課程 ── -->
-    <div class="fade-section">
+    <div class="fade-section" id="course-section">
       <div class="section-label"><span class="tag">課程</span><div class="line"></div></div>
       <div class="cards-group">
-        <a class="link-card" href="#" target="_blank" onclick="trackClick('course-new')">
+        <div class="link-card" onclick="openCourseModal(); trackClick('course-new')" style="cursor:pointer;">
           <span class="card-icon">📚</span>
           <div class="card-title">新人帶狀課程</div>
-          <div class="card-desc">新夥伴入職系列培訓</div>
+          <div class="card-desc">2026 第二季｜7 堂系列培訓</div>
           <div class="card-arrow">→</div>
-        </a>
+        </div>
         <a class="link-card" href="#" target="_blank" onclick="trackClick('course-double10')">
           <span class="card-icon">✕</span>
           <div class="card-title">雙十字教學</div>
@@ -449,7 +560,7 @@ body {
     </div>
 
     <!-- ── 活動 ── -->
-    <div class="fade-section">
+    <div class="fade-section" id="activity-section">
       <div class="section-label"><span class="tag">活動</span><div class="line"></div></div>
       <div class="cards-grid">
         <a class="link-card" href="#" target="_blank" onclick="trackClick('monthly-meeting')">
@@ -468,7 +579,7 @@ body {
     </div>
 
     <!-- ── 工具（所有人）── -->
-    <div class="fade-section">
+    <div class="fade-section" id="tools-section">
       <div class="section-label"><span class="tag">工具</span><div class="line"></div></div>
       <div class="cards-grid">
         <a class="link-card" href="#" target="_blank" onclick="trackClick('chubb-travel')">
@@ -953,5 +1064,122 @@ document.addEventListener('keydown', e => {
   else if (document.getElementById('form-register').style.display !== 'none') handleRegister();
 });
 </script>
+
+<!-- ═══ Course Modal ═══ -->
+<div class="modal-backdrop" id="course-modal" onclick="closeCourseModal(event)">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">📚 新人帶狀課程</div>
+      <button class="modal-close" onclick="document.getElementById('course-modal').classList.remove('open')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-season-tag">2026 · Q2 · 第二季</div>
+
+      <div class="course-playlist-row">
+        <div class="pl-label"><span>總課程清單</span>｜所有課程影片播放清單</div>
+        <a class="btn-playlist" href="https://www.youtube.com/playlist?list=PLDF5-xse-9XB0unKU_CyHjbI8l4OLErkM" target="_blank">▶ 開啟播放清單</a>
+      </div>
+
+      <div class="course-item">
+        <div class="course-meta">
+          <span class="course-date">2026.05.14</span>
+          <span class="course-speaker">陳宥臻 處經理</span>
+        </div>
+        <div class="course-name">醫療險銷售實務及理賠案例</div>
+        <div class="course-links">
+          <a class="btn-video" href="https://youtu.be/boc2MpkuHJo?si=dXSe2r53R7qRGBmq" target="_blank">▶ 觀看影片</a>
+        </div>
+      </div>
+
+      <div class="course-item">
+        <div class="course-meta">
+          <span class="course-date">2026.05.28</span>
+          <span class="course-speaker">蔡承叡 業務襄理</span>
+        </div>
+        <div class="course-name">風險管理</div>
+        <div class="course-links">
+          <a class="btn-video" href="https://youtu.be/l3iVCssQH9U?si=Xnj7ymc3uekGdEVb" target="_blank">▶ Part 1</a>
+          <a class="btn-video" href="https://youtu.be/l1Mqa6TjC_c?si=8FvuhMNO85hJ2BMv" target="_blank">▶ Part 2</a>
+        </div>
+      </div>
+
+      <div class="course-item">
+        <div class="course-meta">
+          <span class="course-date">2026.06.04</span>
+          <span class="course-speaker">徐靖柔 處經理</span>
+        </div>
+        <div class="course-name">產險出發</div>
+        <div class="course-links">
+          <a class="btn-video" href="https://youtu.be/EmiKJvvzhzQ?si=kLq4_rCVyatZFYGs" target="_blank">▶ 觀看影片</a>
+        </div>
+      </div>
+
+      <div class="course-item">
+        <div class="course-meta">
+          <span class="course-date">2026.06.11</span>
+          <span class="course-speaker">張晏榕 資深業務協理</span>
+        </div>
+        <div class="course-name">業務心法及定位</div>
+        <div class="course-links">
+          <a class="btn-video" href="https://youtu.be/1F-pnFoSUT0?si=PzAbQaKK4h1UgD_L" target="_blank">▶ 觀看影片</a>
+        </div>
+      </div>
+
+      <div class="course-item">
+        <div class="course-meta">
+          <span class="course-date">2026.06.18</span>
+          <span class="course-speaker">鄭俊凱 業務總監</span>
+        </div>
+        <div class="course-name">投資型保單架構</div>
+        <div class="course-links">
+          <span class="btn-video pending">⏳ 影片待補</span>
+        </div>
+      </div>
+
+      <div class="course-item">
+        <div class="course-meta">
+          <span class="course-date">2026.06.25</span>
+          <span class="course-speaker">許柏彥 業務協理</span>
+        </div>
+        <div class="course-name">分紅保單的節稅佈局及資產保全</div>
+        <div class="course-links">
+          <span class="btn-video pending">⏳ 影片待補</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function openCourseModal() {
+  document.getElementById('course-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeCourseModal(e) {
+  if (e.target === document.getElementById('course-modal')) {
+    document.getElementById('course-modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.getElementById('course-modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+});
+
+function scrollToSection(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const offset = 60 + 44 + 8; // header + quicknav + gap
+  const top = el.getBoundingClientRect().top + window.scrollY - offset;
+  window.scrollTo({ top, behavior: 'smooth' });
+  // highlight active pill
+  document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+}
+</script>
+
 </body>
 </html>
