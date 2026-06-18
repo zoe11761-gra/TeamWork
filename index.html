@@ -326,10 +326,10 @@ body {
   position: fixed; inset: 0; z-index: 200;
   background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
   display: flex; align-items: center; justify-content: center;
-  padding: 20px; opacity: 0; pointer-events: none;
-  transition: opacity 0.25s ease;
+  padding: 20px; opacity: 0; pointer-events: none; visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
 }
-.modal-backdrop.open { opacity: 1; pointer-events: auto; }
+.modal-backdrop.open { opacity: 1; pointer-events: auto; visibility: visible; }
 .modal-box {
   background: var(--surface); border: 1px solid var(--border);
   border-radius: 16px; width: 100%; max-width: 600px;
@@ -1274,7 +1274,7 @@ document.addEventListener('keydown', e => {
       <button class="modal-close" onclick="document.getElementById('course-modal').classList.remove('open')">✕</button>
     </div>
     <div class="modal-body">
-      <div class="modal-season-tag">2026 · Q2 · 第二季</div>
+      <div class="modal-season-tag">2026・第二季</div>
 
       <div class="course-playlist-row">
         <div class="pl-label"><span>總課程清單</span>｜所有課程影片播放清單</div>
@@ -1282,22 +1282,22 @@ document.addEventListener('keydown', e => {
       </div>
 
       <div class="course-item">
-        <div class="course-meta">
+        <div class="course-item-left"><div class="course-meta">
           <span class="course-date">2026.05.14</span>
           <span class="course-speaker">陳宥臻 處經理</span>
         </div>
-        <div class="course-name">醫療險銷售實務及理賠案例</div>
+        <div class="course-name">醫療險銷售實務及理賠案例</div></div>
         <div class="course-links">
           <a class="btn-video" href="https://youtu.be/boc2MpkuHJo?si=dXSe2r53R7qRGBmq" target="_blank">▶ 觀看影片</a>
         </div>
       </div>
 
       <div class="course-item">
-        <div class="course-meta">
+        <div class="course-item-left"><div class="course-meta">
           <span class="course-date">2026.05.28</span>
           <span class="course-speaker">蔡承叡 業務襄理</span>
         </div>
-        <div class="course-name">風險管理</div>
+        <div class="course-name">風險管理</div></div>
         <div class="course-links">
           <a class="btn-video" href="https://youtu.be/l3iVCssQH9U?si=Xnj7ymc3uekGdEVb" target="_blank">▶ Part 1</a>
           <a class="btn-video" href="https://youtu.be/l1Mqa6TjC_c?si=8FvuhMNO85hJ2BMv" target="_blank">▶ Part 2</a>
@@ -1305,44 +1305,44 @@ document.addEventListener('keydown', e => {
       </div>
 
       <div class="course-item">
-        <div class="course-meta">
+        <div class="course-item-left"><div class="course-meta">
           <span class="course-date">2026.06.04</span>
           <span class="course-speaker">徐靖柔 處經理</span>
         </div>
-        <div class="course-name">產險出發</div>
+        <div class="course-name">產險出發</div></div>
         <div class="course-links">
           <a class="btn-video" href="https://youtu.be/EmiKJvvzhzQ?si=kLq4_rCVyatZFYGs" target="_blank">▶ 觀看影片</a>
         </div>
       </div>
 
       <div class="course-item">
-        <div class="course-meta">
+        <div class="course-item-left"><div class="course-meta">
           <span class="course-date">2026.06.11</span>
           <span class="course-speaker">張晏榕 資深業務協理</span>
         </div>
-        <div class="course-name">業務心法及定位</div>
+        <div class="course-name">業務心法及定位</div></div>
         <div class="course-links">
           <a class="btn-video" href="https://youtu.be/1F-pnFoSUT0?si=PzAbQaKK4h1UgD_L" target="_blank">▶ 觀看影片</a>
         </div>
       </div>
 
       <div class="course-item">
-        <div class="course-meta">
+        <div class="course-item-left"><div class="course-meta">
           <span class="course-date">2026.06.18</span>
           <span class="course-speaker">鄭俊凱 業務總監</span>
         </div>
-        <div class="course-name">投資型保單架構</div>
+        <div class="course-name">投資型保單架構</div></div>
         <div class="course-links">
-          <span class="btn-video pending">⏳ 影片待補</span>
+          <a class="btn-video" href="https://youtu.be/YTHBaIL4xDw" target="_blank">▶ 觀看影片</a>
         </div>
       </div>
 
       <div class="course-item">
-        <div class="course-meta">
+        <div class="course-item-left"><div class="course-meta">
           <span class="course-date">2026.06.25</span>
           <span class="course-speaker">許柏彥 業務協理</span>
         </div>
-        <div class="course-name">分紅保單的節稅佈局及資產保全</div>
+        <div class="course-name">分紅保單的節稅佈局及資產保全</div></div>
         <div class="course-links">
           <span class="btn-video pending">⏳ 影片待補</span>
         </div>
