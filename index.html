@@ -422,15 +422,16 @@ body {
 }
 .btn-playlist:hover { background: rgba(201,168,76,0.2); border-color: var(--gold); }
 .course-item {
-  border-bottom: 1px solid var(--border); padding: 14px 0;
-  display: flex; flex-direction: column; gap: 6px;
+  border-bottom: 1px solid var(--border); padding: 12px 0;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
 }
 .course-item:last-child { border-bottom: none; padding-bottom: 0; }
-.course-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.course-date { font-size: 11px; color: var(--text-muted); letter-spacing: 0.05em; }
-.course-speaker { font-size: 11px; color: var(--teal); background: var(--teal-glow); border: 1px solid rgba(92,168,201,0.2); border-radius: 4px; padding: 2px 7px; }
-.course-name { font-size: 17px; font-weight: 500; color: var(--text); line-height: 1.4; }
-.course-links { display: flex; gap: 8px; flex-wrap: wrap; }
+.course-item-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; flex-wrap: nowrap; }
+.course-meta { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.course-date { font-size: 11px; color: var(--text-muted); letter-spacing: 0.05em; white-space: nowrap; }
+.course-speaker { font-size: 11px; color: var(--teal); background: var(--teal-glow); border: 1px solid rgba(92,168,201,0.2); border-radius: 4px; padding: 2px 7px; white-space: nowrap; }
+.course-name { font-size: 15px; font-weight: 500; color: var(--text); line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.course-links { display: flex; gap: 8px; flex-wrap: nowrap; flex-shrink: 0; }
 .btn-video {
   font-size: 11px; color: var(--text-dim);
   background: var(--surface2); border: 1px solid var(--border);
@@ -739,7 +740,7 @@ body {
           <div class="sop-step" style="border-bottom:none;">
             <span class="sop-step-num" style="visibility:hidden;">  </span>
             <div class="sop-body">
-              <div class="sop-step-content" style="color:var(--teal);font-size:14px;">※ 若不知道「合格證號」或要確認「登錄狀態」，可以在步驟五畫面中的「登錄資格及狀態查詢」查詢</div>
+              <div class="sop-step-content">※ 若不知道「合格證號」或要確認「登錄狀態」，可以在步驟五畫面中的「登錄資格及狀態查詢」查詢</div>
             </div>
           </div>
 
@@ -799,8 +800,7 @@ body {
             <div class="sop-body">
               <div class="sop-step-title">考試報名路徑</div>
               <div class="sop-step-content">
-                信安業務系統 ➡ 行政中心 ➡ 報名系統 ➡ 考試報名<br>
-                <span style="color:var(--text-muted);margin:0 4px;">或</span><br>
+                信安業務系統 ➡ 行政中心 ➡ 報名系統 ➡ 考試報名<span style="color:var(--text-muted);margin:0 6px;">或</span><br>
                 小信信 ➡ 教育訓練 ➡ 我要報名 ➡ 報名系統 ➡ 考試報名
               </div>
               <div class="sop-step-content" style="margin-top:4px;">※ 此系統只供報名，無須繳費，費用會從下期薪資扣（扣登入帳號者）</div>
@@ -1559,11 +1559,11 @@ function scrollToSection(id) { }
 window.addEventListener('scroll', function() {
   const btn = document.getElementById('scroll-top-btn');
   if (!btn) return;
-  if (window.scrollY > 200) btn.classList.add('show');
+  if (window.scrollY > 120) btn.classList.add('show');
   else btn.classList.remove('show');
 });
 </script>
 
-<button class="scroll-top-btn" id="scroll-top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<button class="scroll-top-btn" id="scroll-top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">▲</button>
 </body>
 </html>
