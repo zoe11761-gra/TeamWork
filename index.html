@@ -291,6 +291,9 @@ body {
 }
 .nav-pill:hover { border-color: var(--gold-dim); color: var(--gold); }
 .nav-pill.active { background: var(--gold-glow); border-color: rgba(201,168,76,0.4); color: var(--gold); }
+.nav-pill-member { border-color: rgba(76,175,125,0.4) !important; color: var(--green) !important; }
+.nav-pill-member:hover { border-color: var(--green) !important; color: var(--green) !important; background: var(--green-glow) !important; }
+.nav-pill-member.active { background: var(--green-glow) !important; border-color: rgba(76,175,125,0.6) !important; color: var(--green) !important; }
 
 /* ─── Course Modal ─── */
 .modal-backdrop {
@@ -412,7 +415,7 @@ body {
 
 <div class="loading-overlay" id="loading-overlay">
   <div class="spinner"></div>
-  <div class="loading-text">上岸團隊</div>
+  <div class="loading-text">上岸好榕逸</div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -421,7 +424,7 @@ body {
 <div id="login-screen" style="display:none;">
   <div class="login-card">
     <div class="login-logo">
-      <span class="brand">上岸團隊</span>
+      <span class="brand">上岸好榕逸</span>
       <div class="login-divider"></div>
       <span class="sub">Team Portal</span>
     </div>
@@ -447,7 +450,7 @@ body {
 <!-- ═══ APP ═══ -->
 <div id="app">
   <header class="app-header">
-    <div class="header-brand">上岸團隊｜資源地圖</div>
+    <div class="header-brand">上岸好榕逸｜資源地圖</div>
     <div class="header-right">
       <span class="header-user">您好，<span id="header-name"></span></span>
       <span class="role-badge" id="role-badge"></span>
@@ -466,18 +469,18 @@ body {
 
   <!-- Quick Nav -->
   <div class="quick-nav" id="quick-nav">
-    <button class="nav-pill" onclick="scrollToSection('home-section')">🏠 首頁</button>
-    <button class="nav-pill" onclick="scrollToSection('sop-section')">新人報聘 SOP</button>
-    <button class="nav-pill" onclick="scrollToSection('course-section')">新手起步</button>
-    <button class="nav-pill" onclick="scrollToSection('activity-section')">團隊常態課程</button>
-    <button class="nav-pill" onclick="scrollToSection('tools-section')">資料庫小工具</button>
-    <button class="nav-pill" onclick="scrollToSection('member-tools-section')">草草 Team</button>
+    <button class="nav-pill active" id="pill-home" onclick="switchTab('home')">🏠 首頁</button>
+    <button class="nav-pill" id="pill-sop" onclick="switchTab('sop')">新人報聘 SOP</button>
+    <button class="nav-pill" id="pill-course" onclick="switchTab('course')">新手起步 Video</button>
+    <button class="nav-pill" id="pill-activity" onclick="switchTab('activity')">團隊常態課程</button>
+    <button class="nav-pill" id="pill-tools" onclick="switchTab('tools')">資料庫小工具</button>
+    <button class="nav-pill nav-pill-member" id="pill-member" onclick="switchTab('member')" style="display:none;">🌿 草草 Team</button>
   </div>
 
   <main class="app-main">
 
     <!-- ── 首頁 ── -->
-    <div class="fade-section" id="home-section">
+    <div class="tab-page fade-section" id="tab-home">
       <div class="section-label"><span class="tag">首頁</span><div class="line"></div></div>
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:32px 28px;text-align:center;">
         <div style="font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--gold);margin-bottom:10px;">上岸團隊｜資源地圖</div>
@@ -530,7 +533,7 @@ body {
     </div>
 
     <!-- ── SOP ── -->
-    <div class="fade-section" id="sop-section">
+    <div class="tab-page fade-section" id="tab-sop" style="display:none;">
       <div class="section-label"><span class="tag">SOP</span><div class="line"></div></div>
       <div class="sop-card">
         <div class="sop-header">
@@ -545,7 +548,7 @@ body {
     </div>
 
     <!-- ── 課程 ── -->
-    <div class="fade-section" id="course-section">
+    <div class="tab-page fade-section" id="tab-course" style="display:none;">
       <div class="section-label"><span class="tag">新手起步</span><div class="line"></div></div>
       <div class="cards-group">
         <div class="link-card" onclick="openCourseModal(); trackClick('course-new')" style="cursor:pointer;">
@@ -554,13 +557,13 @@ body {
           <div class="card-desc">2026 第二季｜7 堂系列培訓</div>
           <div class="card-arrow">→</div>
         </div>
-        <a class="link-card" href="#" target="_blank" onclick="trackClick('course-double10')">
+        <a class="link-card" href="https://youtu.be/amvcZQvxC7U" target="_blank" onclick="trackClick('course-double10')">
           <span class="card-icon">✕</span>
           <div class="card-title">雙十字教學</div>
           <div class="card-desc">核心業務技能訓練</div>
           <div class="card-arrow">→</div>
         </a>
-        <a class="link-card" href="#" target="_blank" onclick="trackClick('course-benz')">
+        <a class="link-card" href="https://youtu.be/4RnmIsdXG4M" target="_blank" onclick="trackClick('course-benz')">
           <span class="card-icon">🎯</span>
           <div class="card-title">理財觀念引導</div>
           <div class="card-desc">賓士理論｜財務規劃思維</div>
@@ -570,15 +573,15 @@ body {
     </div>
 
     <!-- ── 活動 ── -->
-    <div class="fade-section" id="activity-section">
+    <div class="tab-page fade-section" id="tab-activity" style="display:none;">
       <div class="section-label"><span class="tag">團隊常態課程</span><div class="line"></div></div>
       <div class="cards-grid">
-        <a class="link-card" href="#" target="_blank" onclick="trackClick('monthly-meeting')">
+        <div class="link-card" onclick="trackClick('monthly-meeting')" style="cursor:default;opacity:0.5;">
           <span class="card-icon">🗓</span>
           <div class="card-title">上岸月會</div>
           <div class="card-desc">每月團隊定期會議連結與資料</div>
-          <div class="card-arrow">→</div>
-        </a>
+          <div class="card-arrow" style="opacity:0;">→</div>
+        </div>
         <a class="link-card" href="https://course.zoe11761.workers.dev" target="_blank" onclick="trackClick('all-courses')">
           <span class="card-icon">🎓</span>
           <div class="card-title">上岸團隊課程統整</div>
@@ -589,19 +592,13 @@ body {
     </div>
 
     <!-- ── 工具（所有人）── -->
-    <div class="fade-section" id="tools-section">
+    <div class="tab-page fade-section" id="tab-tools" style="display:none;">
       <div class="section-label"><span class="tag">資料庫小工具</span><div class="line"></div></div>
       <div class="cards-grid">
         <a class="link-card" href="https://reurl.cc/R283p9" target="_blank" onclick="trackClick('chubb-travel')">
           <span class="card-icon">✈️</span>
           <div class="card-title">安達產物旅平自助報價</div>
           <div class="card-desc">CHUBB 旅行平安險快速試算系統</div>
-          <div class="card-arrow">→</div>
-        </a>
-        <a class="link-card" href="https://zoe11761-gra.github.io/car-accident-claim/" target="_blank" onclick="trackClick('accident-claim-pub')">
-          <span class="card-icon">🚗</span>
-          <div class="card-title">車禍求償明細產生器</div>
-          <div class="card-desc">自動整理求償項目與金額明細</div>
           <div class="card-arrow">→</div>
         </a>
         <a class="link-card" href="https://precious-moose-90a.notion.site/9e63e5cf9447476ea901352969f01664?v=8402d2b68c2149bab8512287d91596a6&source=copy_link" target="_blank" onclick="trackClick('notion-db')">
@@ -614,7 +611,7 @@ body {
     </div>
 
     <!-- ── 夥伴限定工具區 ── -->
-    <div class="fade-section" id="member-tools-section">
+    <div class="tab-page fade-section" id="tab-member" style="display:none;">
       <div class="section-label">
         <span class="tag member-tag">草草 Team</span>
         <div class="line"></div>
@@ -629,7 +626,7 @@ body {
         </div>
         <!-- Actual cards (blurred until unlocked) -->
         <div class="cards-grid" id="member-cards" style="filter:blur(4px);pointer-events:none;user-select:none;">
-          <a class="link-card member-card" href="#" target="_blank" onclick="trackClick('accident-claim')">
+          <a class="link-card member-card" href="https://zoe11761-gra.github.io/car-accident-claim/" target="_blank" onclick="trackClick('accident-claim')">
             <span class="card-icon">🚗</span>
             <div class="card-title">車禍求償明細產生器</div>
             <div class="card-desc">自動整理求償項目與金額明細</div>
@@ -657,8 +654,8 @@ const SESSION_MS  = 30 * 24 * 60 * 60 * 1000; // 30天
 // 工具連結設定（把 '#' 換成真實 URL）
 const LINKS = {
   'course-new':      { href: '#', label: '新人帶狀課程' },
-  'course-double10': { href: '#', label: '雙十字教學' },
-  'course-benz':     { href: '#', label: '賓士理論' },
+  'course-double10': { href: 'https://youtu.be/amvcZQvxC7U', label: '雙十字教學' },
+  'course-benz':     { href: 'https://youtu.be/4RnmIsdXG4M', label: '賓士理論' },
   'monthly-meeting': { href: '#', label: '上岸月會' },
   'all-courses':     { href: 'https://course.zoe11761.workers.dev', label: '上岸課程統整' },
   'chubb-travel':    { href: 'https://reurl.cc/R283p9', label: '安達旅平報價' },
@@ -844,6 +841,15 @@ function showApp() {
   applyLinks();
   renderSOP();
   loadSOPProgress();
+
+  // 顯示草草Team按鈕（成員或管理者才顯示）
+  if (currentUser.isAdmin || currentUser.isMember) {
+    const memberPill = document.getElementById('pill-member');
+    if (memberPill) memberPill.style.display = 'inline-block';
+  }
+
+  // 預設顯示首頁 tab
+  switchTab('home');
 }
 
 // ═══════════════════════════════════════
@@ -954,6 +960,7 @@ function toggleViewMode() {
 
   if (isMemberView) {
     // 模擬夥伴視角
+    switchTab('home');
     adminSection.style.display = 'none';
     adminBtn.style.display = 'none';
     btn.textContent = '↩ 返回管理者視角';
@@ -1193,16 +1200,27 @@ document.addEventListener('keydown', function(e) {
   }
 });
 
-function scrollToSection(id) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  const offset = 60 + 44 + 8; // header + quicknav + gap
-  const top = el.getBoundingClientRect().top + window.scrollY - offset;
-  window.scrollTo({ top, behavior: 'smooth' });
-  // highlight active pill
+function switchTab(tab) {
+  // 隱藏所有 tab-page（admin-section 另外處理）
+  document.querySelectorAll('.tab-page').forEach(el => el.style.display = 'none');
+  // 顯示目標
+  const target = document.getElementById('tab-' + tab);
+  if (target) { target.style.display = 'block'; target.style.animation = 'fadeUp 0.3s ease both'; }
+  // 更新 pill active
   document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  const pill = document.getElementById('pill-' + tab);
+  if (pill) pill.classList.add('active');
+  // 首頁時，若管理者也顯示 admin-section
+  if (tab === 'home' && currentUser && currentUser.isAdmin) {
+    document.getElementById('admin-section').style.display = 'block';
+  } else {
+    if (document.getElementById('admin-section')) document.getElementById('admin-section').style.display = 'none';
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
+// 相容舊版 scroll（保留以防萬一）
+function scrollToSection(id) { }
 </script>
 
 </body>
