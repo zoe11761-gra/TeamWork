@@ -297,20 +297,53 @@ body {
 }
 .sop-img { width: 100%; display: block; }
 
+/* ─── Toggle Group ─── */
+.toggle-groups { margin-top: 10px; }
+.toggle-group-btn {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 14px; cursor: pointer;
+  font-family: var(--font-body); font-size: 14px; color: var(--text-dim);
+  transition: all 0.2s; text-align: left;
+}
+.toggle-group-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+.toggle-group-btn.open { border-color: rgba(201,168,76,0.4); color: var(--gold); border-radius: 8px 8px 0 0; }
+.toggle-arrow { font-size: 14px; transition: transform 0.25s; }
+.toggle-group-btn.open .toggle-arrow { transform: rotate(180deg); }
+.toggle-group-content {
+  display: none; grid-template-columns: 1fr 1fr; gap: 12px;
+  background: var(--surface2); border: 1px solid rgba(201,168,76,0.2);
+  border-top: none; border-radius: 0 0 8px 8px; padding: 14px;
+}
+.toggle-group-content.open { display: grid; }
+.group-col { display: flex; flex-direction: column; gap: 6px; }
+.group-col-title {
+  font-size: 12px; letter-spacing: 0.15em; color: var(--gold);
+  font-weight: 600; margin-bottom: 4px; text-transform: uppercase;
+}
+.group-link {
+  font-size: 13px; color: var(--text-dim); text-decoration: none;
+  padding: 5px 8px; border-radius: 6px; background: var(--surface);
+  border: 1px solid var(--border); transition: all 0.15s;
+  display: flex; align-items: center; gap: 6px;
+}
+.group-link::before { content: '▶'; font-size: 9px; color: var(--teal); flex-shrink: 0; }
+.group-link:hover { border-color: var(--teal); color: var(--text); background: var(--teal-glow); }
+
 /* ─── Quick Nav Bar ─── */
 .quick-nav {
   position: sticky; top: 60px; z-index: 98;
   background: rgba(13,13,13,0.95); backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; gap: 4px;
-  padding: 0 24px; height: 44px; overflow-x: auto;
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 24px; min-height: 56px; overflow-x: auto;
   scrollbar-width: none;
 }
 .quick-nav::-webkit-scrollbar { display: none; }
 .nav-pill {
   flex-shrink: 0; background: transparent;
-  border: 1px solid var(--border); border-radius: 20px;
-  padding: 4px 14px; font-size: 15px; color: var(--text-dim);
+  border: 1px solid var(--border); border-radius: 8px;
+  padding: 7px 18px; font-size: 15px; color: var(--text-dim);
   cursor: pointer; font-family: var(--font-body);
   white-space: nowrap; transition: all 0.2s;
   letter-spacing: 0.03em;
@@ -565,8 +598,9 @@ body {
       <!-- SOP 三分頁 tabs -->
       <div class="sop-tabs-wrap">
         <button class="sop-tab-btn active" id="stab-apply" onclick="switchSopTab('apply')">📋 線上報聘</button>
-        <button class="sop-tab-btn" id="stab-flow" onclick="switchSopTab('flow')">🔄 登錄流程（公會登錄）</button>
-        <button class="sop-tab-btn" id="stab-resource" onclick="switchSopTab('resource')">📦 登錄後資源</button>
+        <button class="sop-tab-btn" id="stab-flow" onclick="switchSopTab('flow')">🔄 公會登錄</button>
+        <button class="sop-tab-btn" id="stab-resource" onclick="switchSopTab('resource')">📦 登錄✕入教</button>
+        <button class="sop-tab-btn" id="stab-gift" onclick="switchSopTab('gift')">🎁 新手大禮包</button>
       </div>
 
       <!-- ① 線上報聘 -->
@@ -699,7 +733,7 @@ body {
       <div class="sop-tab-content" id="scontent-resource" style="display:none;">
         <div class="sop-card">
           <div class="sop-header">
-            <div class="sop-title">登錄後資源</div>
+            <div class="sop-title">登錄✕入教</div>
             <div class="sop-progress">
               <span id="sop-count">0/0</span>
               <div class="progress-bar-wrap"><div class="progress-bar-fill" id="sop-bar" style="width:0%"></div></div>
@@ -864,7 +898,8 @@ const SOP_STEPS = [
     id: 'sop_6',
     title: '加入「信安北四」單位群組',
     content: '※ 群組記事本有各保險公司群組連結',
-    link: 'https://line.me/ti/g/2wVC2QUgF9', linkText: '加入群組'
+    link: 'https://line.me/ti/g/2wVC2QUgF9', linkText: '加入群組',
+    hasToggle: true
   }
 ];
 
@@ -1071,6 +1106,44 @@ function renderSOP() {
         <div class="sop-step-title">${s.title}</div>
         ${s.content ? `<div class="sop-step-content">${s.content}</div>` : ''}
         ${s.link ? `<a class="sop-link" href="${s.link}" target="_blank">🔗 ${s.linkText||'查看連結'}</a>` : ''}
+        ${s.hasToggle ? `
+        <div class="toggle-groups">
+          <button class="toggle-group-btn" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">
+            <span>各保險公司群組連結</span><span class="toggle-arrow">▾</span>
+          </button>
+          <div class="toggle-group-content">
+            <div class="group-col">
+              <div class="group-col-title">壽險</div>
+              <a class="group-link" href="https://line.me/R/ti/g/IZnQv4HdAL" target="_blank">全球人壽</a>
+              <a class="group-link" href="https://line.me/R/ti/g/xCenBJEwNO" target="_blank">台灣人壽</a>
+              <a class="group-link" href="https://line.me/R/ti/g/WRJRSLDkhk" target="_blank">保誠人壽</a>
+              <a class="group-link" href="https://line.me/R/ti/g/ys896ZxvM-" target="_blank">中國人壽</a>
+              <a class="group-link" href="https://line.me/R/ti/g/qwJsYuY3tq" target="_blank">遠雄人壽</a>
+              <a class="group-link" href="https://line.me/R/ti/g/FSLB9A_l4w" target="_blank">友邦人壽</a>
+              <a class="group-link" href="https://line.me/R/ti/g/x_euoTJt9C" target="_blank">宏泰人壽</a>
+              <a class="group-link" href="https://line.me/R/ti/g/xTIOpITKQb" target="_blank">富邦人壽</a>
+              <a class="group-link" href="https://line.me/R/ti/g/S5S_BxZz9Z" target="_blank">新光人壽</a>
+              <a class="group-link" href="https://line.me/R/ti/g/fSpnj_yEm9" target="_blank">安達人壽</a>
+              <a class="group-link" href="https://line.me/R/ti/g/TKdPeEFLYa" target="_blank">安聯人壽</a>
+            </div>
+            <div class="group-col">
+              <div class="group-col-title">產險</div>
+              <a class="group-link" href="https://line.me/R/ti/g/xeta6Et3nv" target="_blank">華南產險</a>
+              <a class="group-link" href="https://line.me/R/ti/g/1Ip73Qq3tQ" target="_blank">富邦產險</a>
+              <a class="group-link" href="https://line.me/R/ti/g/mftzkf9McK" target="_blank">台灣產險</a>
+              <a class="group-link" href="https://line.me/R/ti/g/deQY0R0pRc" target="_blank">安達產險</a>
+              <a class="group-link" href="https://line.me/R/ti/g/Yz3tEPbxZB" target="_blank">中信產險</a>
+              <a class="group-link" href="https://line.me/R/ti/g/8UkvkI3YkZ" target="_blank">和泰產險</a>
+              <a class="group-link" href="https://line.me/R/ti/g/CJ9rsQpDuI" target="_blank">旺旺產險</a>
+              <a class="group-link" href="https://line.me/R/ti/g/RkdOGKmSMs" target="_blank">國泰產險</a>
+              <a class="group-link" href="https://line.me/ti/g/4swbJf3KrG" target="_blank">第一產險</a>
+              <a class="group-link" href="https://line.me/R/ti/g/GcqglkgUbR" target="_blank">新光產險</a>
+              <a class="group-link" href="https://line.me/ti/g/cL_0d5sOZP" target="_blank">新安東京產</a>
+              <a class="group-link" href="https://line.me/R/ti/g/rbCEeBvlAn" target="_blank">明台產險</a>
+              <a class="group-link" href="https://line.me/R/ti/g/u6H1kOvwNm" target="_blank">泰安產險</a>
+            </div>
+          </div>
+        </div>` : ''}
       </div>
     </div>`).join('');
   updateSOPBar();
@@ -1354,9 +1427,11 @@ document.addEventListener('keydown', e => {
 
 <script>
 function switchSopTab(tab) {
-  ['apply','flow','resource'].forEach(t => {
-    document.getElementById('scontent-' + t).style.display = t === tab ? 'block' : 'none';
-    document.getElementById('stab-' + t).classList.toggle('active', t === tab);
+  ['apply','flow','resource','gift'].forEach(t => {
+    const c = document.getElementById('scontent-' + t);
+    if (c) c.style.display = t === tab ? 'block' : 'none';
+    const b = document.getElementById('stab-' + t);
+    if (b) b.classList.toggle('active', t === tab);
   });
 }
 
