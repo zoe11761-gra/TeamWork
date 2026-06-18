@@ -325,7 +325,7 @@ body {
 .toggle-arrow { font-size: 14px; transition: transform 0.25s; }
 .toggle-group-btn.open .toggle-arrow { transform: rotate(180deg); }
 .toggle-group-content {
-  display: none; grid-template-columns: 1fr 1fr; gap: 12px;
+  display: none; grid-template-columns: 1fr; gap: 12px;
   background: var(--surface2); border: 1px solid rgba(201,168,76,0.2);
   border-top: none; border-radius: 0 0 8px 8px; padding: 14px;
 }
@@ -447,6 +447,28 @@ body {
   .modal-body { padding: 16px; }
   .course-playlist-row { flex-direction: column; align-items: flex-start; gap: 10px; }
 }
+
+/* ─── Inline Course List (新手起步頁) ─── */
+.inline-divider {
+  display: flex; align-items: center; gap: 10px;
+  margin: 4px 0 16px; font-size: 13px; letter-spacing: 0.1em;
+  color: var(--gold);
+}
+.inline-divider::before, .inline-divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+.inline-season-tag {
+  display: inline-block; font-size: 12px; letter-spacing: 0.15em;
+  color: var(--gold); background: var(--gold-glow);
+  border: 1px solid rgba(201,168,76,0.25); border-radius: 6px;
+  padding: 4px 12px; margin-bottom: 10px;
+}
+.inline-course-list {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 4px 16px;
+  margin-bottom: 4px;
+}
+.inline-course-list .course-item { padding: 10px 0; }
 
 /* ─── Season Divider ─── */
 .modal-season-divider {
@@ -822,13 +844,9 @@ body {
     <!-- ── 課程 ── -->
     <div class="tab-page fade-section" id="tab-course" style="display:none;">
       <div class="section-label"><span class="tag">新手起步</span><div class="line"></div></div>
-      <div class="cards-group">
-        <div class="link-card" onclick="openCourseModal(); trackClick('course-new')" style="cursor:pointer;">
-          <span class="card-icon">📚</span>
-          <div class="card-title">新人帶狀課程</div>
-          <div class="card-desc">2026 第二季｜7 堂系列培訓</div>
-          <div class="card-arrow">→</div>
-        </div>
+
+      <!-- 置頂卡片 -->
+      <div class="cards-group" style="margin-bottom:20px;">
         <a class="link-card" href="https://youtu.be/amvcZQvxC7U" target="_blank" onclick="trackClick('course-double10')">
           <span class="card-icon">✕</span>
           <div class="card-title">雙十字教學</div>
@@ -842,6 +860,128 @@ body {
           <div class="card-arrow">→</div>
         </a>
       </div>
+
+      <!-- 分隔線 -->
+      <div class="inline-divider">
+        <span>📚 新人帶狀課程</span>
+      </div>
+
+      <!-- 2026 第二季：展開顯示 -->
+      <div class="inline-season-tag">2026・第二季</div>
+      <div class="course-playlist-row" style="margin-bottom:10px;">
+        <div class="pl-label"><span>總課程清單</span>｜所有課程影片播放清單</div>
+        <a class="btn-playlist" href="https://www.youtube.com/playlist?list=PLDF5-xse-9XB0unKU_CyHjbI8l4OLErkM" target="_blank">▶ 開啟播放清單</a>
+      </div>
+      <div class="inline-course-list">
+        <div class="course-item">
+          <div class="course-item-left">
+            <span class="course-date">2026.05.14</span>
+            <div class="course-name">陳宥臻 處經理・醫療險銷售實務及理賠案例</div>
+          </div>
+          <div class="course-links">
+            <a class="btn-video" href="https://youtu.be/boc2MpkuHJo?si=dXSe2r53R7qRGBmq" target="_blank">▶ 觀看影片</a>
+          </div>
+        </div>
+        <div class="course-item">
+          <div class="course-item-left">
+            <span class="course-date">2026.05.28</span>
+            <div class="course-name">蔡承叡 業務襄理・風險管理</div>
+          </div>
+          <div class="course-links">
+            <a class="btn-video" href="https://youtu.be/l3iVCssQH9U?si=Xnj7ymc3uekGdEVb" target="_blank">▶ Part 1</a>
+            <a class="btn-video" href="https://youtu.be/l1Mqa6TjC_c?si=8FvuhMNO85hJ2BMv" target="_blank">▶ Part 2</a>
+          </div>
+        </div>
+        <div class="course-item">
+          <div class="course-item-left">
+            <span class="course-date">2026.06.04</span>
+            <div class="course-name">徐靖柔 處經理・產險出發</div>
+          </div>
+          <div class="course-links">
+            <a class="btn-video" href="https://youtu.be/EmiKJvvzhzQ?si=kLq4_rCVyatZFYGs" target="_blank">▶ 觀看影片</a>
+          </div>
+        </div>
+        <div class="course-item">
+          <div class="course-item-left">
+            <span class="course-date">2026.06.11</span>
+            <div class="course-name">張晏榕 資深業務協理・業務心法及定位</div>
+          </div>
+          <div class="course-links">
+            <a class="btn-video" href="https://youtu.be/1F-pnFoSUT0?si=PzAbQaKK4h1UgD_L" target="_blank">▶ 觀看影片</a>
+          </div>
+        </div>
+        <div class="course-item">
+          <div class="course-item-left">
+            <span class="course-date">2026.06.18</span>
+            <div class="course-name">鄭俊凱 業務總監・投資型保單架構</div>
+          </div>
+          <div class="course-links">
+            <a class="btn-video" href="https://youtu.be/YTHBaIL4xDw" target="_blank">▶ 觀看影片</a>
+          </div>
+        </div>
+        <div class="course-item">
+          <div class="course-item-left">
+            <span class="course-date">2026.06.25</span>
+            <div class="course-name">許柏彥 業務協理・分紅保單的節稅佈局及資產保全</div>
+          </div>
+          <div class="course-links">
+            <span class="btn-video pending">⏳ 影片待補</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2024 第二季：折疊 -->
+      <div style="height:12px;"></div>
+      <button class="toggle-group-btn" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')" style="border-radius:8px;margin-bottom:0;">
+        <span>2024・第二季</span><span class="toggle-arrow">▾</span>
+      </button>
+      <div class="toggle-group-content" style="display:none;border-radius:0 0 8px 8px;border-top:none;">
+        <div style="grid-column:1/-1;">
+          <div class="course-playlist-row" style="margin-bottom:10px;background:transparent;border:none;padding:0;">
+            <div class="pl-label"><span>總課程清單</span>｜所有課程影片播放清單</div>
+            <a class="btn-playlist" href="https://www.youtube.com/playlist?list=PLZgGqirVmLuCbSRyrHVBatENmBrGjZ8fl" target="_blank">▶ 開啟播放清單</a>
+          </div>
+          <div class="inline-course-list">
+            <div class="course-item">
+              <div class="course-item-left"><span class="course-date">2024.04.09</span><div class="course-name">巫思予・搞懂投資型，帶客戶幹大事</div></div>
+              <div class="course-links"><a class="btn-video" href="https://youtu.be/0rpsi0XJGlg?si=xvfbfBxE0C7uNIPd" target="_blank">▶ 觀看影片</a></div>
+            </div>
+            <div class="course-item">
+              <div class="course-item-left"><span class="course-date">2024.04.10</span><div class="course-name">吳宜珊・解決客戶的擔心、簽約前不害怕</div></div>
+              <div class="course-links"><a class="btn-video" href="https://youtu.be/f-Pm2LIcIFo?si=7qY0pV9qLs_a9Q8U" target="_blank">▶ 觀看影片</a></div>
+            </div>
+            <div class="course-item">
+              <div class="course-item-left"><span class="course-date">2024.04.16</span><div class="course-name">徐靖柔・自我介紹客戶輕鬆約、轉介紹滾滾來</div></div>
+              <div class="course-links"><a class="btn-video" href="https://youtu.be/7jrSnsi2OSk?si=lOQB6SnvYLrknueP" target="_blank">▶ 觀看影片</a></div>
+            </div>
+            <div class="course-item">
+              <div class="course-item-left"><span class="course-date">2024.04.19</span><div class="course-name">子菱・名單開發</div></div>
+              <div class="course-links"><a class="btn-video" href="https://youtu.be/WYzsP3f0GHk?si=TWukTeN-6k5TxHik" target="_blank">▶ 觀看影片</a></div>
+            </div>
+            <div class="course-item">
+              <div class="course-item-left"><span class="course-date">2024.04.19</span><div class="course-name">陳嘉逸・銷售面談技巧</div></div>
+              <div class="course-links"><a class="btn-video" href="https://youtu.be/jXxYFt0iSLI?si=bOn-pOPNfl5ot-OW" target="_blank">▶ 觀看影片</a></div>
+            </div>
+            <div class="course-item">
+              <div class="course-item-left"><span class="course-date">2024.04.19</span><div class="course-name">陳嘉逸・醫療險</div></div>
+              <div class="course-links"><a class="btn-video" href="https://youtu.be/oiP_IubfGD4?si=6v3QmKKQe00Z2oTa" target="_blank">▶ 觀看影片</a></div>
+            </div>
+            <div class="course-item">
+              <div class="course-item-left"><span class="course-date">2024.04.23</span><div class="course-name">林昱丞・善用工具、行銷能力突破</div></div>
+              <div class="course-links"><a class="btn-video" href="https://youtu.be/gCVQpOgBRcA?si=iOqPvBy7A1pAVV93" target="_blank">▶ 觀看影片</a></div>
+            </div>
+            <div class="course-item">
+              <div class="course-item-left"><span class="course-date">2024.04.25</span><div class="course-name">張晏榕・意外險</div></div>
+              <div class="course-links"><a class="btn-video" href="https://youtu.be/s6NVPdBCo3Y?si=XtXdhRZArF3lrI2m" target="_blank">▶ 觀看影片</a></div>
+            </div>
+            <div class="course-item" style="border-bottom:none;">
+              <div class="course-item-left"><span class="course-date">2024.04.25</span><div class="course-name">張晏榕・壽險、儲蓄險</div></div>
+              <div class="course-links"><a class="btn-video" href="https://youtu.be/0jb44lXhViw?si=uF-dtFzP-fkUQr98" target="_blank">▶ 觀看影片</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <!-- ── 活動 ── -->
@@ -1433,172 +1573,7 @@ document.addEventListener('keydown', e => {
       <button class="modal-close" onclick="document.getElementById('course-modal').classList.remove('open')">✕</button>
     </div>
     <div class="modal-body">
-      <div class="modal-season-tag">2026・第二季</div>
-
-      <div class="course-playlist-row">
-        <div class="pl-label"><span>總課程清單</span>｜所有課程影片播放清單</div>
-        <a class="btn-playlist" href="https://www.youtube.com/playlist?list=PLDF5-xse-9XB0unKU_CyHjbI8l4OLErkM" target="_blank">▶ 開啟播放清單</a>
-      </div>
-
-      <div class="course-item">
-        <div class="course-item-left">
-          <span class="course-date">2026.05.14</span>
-          <div class="course-name">陳宥臻 處經理・醫療險銷售實務及理賠案例</div>
-        </div>
-        <div class="course-links">
-          <a class="btn-video" href="https://youtu.be/boc2MpkuHJo?si=dXSe2r53R7qRGBmq" target="_blank">▶ 觀看影片</a>
-        </div>
-      </div>
-
-      <div class="course-item">
-        <div class="course-item-left">
-          <span class="course-date">2026.05.28</span>
-          <div class="course-name">蔡承叡 業務襄理・風險管理</div>
-        </div>
-        <div class="course-links">
-          <a class="btn-video" href="https://youtu.be/l3iVCssQH9U?si=Xnj7ymc3uekGdEVb" target="_blank">▶ Part 1</a>
-          <a class="btn-video" href="https://youtu.be/l1Mqa6TjC_c?si=8FvuhMNO85hJ2BMv" target="_blank">▶ Part 2</a>
-        </div>
-      </div>
-
-      <div class="course-item">
-        <div class="course-item-left">
-          <span class="course-date">2026.06.04</span>
-          <div class="course-name">徐靖柔 處經理・產險出發</div>
-        </div>
-        <div class="course-links">
-          <a class="btn-video" href="https://youtu.be/EmiKJvvzhzQ?si=kLq4_rCVyatZFYGs" target="_blank">▶ 觀看影片</a>
-        </div>
-      </div>
-
-      <div class="course-item">
-        <div class="course-item-left">
-          <span class="course-date">2026.06.11</span>
-          <div class="course-name">張晏榕 資深業務協理・業務心法及定位</div>
-        </div>
-        <div class="course-links">
-          <a class="btn-video" href="https://youtu.be/1F-pnFoSUT0?si=PzAbQaKK4h1UgD_L" target="_blank">▶ 觀看影片</a>
-        </div>
-      </div>
-
-      <div class="course-item">
-        <div class="course-item-left">
-          <span class="course-date">2026.06.18</span>
-          <div class="course-name">鄭俊凱 業務總監・投資型保單架構</div>
-        </div>
-        <div class="course-links">
-          <a class="btn-video" href="https://youtu.be/YTHBaIL4xDw" target="_blank">▶ 觀看影片</a>
-        </div>
-      </div>
-
-      <div class="course-item">
-        <div class="course-item-left">
-          <span class="course-date">2026.06.25</span>
-          <div class="course-name">許柏彥 業務協理・分紅保單的節稅佈局及資產保全</div>
-        </div>
-        <div class="course-links">
-          <span class="btn-video pending">⏳ 影片待補</span>
-        </div>
-      </div>
-
-      <div class="modal-season-divider"></div>
-      <div class="modal-season-tag" style="margin-top:8px;">2024・第二季</div>
-
-      <div class="course-playlist-row">
-        <div class="pl-label"><span>總課程清單</span>｜所有課程影片播放清單</div>
-        <a class="btn-playlist" href="https://www.youtube.com/playlist?list=PLZgGqirVmLuCbSRyrHVBatENmBrGjZ8fl" target="_blank">▶ 開啟播放清單</a>
-      </div>
-
-      <div class="course-item">
-        <div class="course-item-left">
-          <span class="course-date">2024.04.09</span>
-          <div class="course-name">巫思予・搞懂投資型，帶客戶幹大事</div>
-        </div>
-        <div class="course-links">
-          <a class="btn-video" href="https://youtu.be/0rpsi0XJGlg?si=xvfbfBxE0C7uNIPd" target="_blank">▶ 觀看影片</a>
-        </div>
-      </div>
-
-      <div class="course-item">
-        <div class="course-item-left">
-          <span class="course-date">2024.04.10</span>
-          <div class="course-name">吳宜珊・解決客戶的擔心、簽約前不害怕</div>
-        </div>
-        <div class="course-links">
-          <a class="btn-video" href="https://youtu.be/f-Pm2LIcIFo?si=7qY0pV9qLs_a9Q8U" target="_blank">▶ 觀看影片</a>
-        </div>
-      </div>
-
-      <div class="course-item">
-        <div class="course-item-left">
-          <span class="course-date">2024.04.16</span>
-          <div class="course-name">徐靖柔・自我介紹客戶輕鬆約、轉介紹滾滾來</div>
-        </div>
-        <div class="course-links">
-          <a class="btn-video" href="https://youtu.be/7jrSnsi2OSk?si=lOQB6SnvYLrknueP" target="_blank">▶ 觀看影片</a>
-        </div>
-      </div>
-
-      <div class="course-item">
-        <div class="course-item-left">
-          <span class="course-date">2024.04.19</span>
-          <div class="course-name">子菱・名單開發</div>
-        </div>
-        <div class="course-links">
-          <a class="btn-video" href="https://youtu.be/WYzsP3f0GHk?si=TWukTeN-6k5TxHik" target="_blank">▶ 觀看影片</a>
-        </div>
-      </div>
-
-      <div class="course-item">
-        <div class="course-item-left">
-          <span class="course-date">2024.04.19</span>
-          <div class="course-name">陳嘉逸・銷售面談技巧</div>
-        </div>
-        <div class="course-links">
-          <a class="btn-video" href="https://youtu.be/jXxYFt0iSLI?si=bOn-pOPNfl5ot-OW" target="_blank">▶ 觀看影片</a>
-        </div>
-      </div>
-
-      <div class="course-item">
-        <div class="course-item-left">
-          <span class="course-date">2024.04.19</span>
-          <div class="course-name">陳嘉逸・醫療險</div>
-        </div>
-        <div class="course-links">
-          <a class="btn-video" href="https://youtu.be/oiP_IubfGD4?si=6v3QmKKQe00Z2oTa" target="_blank">▶ 觀看影片</a>
-        </div>
-      </div>
-
-      <div class="course-item">
-        <div class="course-item-left">
-          <span class="course-date">2024.04.23</span>
-          <div class="course-name">林昱丞・善用工具、行銷能力突破</div>
-        </div>
-        <div class="course-links">
-          <a class="btn-video" href="https://youtu.be/gCVQpOgBRcA?si=iOqPvBy7A1pAVV93" target="_blank">▶ 觀看影片</a>
-        </div>
-      </div>
-
-      <div class="course-item">
-        <div class="course-item-left">
-          <span class="course-date">2024.04.25</span>
-          <div class="course-name">張晏榕・意外險</div>
-        </div>
-        <div class="course-links">
-          <a class="btn-video" href="https://youtu.be/s6NVPdBCo3Y?si=XtXdhRZArF3lrI2m" target="_blank">▶ 觀看影片</a>
-        </div>
-      </div>
-
-      <div class="course-item">
-        <div class="course-item-left">
-          <span class="course-date">2024.04.25</span>
-          <div class="course-name">張晏榕・壽險、儲蓄險</div>
-        </div>
-        <div class="course-links">
-          <a class="btn-video" href="https://youtu.be/0jb44lXhViw?si=uF-dtFzP-fkUQr98" target="_blank">▶ 觀看影片</a>
-        </div>
-      </div>
-
+      <p style="font-size:14px;color:var(--text-dim);text-align:center;padding:8px 0;">課程列表已移至頁面，可直接在「新手起步 Video」分頁瀏覽</p>
     </div>
   </div>
 </div>
