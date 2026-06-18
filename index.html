@@ -270,6 +270,17 @@ body {
 .toggle-member-btn.is-member { background: var(--green-glow); border-color: rgba(76,175,125,0.4); color: var(--green); }
 .toggle-member-btn.is-member:hover { background: rgba(76,175,125,0.05); border-color: var(--red); color: var(--red); }
 
+/* ─── View Mode Banner ─── */
+.view-mode-banner {
+  display: none;
+  align-items: center; justify-content: center; gap: 8px;
+  background: rgba(92,168,201,0.1); border-bottom: 1px solid rgba(92,168,201,0.3);
+  padding: 8px 16px; font-size: 12px; color: var(--teal);
+  letter-spacing: 0.05em; position: sticky; top: 60px; z-index: 99;
+}
+.view-mode-banner .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: pulse 1.5s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
 /* ─── Fade in ─── */
 @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 .fade-section { animation: fadeUp 0.4s ease both; }
@@ -340,9 +351,16 @@ body {
       <span class="header-user">您好，<span id="header-name"></span></span>
       <span class="role-badge" id="role-badge"></span>
       <button class="btn-sm gold" id="admin-btn" style="display:none;" onclick="toggleAdminSection()">管理後台</button>
+      <button class="btn-sm" id="view-toggle-btn" style="display:none;" onclick="toggleViewMode()">👁 切換夥伴視角</button>
       <button class="btn-sm" onclick="handleLogout()">登出</button>
     </div>
   </header>
+
+  <!-- 視角切換提示 banner -->
+  <div class="view-mode-banner" id="view-mode-banner">
+    <div class="dot"></div>
+    目前為「夥伴視角」預覽模式，點擊右上角按鈕返回管理者視角
+  </div>
 
   <main class="app-main">
 
@@ -518,21 +536,33 @@ const LINKS = {
 const SOP_STEPS = [
   {
     id: 'sop_1',
-    title: '步驟一：準備入職文件',
-    content: '身份證正反面、學歷證明、照片…（草草請填入具體內容）',
-    link: '', linkText: ''
+    title: '加「大信信」好友',
+    content: '※ 總公司行政窗口通知與溝通用<br>※ 加入後請打開小鍵盤輸入你的單位跟你的名字，之後總公司行政有需要跟你聯繫的話，會用大信信聯繫！',
+    link: 'https://line.me/R/ti/p/%40lsb8319d', linkText: '加入好友'
   },
   {
     id: 'sop_2',
-    title: '步驟二：填寫報聘申請表',
-    content: '登入系統填寫個人資料及相關聲明…（草草請填入具體內容）',
-    link: '', linkText: '前往申請系統'
+    title: '加「小信信」好友',
+    content: '※ 將網頁版的業務系統整合於這個 Line 帳號，以便搜尋查找<br>※ 初次使用需要綁定手機內部瀏覽器與外部瀏覽器（加入帳號好友即可看到連結，若不見請於對話框輸入「登入」兩字並送出即可再次出現）<br>※ iPhone 手機內可能有 Safari 跟 Chrome 兩種瀏覽器，若使用異常請複製外部瀏覽器之網址，兩個瀏覽器皆開通一次！',
+    link: 'https://line.me/R/ti/p/TVmX_VaSj5', linkText: '加入好友'
   },
   {
     id: 'sop_3',
-    title: '步驟三：繳交證照資料',
-    content: '業務員資格測驗合格證書…（草草請填入具體內容）',
+    title: '加入【信安總公司公告群】',
+    content: '※ 加入時名稱務必照這樣打 → <strong style="color:var(--gold);">單位／姓名</strong>',
+    link: 'https://line.me/ti/g2/jakuRwwC3BgpGZ2cuEHeYo3lH428uPslR7NlZA?utm_source=invitation&utm_medium=link_copy&utm_campaign=default', linkText: '加入好友'
+  },
+  {
+    id: 'sop_4',
+    title: '加入 FB 社團【信安的祕密花園】',
+    content: '※ 此為私密社團，請直屬主管協助邀請入團',
     link: '', linkText: ''
+  },
+  {
+    id: 'sop_5',
+    title: '登入【信安業務系統】',
+    content: '※ 初始帳號：身分證<br>※ 初始密碼：abc1234<br>※ 請打開手機跟電腦的 Line，開啟小信信輸入「登入」兩字按送出，將出現的 2 個連結選單，依序點擊進入頁面，並輸入「身分證」與「西元出生年月日」後才能正常使用！',
+    link: 'https://broker.s338.com.tw/Account/Login?ReturnUrl=%2F', linkText: '前往登入'
   }
 ];
 
@@ -669,6 +699,7 @@ function showApp() {
   // Admin
   if (currentUser.isAdmin) {
     document.getElementById('admin-btn').style.display = 'inline-block';
+    document.getElementById('view-toggle-btn').style.display = 'inline-block';
     document.getElementById('admin-section').style.display = 'block';
     loadAdminData();
   }
@@ -773,6 +804,47 @@ async function loadSOPProgress() {
 function toggleAdminSection() {
   const s = document.getElementById('admin-section');
   s.style.display = s.style.display === 'none' ? 'block' : 'none';
+}
+
+// ─── 視角切換（管理者預覽夥伴視角）───
+let _adminViewMode = 'admin'; // 'admin' | 'member'
+function toggleViewMode() {
+  _adminViewMode = _adminViewMode === 'admin' ? 'member' : 'admin';
+  const isMemberView = _adminViewMode === 'member';
+  const btn = document.getElementById('view-toggle-btn');
+  const adminSection = document.getElementById('admin-section');
+  const adminBtn = document.getElementById('admin-btn');
+  const badge = document.getElementById('role-badge');
+  const viewBanner = document.getElementById('view-mode-banner');
+
+  if (isMemberView) {
+    // 模擬夥伴視角
+    adminSection.style.display = 'none';
+    adminBtn.style.display = 'none';
+    btn.textContent = '↩ 返回管理者視角';
+    btn.style.borderColor = 'var(--teal)';
+    btn.style.color = 'var(--teal)';
+    badge.textContent = '團隊夥伴';
+    badge.className = 'role-badge member';
+    viewBanner.style.display = 'flex';
+    // 解鎖夥伴區
+    document.getElementById('locked-overlay').style.display = 'none';
+    document.getElementById('member-cards').style.filter = 'none';
+    document.getElementById('member-cards').style.pointerEvents = 'auto';
+    document.getElementById('member-cards').style.userSelect = 'auto';
+    if (document.getElementById('member-lock-icon')) document.getElementById('member-lock-icon').style.display = 'none';
+  } else {
+    // 回到管理者視角
+    adminSection.style.display = 'block';
+    adminBtn.style.display = 'inline-block';
+    btn.textContent = '👁 切換夥伴視角';
+    btn.style.borderColor = '';
+    btn.style.color = '';
+    badge.textContent = '管理者';
+    badge.className = 'role-badge admin';
+    viewBanner.style.display = 'none';
+    applyMemberAccess();
+  }
 }
 
 let adminTabCurrent = 'stats';
