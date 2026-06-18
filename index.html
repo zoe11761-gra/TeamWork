@@ -466,14 +466,24 @@ body {
 
   <!-- Quick Nav -->
   <div class="quick-nav" id="quick-nav">
+    <button class="nav-pill" onclick="scrollToSection('home-section')">🏠 首頁</button>
     <button class="nav-pill" onclick="scrollToSection('sop-section')">新人報聘 SOP</button>
-    <button class="nav-pill" onclick="scrollToSection('course-section')">課程</button>
-    <button class="nav-pill" onclick="scrollToSection('activity-section')">活動</button>
-    <button class="nav-pill" onclick="scrollToSection('tools-section')">工具</button>
-    <button class="nav-pill" onclick="scrollToSection('member-tools-section')">夥伴限定</button>
+    <button class="nav-pill" onclick="scrollToSection('course-section')">新手起步</button>
+    <button class="nav-pill" onclick="scrollToSection('activity-section')">團隊常態課程</button>
+    <button class="nav-pill" onclick="scrollToSection('tools-section')">資料庫小工具</button>
+    <button class="nav-pill" onclick="scrollToSection('member-tools-section')">草草 Team</button>
   </div>
 
   <main class="app-main">
+
+    <!-- ── 首頁 ── -->
+    <div class="fade-section" id="home-section">
+      <div class="section-label"><span class="tag">首頁</span><div class="line"></div></div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:32px 28px;text-align:center;">
+        <div style="font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--gold);margin-bottom:10px;">上岸團隊｜資源地圖</div>
+        <div style="font-size:13px;color:var(--text-muted);letter-spacing:0.1em;">內容待補 · Coming Soon</div>
+      </div>
+    </div>
 
     <!-- ── Admin ── -->
     <div class="fade-section" id="admin-section" style="display:none;">
@@ -536,7 +546,7 @@ body {
 
     <!-- ── 課程 ── -->
     <div class="fade-section" id="course-section">
-      <div class="section-label"><span class="tag">課程</span><div class="line"></div></div>
+      <div class="section-label"><span class="tag">新手起步</span><div class="line"></div></div>
       <div class="cards-group">
         <div class="link-card" onclick="openCourseModal(); trackClick('course-new')" style="cursor:pointer;">
           <span class="card-icon">📚</span>
@@ -561,7 +571,7 @@ body {
 
     <!-- ── 活動 ── -->
     <div class="fade-section" id="activity-section">
-      <div class="section-label"><span class="tag">活動</span><div class="line"></div></div>
+      <div class="section-label"><span class="tag">團隊常態課程</span><div class="line"></div></div>
       <div class="cards-grid">
         <a class="link-card" href="#" target="_blank" onclick="trackClick('monthly-meeting')">
           <span class="card-icon">🗓</span>
@@ -569,7 +579,7 @@ body {
           <div class="card-desc">每月團隊定期會議連結與資料</div>
           <div class="card-arrow">→</div>
         </a>
-        <a class="link-card" href="#" target="_blank" onclick="trackClick('all-courses')">
+        <a class="link-card" href="https://course.zoe11761.workers.dev" target="_blank" onclick="trackClick('all-courses')">
           <span class="card-icon">🎓</span>
           <div class="card-title">上岸團隊課程統整</div>
           <div class="card-desc">所有課程資源一站集合</div>
@@ -580,12 +590,24 @@ body {
 
     <!-- ── 工具（所有人）── -->
     <div class="fade-section" id="tools-section">
-      <div class="section-label"><span class="tag">工具</span><div class="line"></div></div>
+      <div class="section-label"><span class="tag">資料庫小工具</span><div class="line"></div></div>
       <div class="cards-grid">
-        <a class="link-card" href="#" target="_blank" onclick="trackClick('chubb-travel')">
+        <a class="link-card" href="https://reurl.cc/R283p9" target="_blank" onclick="trackClick('chubb-travel')">
           <span class="card-icon">✈️</span>
           <div class="card-title">安達產物旅平自助報價</div>
           <div class="card-desc">CHUBB 旅行平安險快速試算系統</div>
+          <div class="card-arrow">→</div>
+        </a>
+        <a class="link-card" href="https://zoe11761-gra.github.io/car-accident-claim/" target="_blank" onclick="trackClick('accident-claim-pub')">
+          <span class="card-icon">🚗</span>
+          <div class="card-title">車禍求償明細產生器</div>
+          <div class="card-desc">自動整理求償項目與金額明細</div>
+          <div class="card-arrow">→</div>
+        </a>
+        <a class="link-card" href="https://precious-moose-90a.notion.site/9e63e5cf9447476ea901352969f01664?v=8402d2b68c2149bab8512287d91596a6&source=copy_link" target="_blank" onclick="trackClick('notion-db')">
+          <span class="card-icon">📂</span>
+          <div class="card-title">Notion 資料庫</div>
+          <div class="card-desc">團隊知識庫與資料整理中心</div>
           <div class="card-arrow">→</div>
         </a>
       </div>
@@ -594,7 +616,7 @@ body {
     <!-- ── 夥伴限定工具區 ── -->
     <div class="fade-section" id="member-tools-section">
       <div class="section-label">
-        <span class="tag member-tag">夥伴限定</span>
+        <span class="tag member-tag">草草 Team</span>
         <div class="line"></div>
         <span class="lock-icon" id="member-lock-icon">🔒</span>
       </div>
@@ -638,9 +660,11 @@ const LINKS = {
   'course-double10': { href: '#', label: '雙十字教學' },
   'course-benz':     { href: '#', label: '賓士理論' },
   'monthly-meeting': { href: '#', label: '上岸月會' },
-  'all-courses':     { href: '#', label: '上岸課程統整' },
-  'chubb-travel':    { href: '#', label: '安達旅平報價' },
-  'accident-claim':  { href: '#', label: '車禍求償明細' }
+  'all-courses':     { href: 'https://course.zoe11761.workers.dev', label: '上岸課程統整' },
+  'chubb-travel':    { href: 'https://reurl.cc/R283p9', label: '安達旅平報價' },
+  'accident-claim':  { href: '#', label: '車禍求償明細' },
+  'accident-claim-pub': { href: 'https://zoe11761-gra.github.io/car-accident-claim/', label: '車禍求償明細' },
+  'notion-db':       { href: 'https://precious-moose-90a.notion.site/9e63e5cf9447476ea901352969f01664?v=8402d2b68c2149bab8512287d91596a6&source=copy_link', label: 'Notion資料庫' }
 };
 
 // SOP 步驟（新增步驟請照格式在此填寫）
