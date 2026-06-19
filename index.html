@@ -848,15 +848,15 @@ body {
       <!-- 置頂卡片 -->
       <div class="cards-group" style="margin-bottom:20px;">
         <a class="link-card" href="https://youtu.be/amvcZQvxC7U" target="_blank" onclick="trackClick('course-double10')">
-          <span class="card-icon">✕</span>
-          <div class="card-title">雙十字教學</div>
-          <div class="card-desc">核心業務技能訓練</div>
+          <span class="card-icon">🩺</span>
+          <div class="card-title">醫療雙十字教學</div>
+          <div class="card-desc">談保障基本功</div>
           <div class="card-arrow">→</div>
         </a>
         <a class="link-card" href="https://youtu.be/4RnmIsdXG4M" target="_blank" onclick="trackClick('course-benz')">
-          <span class="card-icon">🎯</span>
-          <div class="card-title">理財觀念引導</div>
-          <div class="card-desc">賓士理論｜財務規劃思維</div>
+          <span class="card-icon">💰</span>
+          <div class="card-title">三益法則|賓士理論</div>
+          <div class="card-desc">理財思維、觀念引導</div>
           <div class="card-arrow">→</div>
         </a>
       </div>
@@ -935,7 +935,7 @@ body {
       <button class="toggle-group-btn" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')" style="border-radius:8px;margin-bottom:0;">
         <span>2024・第二季</span><span class="toggle-arrow">▾</span>
       </button>
-      <div class="toggle-group-content" style="display:none;border-radius:0 0 8px 8px;border-top:none;">
+      <div class="toggle-group-content" style="border-radius:0 0 8px 8px;border-top:none;">
         <div style="grid-column:1/-1;">
           <div class="course-playlist-row" style="margin-bottom:10px;background:transparent;border:none;padding:0;">
             <div class="pl-label"><span>總課程清單</span>｜所有課程影片播放清單</div>
@@ -1066,8 +1066,8 @@ const SESSION_MS  = 30 * 24 * 60 * 60 * 1000; // 30天
 // 工具連結設定（把 '#' 換成真實 URL）
 const LINKS = {
   'course-new':      { href: '#', label: '新人帶狀課程' },
-  'course-double10': { href: 'https://youtu.be/amvcZQvxC7U', label: '雙十字教學' },
-  'course-benz':     { href: 'https://youtu.be/4RnmIsdXG4M', label: '賓士理論' },
+  'course-double10': { href: 'https://youtu.be/amvcZQvxC7U', label: '醫療雙十字教學' },
+  'course-benz':     { href: 'https://youtu.be/4RnmIsdXG4M', label: '三益法則|賓士理論' },
   'monthly-meeting': { href: '#', label: '上岸月會' },
   'all-courses':     { href: 'https://course.zoe11761.workers.dev', label: '上岸課程統整' },
   'chubb-travel':    { href: 'https://reurl.cc/R283p9', label: '安達旅平報價' },
@@ -1343,12 +1343,12 @@ function renderSOP() {
               <a class="group-link" href="https://line.me/R/ti/g/IZnQv4HdAL" target="_blank">全球人壽</a>
               <a class="group-link" href="https://line.me/R/ti/g/xCenBJEwNO" target="_blank">台灣人壽</a>
               <a class="group-link" href="https://line.me/R/ti/g/WRJRSLDkhk" target="_blank">保誠人壽</a>
-              <a class="group-link" href="https://line.me/R/ti/g/ys896ZxvM-" target="_blank">中國人壽</a>
+              <a class="group-link" href="https://line.me/R/ti/g/ys896ZxvM-" target="_blank">凱基人壽</a>
               <a class="group-link" href="https://line.me/R/ti/g/qwJsYuY3tq" target="_blank">遠雄人壽</a>
               <a class="group-link" href="https://line.me/R/ti/g/FSLB9A_l4w" target="_blank">友邦人壽</a>
               <a class="group-link" href="https://line.me/R/ti/g/x_euoTJt9C" target="_blank">宏泰人壽</a>
               <a class="group-link" href="https://line.me/R/ti/g/xTIOpITKQb" target="_blank">富邦人壽</a>
-              <a class="group-link" href="https://line.me/R/ti/g/S5S_BxZz9Z" target="_blank">新光人壽</a>
+              <a class="group-link" href="https://line.me/ti/g/YDnbx3nhSz" target="_blank">新光人壽</a>
               <a class="group-link" href="https://line.me/R/ti/g/fSpnj_yEm9" target="_blank">安達人壽</a>
               <a class="group-link" href="https://line.me/R/ti/g/TKdPeEFLYa" target="_blank">安聯人壽</a>
             </div>
@@ -1356,7 +1356,7 @@ function renderSOP() {
               <div class="group-col-title">產險</div>
               <a class="group-link" href="https://line.me/R/ti/g/xeta6Et3nv" target="_blank">華南產險</a>
               <a class="group-link" href="https://line.me/R/ti/g/1Ip73Qq3tQ" target="_blank">富邦產險</a>
-              <a class="group-link" href="https://line.me/R/ti/g/mftzkf9McK" target="_blank">台灣產險</a>
+              <span class="group-link" style="cursor:default;opacity:0.5;">台灣產物(無群組)</span>
               <a class="group-link" href="https://line.me/R/ti/g/deQY0R0pRc" target="_blank">安達產險</a>
               <a class="group-link" href="https://line.me/R/ti/g/Yz3tEPbxZB" target="_blank">中信產險</a>
               <a class="group-link" href="https://line.me/R/ti/g/8UkvkI3YkZ" target="_blank">和泰產險</a>
