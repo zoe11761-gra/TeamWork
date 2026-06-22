@@ -584,54 +584,11 @@ body {
     <div class="tab-page fade-section" id="tab-home">
       <div class="section-label"><span class="tag">首頁</span><div class="line"></div></div>
 
-      <!-- 歡迎語 -->
-      <div style="text-align:center;margin-bottom:24px;">
-        <div style="font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--gold);margin-bottom:6px;">上岸好榕逸｜資源地圖</div>
-        <div style="font-size:12px;color:var(--text-muted);letter-spacing:0.08em;">點擊下方卡片，一鍵跳轉對應區域</div>
-      </div>
-
-      <!-- 導覽卡片 -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
-
-        <!-- 新人報聘/登錄 -->
-        <div onclick="switchTab('sop')" style="cursor:pointer;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 16px;transition:border-color 0.2s,background 0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.5)';this.style.background='rgba(201,168,76,0.05)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface)'">
-          <div style="font-size:28px;margin-bottom:10px;line-height:1;">📋</div>
-          <div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:6px;">新人報聘/登錄</div>
-          <div style="font-size:11px;color:var(--text-muted);line-height:1.6;">報聘所需文件<br>線上報聘 SOP<br>公會登錄流程<br>報聘後待辦事項</div>
-        </div>
-
-        <!-- 新人搶先跑 -->
-        <div onclick="switchTab('course')" style="cursor:pointer;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 16px;transition:border-color 0.2s,background 0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.5)';this.style.background='rgba(201,168,76,0.05)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface)'">
-          <div style="font-size:28px;margin-bottom:10px;line-height:1;">🎬</div>
-          <div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:6px;">新人搶先跑</div>
-          <div style="font-size:11px;color:var(--text-muted);line-height:1.6;">置頂必看影片<br>新人帶狀課程<br>2026 Q2 課程<br>歷屆課程回放</div>
-        </div>
-
-        <!-- 團隊常態課程 -->
-        <div onclick="switchTab('activity')" style="cursor:pointer;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 16px;transition:border-color 0.2s,background 0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.5)';this.style.background='rgba(201,168,76,0.05)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface)'">
-          <div style="font-size:28px;margin-bottom:10px;line-height:1;">📅</div>
-          <div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:6px;">團隊常態課程</div>
-          <div style="font-size:11px;color:var(--text-muted);line-height:1.6;">上岸選修課程<br>北四日常課表<br>實體 / 線上課<br>報名連結</div>
-        </div>
-
-        <!-- 資料庫小工具 -->
-        <div onclick="switchTab('tools')" style="cursor:pointer;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 16px;transition:border-color 0.2s,background 0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.5)';this.style.background='rgba(201,168,76,0.05)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface)'">
-          <div style="font-size:28px;margin-bottom:10px;line-height:1;">🛠</div>
-          <div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:6px;">資料庫小工具</div>
-          <div style="font-size:11px;color:var(--text-muted);line-height:1.6;">商品試算連結<br>保單比較工具<br>保費查詢 QR<br>實用外部資源</div>
-        </div>
-
-      </div>
-
-      <!-- SOP 子項目快捷入口 -->
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;">
-        <div style="font-size:11px;color:var(--text-muted);letter-spacing:0.1em;margin-bottom:12px;">🗂 報聘/登錄 快捷入口</div>
-        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;">
-          <button onclick="switchTab('sop');setTimeout(()=>switchSopTab('docs'),50)" style="background:transparent;border:1px solid var(--border);border-radius:8px;padding:10px 4px;cursor:pointer;font-size:10px;color:var(--text-dim);line-height:1.5;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.4)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-dim)'">📋<br>報聘所需</button>
-          <button onclick="switchTab('sop');setTimeout(()=>switchSopTab('apply'),50)" style="background:transparent;border:1px solid var(--border);border-radius:8px;padding:10px 4px;cursor:pointer;font-size:10px;color:var(--text-dim);line-height:1.5;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.4)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-dim)'">🖊<br>線上報聘</button>
-          <button onclick="switchTab('sop');setTimeout(()=>switchSopTab('flow'),50)" style="background:transparent;border:1px solid var(--border);border-radius:8px;padding:10px 4px;cursor:pointer;font-size:10px;color:var(--text-dim);line-height:1.5;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.4)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-dim)'">🔄<br>公會登錄</button>
-          <button onclick="switchTab('sop');setTimeout(()=>switchSopTab('resource'),50)" style="background:transparent;border:1px solid var(--border);border-radius:8px;padding:10px 4px;cursor:pointer;font-size:10px;color:var(--text-dim);line-height:1.5;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.4)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-dim)'">📌<br>報聘後</button>
-          <button onclick="switchTab('sop');setTimeout(()=>switchSopTab('gift'),50)" style="background:transparent;border:1px solid var(--border);border-radius:8px;padding:10px 4px;cursor:pointer;font-size:10px;color:var(--text-dim);line-height:1.5;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.4)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-dim)'">🎁<br>新手大禮包</button>
+      <!-- 激勵短句輪播 -->
+      <div id="quote-card" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:32px 24px;text-align:center;min-height:130px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;">
+        <div id="quote-text" style="font-family:var(--font-display);font-size:17px;font-weight:700;color:var(--gold);line-height:1.7;letter-spacing:0.05em;transition:opacity 0.4s;"></div>
+        <div style="display:flex;gap:6px;align-items:center;margin-top:4px;">
+          <div id="quote-dots" style="display:flex;gap:5px;"></div>
         </div>
       </div>
 
@@ -647,6 +604,7 @@ body {
         <div class="admin-tabs">
           <button class="admin-tab active" onclick="switchAdminTab('stats')">使用統計</button>
           <button class="admin-tab" onclick="switchAdminTab('members')">夥伴管理</button>
+          <button class="admin-tab" onclick="switchAdminTab('quotes')">激勵短句</button>
         </div>
 
         <!-- Stats tab -->
@@ -678,6 +636,21 @@ body {
             </table>
           </div>
         </div>
+
+        <!-- Quotes tab -->
+        <div class="admin-tab-content" id="tab-quotes">
+          <p style="font-size:13px;color:var(--text-dim);margin-bottom:16px;line-height:1.7;">
+            管理首頁輪播的<span style="color:var(--gold);">激勵短句</span>，每句輪播 3 秒。<br>
+            新增或刪除後自動儲存於本機。
+          </p>
+          <div style="display:flex;gap:8px;margin-bottom:16px;">
+            <input id="quote-input" type="text" placeholder="輸入新短句…" style="flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-size:13px;outline:none;">
+            <button onclick="adminAddQuote()" style="background:var(--gold-glow);border:1px solid rgba(201,168,76,0.4);border-radius:8px;padding:8px 16px;color:var(--gold);font-size:13px;cursor:pointer;white-space:nowrap;">＋ 新增</button>
+          </div>
+          <div id="quotes-list" style="display:flex;flex-direction:column;gap:6px;"></div>
+          <button onclick="adminResetQuotes()" style="margin-top:14px;background:transparent;border:1px solid var(--border);border-radius:8px;padding:7px 14px;color:var(--text-muted);font-size:12px;cursor:pointer;">↩ 還原預設短句</button>
+        </div>
+
       </div>
     </div>
 
@@ -1127,6 +1100,12 @@ body {
             <div class="card-desc">自動整理求償項目與金額明細</div>
             <div class="card-arrow">→</div>
           </a>
+          <a class="link-card member-card" href="https://finfo.tw/" target="_blank" onclick="trackClick('finfo')">
+            <span class="card-icon">📊</span>
+            <div class="card-title">Finfo 保單檢視/新契約搭配</div>
+            <div class="card-desc">帳號密碼請跟草草拿</div>
+            <div class="card-arrow">→</div>
+          </a>
           <!-- 草草可在此繼續新增夥伴限定工具卡片 -->
         </div>
       </div>
@@ -1145,6 +1124,31 @@ const ADMIN_PASSWORD = 'grass';
 
 const SESSION_KEY = 'shangang_session';
 const SESSION_MS  = 30 * 24 * 60 * 60 * 1000; // 30天
+
+// ── 激勵短句（管理後台可新增/刪除）──
+const DEFAULT_QUOTES = [
+  "你今天的努力，是明天客戶信任你的理由。",
+  "每一通電話，都是一次改變別人生活的機會。",
+  "拒絕是起點，不是終點。",
+  "最好的保障，是你還沒開口前就已準備好的那份心意。",
+  "業務的本質是陪伴，不是銷售。",
+  "你不需要完美，你只需要真誠。",
+  "今天種下的種子，會在某個你看不見的地方發芽。",
+  "每一個「我再想想」背後，都藏著一個等你解答的問題。",
+  "不是你在賣保險，是保險在幫你照顧你在意的人。",
+  "持續出現的人，才是最後被記住的人。",
+  "客戶買的不是商品，是你讓他放心的那份感覺。",
+  "你的自信，來自你比任何人都更了解這份工作的意義。",
+  "一次被拒絕，就離成交又近了一步。",
+  "做業務，就是每天都在練習成為更好的自己。",
+  "今天的行動，是你未來自由的基礎。",
+  "你的存在，讓某個家庭有了更安全的明天。",
+  "不要跟昨天的你比業績，要跟昨天的你比成長。",
+  "最好的時機永遠是現在，最壞的時機也永遠是現在。",
+  "你選擇的不是一份工作，是一種生活方式。",
+  "每一個「謝謝你當初跟我說」，都值得你今天撐下去。"
+];
+let QUOTES = JSON.parse(localStorage.getItem('shangang_quotes') || 'null') || DEFAULT_QUOTES;
 
 // 工具連結設定（把 '#' 換成真實 URL）
 const LINKS = {
@@ -1545,10 +1549,13 @@ let adminTabCurrent = 'stats';
 function switchAdminTab(tab) {
   adminTabCurrent = tab;
   document.querySelectorAll('.admin-tab').forEach((el, i) => {
-    el.classList.toggle('active', (i === 0 && tab === 'stats') || (i === 1 && tab === 'members'));
+    el.classList.toggle('active', (i === 0 && tab === 'stats') || (i === 1 && tab === 'members') || (i === 2 && tab === 'quotes'));
   });
   document.getElementById('tab-stats').classList.toggle('active', tab === 'stats');
   document.getElementById('tab-members').classList.toggle('active', tab === 'members');
+  const tq = document.getElementById('tab-quotes');
+  if (tq) tq.classList.toggle('active', tab === 'quotes');
+  if (tab === 'quotes') renderQuotesList();
 }
 
 async function loadAdminData() {
@@ -1646,6 +1653,87 @@ document.addEventListener('keydown', e => {
   if (document.getElementById('form-login').style.display !== 'none') handleLogin();
   else if (document.getElementById('form-register').style.display !== 'none') handleRegister();
 });
+
+// ── 激勵短句輪播 ──
+let quoteIndex = 0;
+let quoteTimer = null;
+
+function renderQuoteDots() {
+  const dots = document.getElementById('quote-dots');
+  if (!dots) return;
+  dots.innerHTML = QUOTES.map((_, i) =>
+    `<div onclick="jumpQuote(${i})" style="width:6px;height:6px;border-radius:50%;background:${i===quoteIndex?'var(--gold)':'var(--border)'};cursor:pointer;transition:background 0.3s;flex-shrink:0;"></div>`
+  ).join('');
+}
+
+function showQuote(idx) {
+  const el = document.getElementById('quote-text');
+  if (!el) return;
+  el.style.opacity = '0';
+  setTimeout(() => {
+    quoteIndex = ((idx % QUOTES.length) + QUOTES.length) % QUOTES.length;
+    el.textContent = QUOTES[quoteIndex];
+    el.style.opacity = '1';
+    renderQuoteDots();
+  }, 400);
+}
+
+function jumpQuote(i) {
+  clearInterval(quoteTimer);
+  showQuote(i);
+  quoteTimer = setInterval(() => showQuote(quoteIndex + 1), 3000);
+}
+
+function startQuoteCarousel() {
+  if (!document.getElementById('quote-text')) return;
+  showQuote(0);
+  quoteTimer = setInterval(() => showQuote(quoteIndex + 1), 3000);
+}
+
+// ── 後台短句管理 ──
+function renderQuotesList() {
+  const list = document.getElementById('quotes-list');
+  if (!list) return;
+  if (QUOTES.length === 0) {
+    list.innerHTML = '<div style="font-size:13px;color:var(--text-muted);text-align:center;padding:16px;">尚無短句</div>';
+    return;
+  }
+  list.innerHTML = QUOTES.map((q, i) => `
+    <div style="display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;">
+      <span style="font-size:12px;color:var(--text-muted);min-width:22px;">${i+1}</span>
+      <span style="flex:1;font-size:13px;color:var(--text);line-height:1.5;">${q}</span>
+      <button onclick="adminDeleteQuote(${i})" style="background:transparent;border:none;color:var(--text-muted);cursor:pointer;font-size:17px;padding:2px 6px;line-height:1;" title="刪除">×</button>
+    </div>
+  `).join('');
+}
+
+function adminAddQuote() {
+  const input = document.getElementById('quote-input');
+  if (!input) return;
+  const val = input.value.trim();
+  if (!val) return;
+  QUOTES.push(val);
+  localStorage.setItem('shangang_quotes', JSON.stringify(QUOTES));
+  input.value = '';
+  renderQuotesList();
+}
+
+function adminDeleteQuote(i) {
+  QUOTES.splice(i, 1);
+  localStorage.setItem('shangang_quotes', JSON.stringify(QUOTES));
+  renderQuotesList();
+  if (quoteIndex >= QUOTES.length) quoteIndex = 0;
+}
+
+function adminResetQuotes() {
+  if (!confirm('確定要還原為預設 20 句嗎？')) return;
+  QUOTES = [...DEFAULT_QUOTES];
+  localStorage.removeItem('shangang_quotes');
+  renderQuotesList();
+}
+
+// 頁面初始化時啟動輪播
+startQuoteCarousel();
 </script>
 
 <!-- ═══ Course Modal ═══ -->
