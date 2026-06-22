@@ -571,7 +571,7 @@ body {
   <!-- Quick Nav -->
   <div class="quick-nav" id="quick-nav">
     <button class="nav-pill active" id="pill-home" onclick="switchTab('home')">🏠 首頁</button>
-    <button class="nav-pill" id="pill-sop" onclick="switchTab('sop')">新人報聘 SOP</button>
+    <button class="nav-pill" id="pill-sop" onclick="switchTab('sop')">新人報聘/登錄</button>
     <button class="nav-pill" id="pill-course" onclick="switchTab('course')">新人搶先跑</button>
     <button class="nav-pill" id="pill-activity" onclick="switchTab('activity')">團隊常態課程</button>
     <button class="nav-pill" id="pill-tools" onclick="switchTab('tools')">資料庫小工具</button>
@@ -583,10 +583,58 @@ body {
     <!-- ── 首頁 ── -->
     <div class="tab-page fade-section" id="tab-home">
       <div class="section-label"><span class="tag">首頁</span><div class="line"></div></div>
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:32px 28px;text-align:center;">
-        <div style="font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--gold);margin-bottom:10px;">上岸團隊｜資源地圖</div>
-        <div style="font-size:13px;color:var(--text-muted);letter-spacing:0.1em;">內容待補 · Coming Soon</div>
+
+      <!-- 歡迎語 -->
+      <div style="text-align:center;margin-bottom:24px;">
+        <div style="font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--gold);margin-bottom:6px;">上岸好榕逸｜資源地圖</div>
+        <div style="font-size:12px;color:var(--text-muted);letter-spacing:0.08em;">點擊下方卡片，一鍵跳轉對應區域</div>
       </div>
+
+      <!-- 導覽卡片 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+
+        <!-- 新人報聘/登錄 -->
+        <div onclick="switchTab('sop')" style="cursor:pointer;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 16px;transition:border-color 0.2s,background 0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.5)';this.style.background='rgba(201,168,76,0.05)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface)'">
+          <div style="font-size:28px;margin-bottom:10px;line-height:1;">📋</div>
+          <div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:6px;">新人報聘/登錄</div>
+          <div style="font-size:11px;color:var(--text-muted);line-height:1.6;">報聘所需文件<br>線上報聘 SOP<br>公會登錄流程<br>報聘後待辦事項</div>
+        </div>
+
+        <!-- 新人搶先跑 -->
+        <div onclick="switchTab('course')" style="cursor:pointer;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 16px;transition:border-color 0.2s,background 0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.5)';this.style.background='rgba(201,168,76,0.05)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface)'">
+          <div style="font-size:28px;margin-bottom:10px;line-height:1;">🎬</div>
+          <div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:6px;">新人搶先跑</div>
+          <div style="font-size:11px;color:var(--text-muted);line-height:1.6;">置頂必看影片<br>新人帶狀課程<br>2026 Q2 課程<br>歷屆課程回放</div>
+        </div>
+
+        <!-- 團隊常態課程 -->
+        <div onclick="switchTab('activity')" style="cursor:pointer;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 16px;transition:border-color 0.2s,background 0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.5)';this.style.background='rgba(201,168,76,0.05)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface)'">
+          <div style="font-size:28px;margin-bottom:10px;line-height:1;">📅</div>
+          <div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:6px;">團隊常態課程</div>
+          <div style="font-size:11px;color:var(--text-muted);line-height:1.6;">上岸選修課程<br>北四日常課表<br>實體 / 線上課<br>報名連結</div>
+        </div>
+
+        <!-- 資料庫小工具 -->
+        <div onclick="switchTab('tools')" style="cursor:pointer;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 16px;transition:border-color 0.2s,background 0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.5)';this.style.background='rgba(201,168,76,0.05)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface)'">
+          <div style="font-size:28px;margin-bottom:10px;line-height:1;">🛠</div>
+          <div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:6px;">資料庫小工具</div>
+          <div style="font-size:11px;color:var(--text-muted);line-height:1.6;">商品試算連結<br>保單比較工具<br>保費查詢 QR<br>實用外部資源</div>
+        </div>
+
+      </div>
+
+      <!-- SOP 子項目快捷入口 -->
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;">
+        <div style="font-size:11px;color:var(--text-muted);letter-spacing:0.1em;margin-bottom:12px;">🗂 報聘/登錄 快捷入口</div>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;">
+          <button onclick="switchTab('sop');setTimeout(()=>switchSopTab('docs'),50)" style="background:transparent;border:1px solid var(--border);border-radius:8px;padding:10px 4px;cursor:pointer;font-size:10px;color:var(--text-dim);line-height:1.5;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.4)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-dim)'">📋<br>報聘所需</button>
+          <button onclick="switchTab('sop');setTimeout(()=>switchSopTab('apply'),50)" style="background:transparent;border:1px solid var(--border);border-radius:8px;padding:10px 4px;cursor:pointer;font-size:10px;color:var(--text-dim);line-height:1.5;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.4)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-dim)'">🖊<br>線上報聘</button>
+          <button onclick="switchTab('sop');setTimeout(()=>switchSopTab('flow'),50)" style="background:transparent;border:1px solid var(--border);border-radius:8px;padding:10px 4px;cursor:pointer;font-size:10px;color:var(--text-dim);line-height:1.5;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.4)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-dim)'">🔄<br>公會登錄</button>
+          <button onclick="switchTab('sop');setTimeout(()=>switchSopTab('resource'),50)" style="background:transparent;border:1px solid var(--border);border-radius:8px;padding:10px 4px;cursor:pointer;font-size:10px;color:var(--text-dim);line-height:1.5;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.4)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-dim)'">📌<br>報聘後</button>
+          <button onclick="switchTab('sop');setTimeout(()=>switchSopTab('gift'),50)" style="background:transparent;border:1px solid var(--border);border-radius:8px;padding:10px 4px;cursor:pointer;font-size:10px;color:var(--text-dim);line-height:1.5;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(201,168,76,0.4)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-dim)'">🎁<br>新手大禮包</button>
+        </div>
+      </div>
+
     </div>
 
     <!-- ── Admin ── -->
@@ -635,14 +683,14 @@ body {
 
     <!-- ── SOP ── -->
     <div class="tab-page fade-section" id="tab-sop" style="display:none;">
-      <div class="section-label"><span class="tag">新人報聘 SOP</span><div class="line"></div></div>
+      <div class="section-label"><span class="tag">新人報聘/登錄</span><div class="line"></div></div>
 
       <!-- SOP 三分頁 tabs -->
       <div class="sop-tabs-wrap">
         <button class="sop-tab-btn active" id="stab-docs" onclick="switchSopTab('docs')">📋 報聘所需</button>
         <button class="sop-tab-btn" id="stab-apply" onclick="switchSopTab('apply')">🖊 線上報聘</button>
         <button class="sop-tab-btn" id="stab-flow" onclick="switchSopTab('flow')">🔄 公會登錄</button>
-        <button class="sop-tab-btn" id="stab-resource" onclick="switchSopTab('resource')">📦 登錄✕入教</button>
+        <button class="sop-tab-btn" id="stab-resource" onclick="switchSopTab('resource')">📋 報聘後</button>
         <button class="sop-tab-btn" id="stab-gift" onclick="switchSopTab('gift')">🎁 新手大禮包</button>
       </div>
 
@@ -740,6 +788,7 @@ body {
         <div class="sop-card">
           <div class="sop-header">
             <div class="sop-title">登錄流程</div>
+            <div class="sop-subtitle-tag" style="margin:0;font-size:11px;white-space:nowrap;color:var(--teal);">✅ 登錄完成即有銷售資格</div>
           </div>
 
           <div class="sop-step">
@@ -808,7 +857,7 @@ body {
       <div class="sop-tab-content" id="scontent-resource" style="display:none;">
         <div class="sop-card">
           <div class="sop-header">
-            <div class="sop-title">登錄✕入教</div>
+            <div class="sop-title">報聘後</div>
             <div class="sop-progress">
               <span id="sop-count">0/0</span>
               <div class="progress-bar-wrap"><div class="progress-bar-fill" id="sop-bar" style="width:0%"></div></div>
