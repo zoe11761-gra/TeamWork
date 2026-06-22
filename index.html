@@ -639,14 +639,50 @@ body {
 
       <!-- SOP 三分頁 tabs -->
       <div class="sop-tabs-wrap">
-        <button class="sop-tab-btn active" id="stab-apply" onclick="switchSopTab('apply')">📋 線上報聘</button>
+        <button class="sop-tab-btn active" id="stab-docs" onclick="switchSopTab('docs')">📋 報聘所需</button>
+        <button class="sop-tab-btn" id="stab-apply" onclick="switchSopTab('apply')">🖊 線上報聘</button>
         <button class="sop-tab-btn" id="stab-flow" onclick="switchSopTab('flow')">🔄 公會登錄</button>
         <button class="sop-tab-btn" id="stab-resource" onclick="switchSopTab('resource')">📦 登錄✕入教</button>
         <button class="sop-tab-btn" id="stab-gift" onclick="switchSopTab('gift')">🎁 新手大禮包</button>
       </div>
 
+      <!-- ⓪ 報聘所需 -->
+      <div class="sop-tab-content" id="scontent-docs">
+        <div class="sop-card">
+          <div class="sop-header">
+            <div class="sop-title">所需文件</div>
+          </div>
+          <div class="sop-step">
+            <span class="sop-step-num" style="color:var(--gold);font-weight:700;font-size:14px;min-width:24px;">➊</span>
+            <div class="sop-body">
+              <div class="sop-step-title">身分證正反面（影本）</div>
+            </div>
+          </div>
+          <div class="sop-step">
+            <span class="sop-step-num" style="color:var(--gold);font-weight:700;font-size:14px;min-width:24px;">➋</span>
+            <div class="sop-body">
+              <div class="sop-step-title">大頭照（放在登錄証上的照片）</div>
+            </div>
+          </div>
+          <div class="sop-step">
+            <span class="sop-step-num" style="color:var(--gold);font-weight:700;font-size:14px;min-width:24px;">➌</span>
+            <div class="sop-body">
+              <div class="sop-step-title">薪轉帳戶（三家銀行擇一）</div>
+              <div class="sop-step-content">中國信託 ／ 永豐銀行 ／ 台北富邦</div>
+            </div>
+          </div>
+          <div class="sop-step" style="border-bottom:none;">
+            <span class="sop-step-num" style="color:var(--gold);font-weight:700;font-size:14px;min-width:24px;">➍</span>
+            <div class="sop-body">
+              <div class="sop-step-title">同業三年內最高薪資證明</div>
+              <div class="sop-step-content">※ 同業直聘需提供</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- ① 線上報聘 -->
-      <div class="sop-tab-content" id="scontent-apply">
+      <div class="sop-tab-content" id="scontent-apply" style="display:none;">
         <div class="sop-card">
           <div class="sop-header" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
             <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
@@ -1578,7 +1614,7 @@ document.addEventListener('keydown', e => {
 
 <script>
 function switchSopTab(tab) {
-  ['apply','flow','resource','gift'].forEach(t => {
+  ['docs','apply','flow','resource','gift'].forEach(t => {
     const c = document.getElementById('scontent-' + t);
     if (c) c.style.display = t === tab ? 'block' : 'none';
     const b = document.getElementById('stab-' + t);
