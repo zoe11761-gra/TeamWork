@@ -506,6 +506,30 @@ body {
   .header-user { display: none; }
   .users-table { font-size: 12px; }
   .users-table th, .users-table td { padding: 8px 6px; }
+
+  /* SOP tabs：允許 wrap，讓按鈕可以換行 */
+  .sop-tabs-wrap { flex-wrap: wrap; gap: 4px; }
+  .sop-tab-btn { flex: 1 0 auto; min-width: 72px; font-size: 11px; padding: 7px 8px; }
+
+  /* 首頁激勵短句：縮小字體 */
+  #quote-text { font-size: 15px !important; padding: 0 4px; }
+
+  /* 課程卡片 row：強制直排 */
+  .course-item { flex-direction: column; align-items: flex-start !important; gap: 8px; }
+  .course-links { flex-wrap: wrap; }
+
+  /* nav-pill 縮小 */
+  .nav-pill { font-size: 12px; padding: 6px 10px; }
+
+  /* link-card 字體調整 */
+  .card-title { font-size: 14px; }
+  .card-desc { font-size: 11px; }
+
+  /* section-label */
+  .section-label { margin-bottom: 14px; }
+
+  /* admin tab */
+  .admin-tab { font-size: 12px; padding: 7px 10px; }
 }
 @media (min-width: 601px) and (max-width: 900px) {
   .cards-grid { grid-template-columns: 1fr 1fr; }
@@ -585,11 +609,8 @@ body {
       <div class="section-label"><span class="tag">首頁</span><div class="line"></div></div>
 
       <!-- 激勵短句輪播 -->
-      <div id="quote-card" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:32px 24px;text-align:center;min-height:130px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;">
+      <div id="quote-card" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:32px 24px;text-align:center;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
         <div id="quote-text" style="font-family:var(--font-display);font-size:17px;font-weight:700;color:var(--gold);line-height:1.7;letter-spacing:0.05em;transition:opacity 0.4s;"></div>
-        <div style="display:flex;gap:6px;align-items:center;margin-top:4px;">
-          <div id="quote-dots" style="display:flex;gap:5px;"></div>
-        </div>
       </div>
 
     </div>
@@ -759,8 +780,8 @@ body {
       <!-- ② 登錄流程 -->
       <div class="sop-tab-content" id="scontent-flow" style="display:none;">
         <div class="sop-card">
-          <div class="sop-header">
-            <div class="sop-title">登錄流程</div>
+          <div class="sop-header" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            <div class="sop-title" style="margin:0;">登錄流程</div>
             <div class="sop-subtitle-tag" style="margin:0;font-size:11px;white-space:nowrap;color:var(--teal);">✅ 登錄完成即有銷售資格</div>
           </div>
 
@@ -1658,14 +1679,6 @@ document.addEventListener('keydown', e => {
 let quoteIndex = 0;
 let quoteTimer = null;
 
-function renderQuoteDots() {
-  const dots = document.getElementById('quote-dots');
-  if (!dots) return;
-  dots.innerHTML = QUOTES.map((_, i) =>
-    `<div onclick="jumpQuote(${i})" style="width:6px;height:6px;border-radius:50%;background:${i===quoteIndex?'var(--gold)':'var(--border)'};cursor:pointer;transition:background 0.3s;flex-shrink:0;"></div>`
-  ).join('');
-}
-
 function showQuote(idx) {
   const el = document.getElementById('quote-text');
   if (!el) return;
@@ -1674,14 +1687,7 @@ function showQuote(idx) {
     quoteIndex = ((idx % QUOTES.length) + QUOTES.length) % QUOTES.length;
     el.textContent = QUOTES[quoteIndex];
     el.style.opacity = '1';
-    renderQuoteDots();
   }, 400);
-}
-
-function jumpQuote(i) {
-  clearInterval(quoteTimer);
-  showQuote(i);
-  quoteTimer = setInterval(() => showQuote(quoteIndex + 1), 3000);
 }
 
 function startQuoteCarousel() {
