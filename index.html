@@ -780,9 +780,9 @@ body {
       <!-- ② 登錄流程 -->
       <div class="sop-tab-content" id="scontent-flow" style="display:none;">
         <div class="sop-card">
-          <div class="sop-header" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-            <div class="sop-title" style="margin:0;">登錄流程</div>
-            <div class="sop-subtitle-tag" style="margin:0;font-size:11px;white-space:nowrap;color:var(--teal);">✅ 登錄完成即有銷售資格</div>
+          <div class="sop-header" style="display:flex;align-items:center;gap:0;flex-wrap:wrap;">
+            <div class="sop-title" style="margin:0;margin-right:10px;">登錄流程</div>
+            <span style="font-size:11px;white-space:nowrap;color:var(--teal);background:var(--teal-glow);border:1px solid rgba(92,168,201,0.25);border-radius:6px;padding:3px 10px;line-height:1.4;">✅ 登錄完成即有銷售資格</span>
           </div>
 
           <div class="sop-step">
@@ -1330,7 +1330,7 @@ async function handleRegister() {
   if (u === ADMIN_USERNAME) { showLoginError('此名稱不可使用'); return; }
   if (p.length < 6) { showLoginError('密碼至少需要 6 個字元'); return; }
   if (p !== c) { showLoginError('兩次密碼不一致'); return; }
-  if (!firebaseReady) { showLoginError('目前無法連線，請稍後再試'); return; }
+  if (!firebaseReady) { showLoginError('⚠️ 尚未連接資料庫，請請管理者先完成 Firebase 設定後才能註冊新帳號'); return; }
   try {
     const snap = await window._fsGetDoc(window._fsDoc(db, 'users', u));
     if (snap.exists()) { showLoginError('此使用者名稱已被使用'); return; }
@@ -1792,8 +1792,8 @@ function switchTab(tab) {
   document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
   const pill = document.getElementById('pill-' + tab);
   if (pill) pill.classList.add('active');
-  // 首頁時，若管理者也顯示 admin-section
-  if (tab === 'home' && currentUser && currentUser.isAdmin) {
+  // 首頁時，若管理者且非夥伴視角預覽模式，才顯示 admin-section
+  if (tab === 'home' && currentUser && currentUser.isAdmin && _adminViewMode === 'admin') {
     document.getElementById('admin-section').style.display = 'block';
   } else {
     if (document.getElementById('admin-section')) document.getElementById('admin-section').style.display = 'none';
