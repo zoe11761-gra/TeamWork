@@ -572,7 +572,7 @@ body {
   <div class="quick-nav" id="quick-nav">
     <button class="nav-pill active" id="pill-home" onclick="switchTab('home')">🏠 首頁</button>
     <button class="nav-pill" id="pill-sop" onclick="switchTab('sop')">新人報聘 SOP</button>
-    <button class="nav-pill" id="pill-course" onclick="switchTab('course')">新手起步 Video</button>
+    <button class="nav-pill" id="pill-course" onclick="switchTab('course')">新人搶先跑</button>
     <button class="nav-pill" id="pill-activity" onclick="switchTab('activity')">團隊常態課程</button>
     <button class="nav-pill" id="pill-tools" onclick="switchTab('tools')">資料庫小工具</button>
     <button class="nav-pill nav-pill-member" id="pill-member" onclick="switchTab('member')" style="display:none;">草草 Team</button>
@@ -761,12 +761,6 @@ body {
             <span class="sop-step-num" style="color:var(--teal);font-weight:700;font-size:12px;min-width:40px;">Step 6</span>
             <div class="sop-body">
               <div class="sop-step-title">印出「登錄申請文件」，填寫完交給單位助理</div>
-            </div>
-          </div>
-
-          <div class="sop-step" style="border-bottom:none;">
-            <span class="sop-step-num" style="visibility:hidden;">  </span>
-            <div class="sop-body">
               <div class="sop-step-content">※ 若不知道「合格證號」或要確認「登錄狀態」，可以在步驟五畫面中的「登錄資格及狀態查詢」查詢</div>
             </div>
           </div>
@@ -866,8 +860,11 @@ body {
         <span>📚 新人帶狀課程</span>
       </div>
 
-      <!-- 2026 第二季：展開顯示 -->
-      <div class="inline-season-tag">2026・第二季</div>
+      <!-- 2026 第二季：可展開收起 -->
+      <button class="toggle-group-btn open" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')" style="border-radius:8px;margin-bottom:0;">
+        <span>2026・第二季</span><span class="toggle-arrow">▾</span>
+      </button>
+      <div class="toggle-group-content open" style="border-radius:0 0 8px 8px;border-top:none;">
       <div class="course-playlist-row" style="margin-bottom:10px;">
         <div class="pl-label"><span>總課程清單</span>｜所有課程影片播放清單</div>
         <a class="btn-playlist" href="https://www.youtube.com/playlist?list=PLDF5-xse-9XB0unKU_CyHjbI8l4OLErkM" target="_blank">▶ 開啟播放清單</a>
@@ -928,6 +925,7 @@ body {
             <span class="btn-video pending">⏳ 影片待補</span>
           </div>
         </div>
+      </div>
       </div>
 
       <!-- 2024 第二季：折疊 -->
