@@ -1452,7 +1452,7 @@ function renderCalendar() {
       : 'background:transparent;border:1px solid transparent;';
     const textColor = isToday ? 'color:var(--gold);font-weight:700;' : 'color:var(--text);';
 
-    html += '<div onclick="calDayClick('' + dateStr + '')" style="' + bgStyle + 'border-radius:7px;padding:5px 2px 4px;text-align:center;cursor:' + (hasDot ? 'pointer' : 'default') + ';position:relative;min-height:38px;">';
+    html += '<div onclick="calDayClick(\'' + dateStr + '\')" style="' + bgStyle + 'border-radius:7px;padding:5px 2px 4px;text-align:center;cursor:' + (hasDot ? 'pointer' : 'default') + ';position:relative;min-height:38px;">';
     html += '<div style="font-size:13px;' + textColor + '">' + d + '</div>';
     if (hasDot) {
       html += '<div style="display:flex;gap:2px;justify-content:center;margin-top:2px;flex-wrap:wrap;">';
