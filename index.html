@@ -780,8 +780,8 @@ body {
       <!-- ② 登錄流程 -->
       <div class="sop-tab-content" id="scontent-flow" style="display:none;">
         <div class="sop-card">
-          <div class="sop-header" style="display:flex;align-items:center;gap:0;flex-wrap:wrap;">
-            <div class="sop-title" style="margin:0;margin-right:10px;">登錄流程</div>
+          <div class="sop-header" style="display:flex;align-items:center;justify-content:flex-start;gap:10px;flex-wrap:wrap;">
+            <div class="sop-title" style="margin:0;">登錄流程</div>
             <span style="font-size:11px;white-space:nowrap;color:var(--teal);background:var(--teal-glow);border:1px solid rgba(92,168,201,0.25);border-radius:6px;padding:3px 10px;line-height:1.4;">✅ 登錄完成即有銷售資格</span>
           </div>
 
@@ -1328,7 +1328,7 @@ async function handleRegister() {
   const c = document.getElementById('reg-confirm').value;
   if (!u) { showLoginError('請填寫使用者名稱'); return; }
   if (u === ADMIN_USERNAME) { showLoginError('此名稱不可使用'); return; }
-  if (p.length < 6) { showLoginError('密碼至少需要 6 個字元'); return; }
+  if (!p) { showLoginError('請填寫密碼'); return; }
   if (p !== c) { showLoginError('兩次密碼不一致'); return; }
   if (!firebaseReady) { showLoginError('⚠️ 尚未連接資料庫，請請管理者先完成 Firebase 設定後才能註冊新帳號'); return; }
   try {
