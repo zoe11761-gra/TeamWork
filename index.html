@@ -8,12 +8,8 @@
 <!-- Firebase SDK -->
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-  import { getFirestore, initializeFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, serverTimestamp, increment } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+  import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, serverTimestamp, increment } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-  // ═══════════════════════════════════════════════════
-  // ⚠️ 草草請將這裡換成你自己的 Firebase 設定
-  // 設定好之前管理者帳號仍可正常登入，一般成員功能需要 Firebase
-  // ═══════════════════════════════════════════════════
   const firebaseConfig = {
     apiKey: "AIzaSyCx5NowSXXuNHZ4vlagL6dkmbKst3ZzrX0",
     authDomain: "teamwork-5c53f.firebaseapp.com",
@@ -27,8 +23,7 @@
 
   try {
     const app = initializeApp(firebaseConfig);
-    // 強制使用 long polling，解決 GitHub Pages / Safari 環境 WebChannel 被擋的問題
-    const db = initializeFirestore(app, { experimentalForceLongPolling: true, useFetchStreams: false });
+    const db = getFirestore(app);
     window._db = db;
     window._fsDoc = doc;
     window._fsSetDoc = setDoc;
@@ -553,6 +548,18 @@ body {
   <div class="spinner"></div>
   <div class="loading-text">上岸好榕逸</div>
 </div>
+<script>
+  // 保底：若 Firebase module 3秒內未完成，強制執行 bootstrap
+  setTimeout(function() {
+    var overlay = document.getElementById('loading-overlay');
+    if (overlay && overlay.style.display !== 'none') {
+      console.warn('Firebase 載入逾時，強制啟動');
+      window._firebaseReady = false;
+      if (typeof bootstrap === 'function') bootstrap();
+      else overlay.style.display = 'none';
+    }
+  }, 3000);
+</script>
 
 <div class="toast" id="toast"></div>
 
