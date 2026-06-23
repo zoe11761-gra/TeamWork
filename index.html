@@ -34,12 +34,16 @@
     window._fsServerTimestamp = serverTimestamp;
     window._fsIncrement = increment;
     window._firebaseReady = true;
+    console.log('✅ Firebase Firestore 初始化成功');
   } catch(e) {
-    console.warn('Firebase 未設定，進入離線模式（管理者仍可登入）', e);
+    console.warn('⚠️ Firebase 初始化失敗，進入離線模式', e);
     window._firebaseReady = false;
   }
+  // 用 window 函式呼叫，繞過 event timing 問題
   window._firebaseReadyFired = true;
-  window.dispatchEvent(new Event('firebaseReady'));
+  if (typeof window._onFirebaseReady === 'function') {
+    window._onFirebaseReady();
+  }
 </script>
 
 <style>
@@ -1356,10 +1360,10 @@ function initFirebase() {
   bootstrap();
 }
 
-// 確保 firebaseReady event 不論早晚都能被接住
-// 若 event 在 listener 掛上前就發出（module 非同步），用 _firebaseReadyFired flag 補救
-window.addEventListener('firebaseReady', initFirebase);
-// 若已錯過 event，直接呼叫
+// 用 window callback 機制，完全避開 event timing 問題
+// module script 完成時會呼叫 window._onFirebaseReady()
+// 若 module 已先完成（_firebaseReadyFired=true），這裡直接執行
+window._onFirebaseReady = function() { initFirebase(); };
 if (window._firebaseReadyFired) { initFirebase(); }
 
 // ═══════════════════════════════════════
