@@ -430,11 +430,11 @@ body {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
 }
 .course-item:last-child { border-bottom: none; padding-bottom: 0; }
-.course-item-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; flex-wrap: nowrap; }
+.course-item-left { display: flex; align-items: flex-start; gap: 8px; flex: 1; min-width: 0; flex-wrap: wrap; }
 .course-meta { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
 .course-date { font-size: 11px; color: var(--text-muted); letter-spacing: 0.05em; white-space: nowrap; }
 .course-speaker { font-size: 11px; color: var(--teal); background: var(--teal-glow); border: 1px solid rgba(92,168,201,0.2); border-radius: 4px; padding: 2px 7px; white-space: nowrap; }
-.course-name { font-size: 15px; font-weight: 500; color: var(--text); line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.course-name { font-size: 14px; font-weight: 500; color: var(--text); line-height: 1.5; white-space: normal; word-break: break-word; }
 .course-links { display: flex; gap: 8px; flex-wrap: nowrap; flex-shrink: 0; }
 .btn-video {
   font-size: 11px; color: var(--text-dim);
@@ -529,6 +529,13 @@ body {
   .card-title { font-size: 14px; }
   .card-desc { font-size: 11px; }
 
+  /* 行事曆手機版 */
+  #cal-grid { gap: 1px; padding: 2px 4px 10px; }
+  #home-calendar { margin-top: 12px; }
+
+  /* 課表 iframe 手機版高度 */
+  #schedule-iframe { height: 70vh !important; }
+
   /* section-label */
   .section-label { margin-bottom: 14px; }
 
@@ -615,6 +622,64 @@ body {
       <!-- 激勵短句輪播 -->
       <div id="quote-card" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:32px 24px;text-align:center;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
         <div id="quote-text" style="font-family:var(--font-display);font-size:17px;font-weight:700;color:var(--gold);line-height:1.7;letter-spacing:0.05em;transition:opacity 0.4s;"></div>
+      </div>
+
+
+      <!-- ── 首頁行事曆 ── -->
+      <div id="home-calendar" style="margin-top:16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;">
+        <!-- 行事曆標題列 -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px 10px;border-bottom:1px solid var(--border);">
+          <button onclick="calChangeMonth(-1)" style="background:none;border:none;color:var(--gold);font-size:18px;cursor:pointer;padding:4px 8px;line-height:1;">‹</button>
+          <div id="cal-title" style="font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--gold);letter-spacing:0.08em;"></div>
+          <button onclick="calChangeMonth(1)" style="background:none;border:none;color:var(--gold);font-size:18px;cursor:pointer;padding:4px 8px;line-height:1;">›</button>
+        </div>
+        <!-- 星期標題 -->
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);text-align:center;padding:6px 8px 0;">
+          <div style="font-size:10px;color:var(--text-muted);padding:4px 0;">日</div>
+          <div style="font-size:10px;color:var(--text-muted);padding:4px 0;">一</div>
+          <div style="font-size:10px;color:var(--text-muted);padding:4px 0;">二</div>
+          <div style="font-size:10px;color:var(--text-muted);padding:4px 0;">三</div>
+          <div style="font-size:10px;color:var(--text-muted);padding:4px 0;">四</div>
+          <div style="font-size:10px;color:var(--text-muted);padding:4px 0;">五</div>
+          <div style="font-size:10px;color:var(--text-muted);padding:4px 0;">六</div>
+        </div>
+        <!-- 日期格子 -->
+        <div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:4px 8px 12px;"></div>
+        <!-- 管理者新增按鈕 -->
+        <div id="cal-admin-bar" style="display:none;padding:10px 16px 14px;border-top:1px solid var(--border);">
+          <button onclick="openCalAddModal()" style="width:100%;background:var(--gold-glow);border:1px solid var(--gold-dim);border-radius:8px;color:var(--gold);font-size:13px;padding:9px;cursor:pointer;">＋ 新增行事曆排程</button>
+        </div>
+      </div>
+
+      <!-- 行事曆新增 Modal -->
+      <div id="cal-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:9999;align-items:center;justify-content:center;">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px 20px;width:min(92vw,380px);max-height:90vh;overflow-y:auto;">
+          <div style="font-family:var(--font-display);font-size:16px;font-weight:700;color:var(--gold);margin-bottom:16px;">📅 新增排程</div>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div>
+              <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:4px;">日期</label>
+              <input id="cal-input-date" type="date" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-size:14px;outline:none;box-sizing:border-box;">
+            </div>
+            <div>
+              <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:4px;">標題</label>
+              <input id="cal-input-title" type="text" placeholder="例如：6月份月會" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-size:14px;outline:none;box-sizing:border-box;">
+            </div>
+            <div>
+              <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:4px;">連結到課程（選填）</label>
+              <select id="cal-input-link" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-size:13px;outline:none;box-sizing:border-box;">
+                <option value="">不連結</option>
+                <option value="schedule-weekly">每週例會</option>
+                <option value="schedule-training">新人培訓</option>
+                <option value="schedule-product">商品說明會</option>
+                <option value="schedule-monthly">月會</option>
+              </select>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:4px;">
+              <button onclick="closeCalModal()" style="flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text-muted);font-size:13px;padding:10px;cursor:pointer;">取消</button>
+              <button onclick="saveCalEvent()" style="flex:2;background:linear-gradient(135deg,#c9a84c,#a07830);border:none;border-radius:8px;color:#1a1208;font-weight:700;font-size:13px;padding:10px;cursor:pointer;">儲存</button>
+            </div>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -956,7 +1021,7 @@ body {
         <div class="course-item">
           <div class="course-item-left">
             <span class="course-date">2026.05.14</span>
-            <div class="course-name">陳宥臻 處經理・醫療險銷售實務及理賠案例</div>
+            <div class="course-name">陳宥臻・醫療險銷售實務及理賠案例</div>
           </div>
           <div class="course-links">
             <a class="btn-video" href="https://youtu.be/boc2MpkuHJo?si=dXSe2r53R7qRGBmq" target="_blank">▶ 觀看影片</a>
@@ -965,7 +1030,7 @@ body {
         <div class="course-item">
           <div class="course-item-left">
             <span class="course-date">2026.05.28</span>
-            <div class="course-name">蔡承叡 業務襄理・風險管理</div>
+            <div class="course-name">蔡承叡・風險管理</div>
           </div>
           <div class="course-links">
             <a class="btn-video" href="https://youtu.be/l3iVCssQH9U?si=Xnj7ymc3uekGdEVb" target="_blank">▶ Part 1</a>
@@ -975,7 +1040,7 @@ body {
         <div class="course-item">
           <div class="course-item-left">
             <span class="course-date">2026.06.04</span>
-            <div class="course-name">徐靖柔 處經理・產險出發</div>
+            <div class="course-name">徐靖柔・產險出發</div>
           </div>
           <div class="course-links">
             <a class="btn-video" href="https://youtu.be/EmiKJvvzhzQ?si=kLq4_rCVyatZFYGs" target="_blank">▶ 觀看影片</a>
@@ -984,7 +1049,7 @@ body {
         <div class="course-item">
           <div class="course-item-left">
             <span class="course-date">2026.06.11</span>
-            <div class="course-name">張晏榕 資深業務協理・業務心法及定位</div>
+            <div class="course-name">張晏榕・業務心法及定位</div>
           </div>
           <div class="course-links">
             <a class="btn-video" href="https://youtu.be/1F-pnFoSUT0?si=PzAbQaKK4h1UgD_L" target="_blank">▶ 觀看影片</a>
@@ -993,7 +1058,7 @@ body {
         <div class="course-item">
           <div class="course-item-left">
             <span class="course-date">2026.06.18</span>
-            <div class="course-name">鄭俊凱 業務總監・投資型保單架構</div>
+            <div class="course-name">鄭俊凱・投資型保單架構</div>
           </div>
           <div class="course-links">
             <a class="btn-video" href="https://youtu.be/YTHBaIL4xDw" target="_blank">▶ 觀看影片</a>
@@ -1002,7 +1067,7 @@ body {
         <div class="course-item">
           <div class="course-item-left">
             <span class="course-date">2026.06.25</span>
-            <div class="course-name">許柏彥 業務協理・分紅保單的節稅佈局及資產保全</div>
+            <div class="course-name">許柏彥・分紅保單的節稅佈局及資產保全</div>
           </div>
           <div class="course-links">
             <span class="btn-video pending">⏳ 影片待補</span>
@@ -1068,18 +1133,37 @@ body {
     <!-- ── 活動 ── -->
     <div class="tab-page fade-section" id="tab-activity" style="display:none;">
       <div class="section-label"><span class="tag">團隊常態課程</span><div class="line"></div></div>
-      <div class="cards-grid">
-        <a class="link-card" href="https://course.zoe11761.workers.dev" target="_blank" onclick="trackClick('all-courses')">
-          <span class="card-icon">🗂</span>
-          <div class="card-title">團隊課表</div>
-          <div class="card-desc">所有課程資源一站集合</div>
-          <div class="card-arrow">→</div>
-        </a>
-        <div class="link-card" onclick="trackClick('monthly-meeting')" style="cursor:default;opacity:0.5;">
+
+      <!-- 子導覽：課表 / 月會 -->
+      <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+        <button class="activity-sub-btn active" id="sub-btn-schedule" onclick="switchActivitySub('schedule')" style="flex:1;min-width:100px;padding:9px 12px;background:var(--gold-glow);border:1px solid var(--gold-dim);border-radius:8px;color:var(--gold);font-size:13px;font-weight:600;cursor:pointer;">🗂 團隊課表</button>
+        <button class="activity-sub-btn" id="sub-btn-monthly" onclick="switchActivitySub('monthly')" style="flex:1;min-width:100px;padding:9px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text-muted);font-size:13px;cursor:pointer;">🗓 上岸月會</button>
+      </div>
+
+      <!-- 課表區域 -->
+      <div id="activity-sub-schedule">
+        <!-- 課表 iframe 嵌入 -->
+        <div id="schedule-iframe-wrap" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;">
+          <div style="padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:12px;color:var(--text-muted);">上岸選修課表</span>
+            <a href="https://course.zoe11761.workers.dev" target="_blank" style="font-size:11px;color:var(--gold);text-decoration:none;border:1px solid var(--gold-dim);padding:3px 10px;border-radius:5px;">↗ 開新分頁</a>
+          </div>
+          <iframe
+            id="schedule-iframe"
+            src="https://course.zoe11761.workers.dev"
+            style="width:100%;height:75vh;border:none;display:block;"
+            loading="lazy"
+            title="上岸選修課表">
+          </iframe>
+        </div>
+      </div>
+
+      <!-- 月會區域（隱藏） -->
+      <div id="activity-sub-monthly" style="display:none;">
+        <div class="link-card" style="cursor:default;opacity:0.5;">
           <span class="card-icon">🗓</span>
           <div class="card-title">上岸月會</div>
-          <div class="card-desc">每月團隊定期會議連結與資料</div>
-          <div class="card-arrow" style="opacity:0;">→</div>
+          <div class="card-desc">每月團隊定期會議連結與資料（建置中）</div>
         </div>
       </div>
     </div>
@@ -1288,6 +1372,145 @@ function clearSession() { localStorage.removeItem(SESSION_KEY); }
 // ═══════════════════════════════════════
 // BOOTSTRAP
 // ═══════════════════════════════════════
+
+
+// ══════════════════════════════════
+// 行事曆系統
+// ══════════════════════════════════
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth(); // 0-based
+let calEvents = JSON.parse(localStorage.getItem('shangang_cal_events') || '[]');
+
+function calSaveEvents() {
+  localStorage.setItem('shangang_cal_events', JSON.stringify(calEvents));
+  if (firebaseReady && currentUser && currentUser.isAdmin) {
+    window._fsSetDoc(window._fsDoc(db, 'settings', 'calEvents'), { events: calEvents });
+  }
+}
+
+async function calLoadEvents() {
+  if (firebaseReady) {
+    try {
+      const snap = await window._fsGetDoc(window._fsDoc(db, 'settings', 'calEvents'));
+      if (snap.exists() && snap.data().events) {
+        calEvents = snap.data().events;
+        localStorage.setItem('shangang_cal_events', JSON.stringify(calEvents));
+      }
+    } catch(e) {}
+  }
+  renderCalendar();
+}
+
+function calChangeMonth(dir) {
+  calMonth += dir;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  if (calMonth < 0)  { calMonth = 11; calYear--; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const titleEl = document.getElementById('cal-title');
+  const gridEl  = document.getElementById('cal-grid');
+  const adminBar = document.getElementById('cal-admin-bar');
+  if (!titleEl || !gridEl) return;
+
+  const months = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  titleEl.textContent = calYear + ' · ' + months[calMonth];
+
+  // 管理者顯示新增按鈕
+  if (adminBar) adminBar.style.display = (currentUser && currentUser.isAdmin) ? 'block' : 'none';
+
+  const firstDay = new Date(calYear, calMonth, 1).getDay(); // 0=日
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const today = new Date();
+
+  let html = '';
+  // 前置空格
+  for (let i = 0; i < firstDay; i++) {
+    html += '<div></div>';
+  }
+  // 日期格子
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = calYear + '-' + String(calMonth + 1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+    const dayEvents = calEvents.filter(e => e.date === dateStr);
+    const isToday = (today.getFullYear() === calYear && today.getMonth() === calMonth && today.getDate() === d);
+    const hasDot  = dayEvents.length > 0;
+
+    const bgStyle = isToday
+      ? 'background:var(--gold-glow);border:1px solid var(--gold-dim);'
+      : 'background:transparent;border:1px solid transparent;';
+    const textColor = isToday ? 'color:var(--gold);font-weight:700;' : 'color:var(--text);';
+
+    html += '<div onclick="calDayClick('' + dateStr + '')" style="' + bgStyle + 'border-radius:7px;padding:5px 2px 4px;text-align:center;cursor:' + (hasDot ? 'pointer' : 'default') + ';position:relative;min-height:38px;">';
+    html += '<div style="font-size:13px;' + textColor + '">' + d + '</div>';
+    if (hasDot) {
+      html += '<div style="display:flex;gap:2px;justify-content:center;margin-top:2px;flex-wrap:wrap;">';
+      dayEvents.slice(0, 3).forEach(ev => {
+        html += '<div style="width:5px;height:5px;background:var(--teal);border-radius:50%;"></div>';
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+  }
+  gridEl.innerHTML = html;
+}
+
+function calDayClick(dateStr) {
+  const dayEvents = calEvents.filter(e => e.date === dateStr);
+  if (dayEvents.length === 0) return;
+  // 只有一個且有連結，直接跳轉
+  if (dayEvents.length === 1 && dayEvents[0].linkTarget) {
+    switchTab('activity');
+    setTimeout(() => {
+      const target = document.getElementById(dayEvents[0].linkTarget);
+      if (target) { target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    }, 200);
+    return;
+  }
+  // 多個事件或無連結：顯示 tooltip
+  const labels = dayEvents.map(e => '・' + e.title).join('\n');
+  alert(dateStr + '\n' + labels);
+}
+
+function openCalAddModal() {
+  const today = new Date();
+  const dd = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+  document.getElementById('cal-input-date').value = dd;
+  document.getElementById('cal-input-title').value = '';
+  document.getElementById('cal-input-link').value = '';
+  const m = document.getElementById('cal-modal');
+  m.style.display = 'flex';
+}
+
+function closeCalModal() {
+  document.getElementById('cal-modal').style.display = 'none';
+}
+
+function saveCalEvent() {
+  const date  = document.getElementById('cal-input-date').value;
+  const title = document.getElementById('cal-input-title').value.trim();
+  const link  = document.getElementById('cal-input-link').value;
+  if (!date || !title) { alert('請填寫日期與標題'); return; }
+  calEvents.push({ date, title, linkTarget: link || '' });
+  calEvents.sort((a, b) => a.date.localeCompare(b.date));
+  calSaveEvents();
+  closeCalModal();
+  renderCalendar();
+  showToast('✓ 排程已新增');
+}
+
+// 課表子頁切換
+function switchActivitySub(sub) {
+  document.getElementById('activity-sub-schedule').style.display = sub === 'schedule' ? 'block' : 'none';
+  document.getElementById('activity-sub-monthly').style.display  = sub === 'monthly'  ? 'block' : 'none';
+  document.getElementById('sub-btn-schedule').style.cssText = sub === 'schedule'
+    ? 'flex:1;min-width:100px;padding:9px 12px;background:var(--gold-glow);border:1px solid var(--gold-dim);border-radius:8px;color:var(--gold);font-size:13px;font-weight:600;cursor:pointer;'
+    : 'flex:1;min-width:100px;padding:9px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text-muted);font-size:13px;cursor:pointer;';
+  document.getElementById('sub-btn-monthly').style.cssText = sub === 'monthly'
+    ? 'flex:1;min-width:100px;padding:9px 12px;background:var(--gold-glow);border:1px solid var(--gold-dim);border-radius:8px;color:var(--gold);font-size:13px;font-weight:600;cursor:pointer;'
+    : 'flex:1;min-width:100px;padding:9px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text-muted);font-size:13px;cursor:pointer;';
+}
+
 function bootstrap() {
   const s = loadSession();
   if (s) { currentUser = s; showApp(); }
@@ -1412,6 +1635,8 @@ function showApp() {
 
   // 預設顯示首頁 tab
   switchTab('home');
+  // 載入行事曆
+  calLoadEvents();
 }
 
 // ═══════════════════════════════════════
