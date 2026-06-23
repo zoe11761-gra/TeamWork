@@ -498,6 +498,74 @@ body {
 .fade-section:nth-child(5) { animation-delay: 0.20s; }
 .fade-section:nth-child(6) { animation-delay: 0.25s; }
 
+/* ─── Schedule Form Inputs ─── */
+.se-label {
+  display: block; font-size: 11px; letter-spacing: 0.12em;
+  color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px;
+}
+.se-input {
+  width: 100%; background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 9px 12px; color: var(--text);
+  font-family: var(--font-body); font-size: 13px; outline: none;
+  transition: border-color 0.2s; box-sizing: border-box;
+}
+.se-input:focus { border-color: var(--gold-dim); }
+select.se-input { cursor: pointer; }
+
+/* ─── Schedule List Row ─── */
+.sched-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 18px; border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: background 0.15s;
+}
+.sched-row:last-child { border-bottom: none; }
+.sched-row:hover { background: var(--surface2); }
+.sched-row-date { font-size: 11px; color: var(--text-muted); white-space: nowrap; flex-shrink: 0; min-width: 70px; }
+.sched-row-info { flex: 1; min-width: 0; }
+.sched-row-name { font-size: 14px; font-weight: 500; color: var(--text); line-height: 1.4; }
+.sched-row-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.sched-row-arrow { font-size: 13px; color: var(--text-muted); flex-shrink: 0; transition: color 0.15s, transform 0.15s; }
+.sched-row:hover .sched-row-arrow { color: var(--gold); transform: translateX(2px); }
+.sched-row-badge {
+  font-size: 10px; padding: 2px 6px; border-radius: 4px; white-space: nowrap; flex-shrink: 0;
+  letter-spacing: 0.05em;
+}
+.sched-row-badge.need-reg { background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.3); color: var(--gold); }
+.sched-row-badge.no-reg { background: rgba(138,134,128,0.1); border: 1px solid var(--border); color: var(--text-muted); }
+
+/* ─── Schedule Detail Modal ─── */
+.sched-detail-field { margin-bottom: 14px; }
+.sched-detail-label { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
+.sched-detail-value { font-size: 14px; color: var(--text); line-height: 1.6; }
+.sched-detail-link { color: var(--gold); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.2s; word-break: break-all; }
+.sched-detail-link:hover { border-color: var(--gold); }
+.sched-poster-thumb { width: 100%; max-width: 360px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 16px; cursor: zoom-in; display: block; }
+
+/* ─── Admin inline edit/delete ─── */
+.sched-admin-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.sched-admin-btn {
+  background: transparent; border: 1px solid var(--border);
+  border-radius: 5px; padding: 3px 8px; font-size: 11px;
+  cursor: pointer; color: var(--text-muted); font-family: var(--font-body);
+  transition: all 0.2s;
+}
+.sched-admin-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+.sched-admin-btn.del:hover { border-color: var(--red); color: var(--red); }
+
+/* ─── Poster zoom overlay ─── */
+#poster-zoom-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0,0,0,0.88); display: none;
+  align-items: center; justify-content: center; padding: 20px;
+}
+#poster-zoom-overlay.open { display: flex; }
+#poster-zoom-img { max-width: 100%; max-height: 90vh; border-radius: 10px; }
+
+/* ─── 2-col top row mobile ─── */
+@media (max-width: 480px) {
+  #tab-activity > div:first-of-type + div { grid-template-columns: 1fr; }
+}
+
 /* ─── Schedule Filter Buttons ─── */
 .sched-filter-btn {
   background: var(--surface2); border: 1px solid var(--border);
@@ -640,7 +708,7 @@ body {
     <button class="nav-pill active" id="pill-home" onclick="switchTab('home')">🏠 首頁</button>
     <button class="nav-pill" id="pill-sop" onclick="switchTab('sop')">新人報聘/登錄</button>
     <button class="nav-pill" id="pill-course" onclick="switchTab('course')">新人搶先跑</button>
-    <button class="nav-pill" id="pill-activity" onclick="switchTab('activity')">團隊常態課程</button>
+    <button class="nav-pill" id="pill-activity" onclick="switchTab('activity')">常態課程</button>
     <button class="nav-pill" id="pill-tools" onclick="switchTab('tools')">資料庫小工具</button>
     <button class="nav-pill nav-pill-member" id="pill-member" onclick="switchTab('member')" style="display:none;">草草 Team</button>
   </div>
@@ -1162,139 +1230,115 @@ body {
 
     </div>
 
-    <!-- ── 活動 ── -->
+    <!-- ── 常態課程 ── -->
     <div class="tab-page fade-section" id="tab-activity" style="display:none;">
-      <div class="section-label"><span class="tag">團隊常態課程</span><div class="line"></div></div>
+      <div class="section-label"><span class="tag">常態課程</span><div class="line"></div></div>
 
-      <!-- ① 上岸月會（獨立顯示在上方） -->
-      <div id="activity-sub-monthly" style="margin-bottom:32px;">
+      <!-- ① 上方 2 columns：北四課程 + 上岸月會 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px;">
+        <!-- 北四課程 -->
+        <a class="link-card" href="https://www.youtube.com/playlist?list=PLDF5-xse-9XBuBpYhIHtoePNEjMg-YkSv" target="_blank" onclick="trackClick('beisi-course')">
+          <span class="card-icon">🎓</span>
+          <div class="card-title">北四課程</div>
+          <div class="card-desc">北四營運中心課程影片播放清單</div>
+          <div class="card-arrow">→</div>
+        </a>
+        <!-- 上岸月會 -->
+        <a class="link-card" href="https://www.youtube.com/playlist?list=PLDF5-xse-9XDQVQIC7h7JNLXfFxCPdExE" target="_blank" onclick="trackClick('monthly-meeting')">
+          <span class="card-icon">🗓</span>
+          <div class="card-title">上岸月會</div>
+          <div class="card-desc">歷次月會影片播放清單</div>
+          <div class="card-arrow">→</div>
+        </a>
+      </div>
+
+      <!-- ② 選修課表 -->
+      <div id="activity-sub-schedule">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-          <span style="font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:var(--teal);background:var(--teal-glow);border:1px solid rgba(92,168,201,0.2);border-radius:4px;padding:3px 8px;">🗓 上岸月會</span>
+          <span style="font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);background:var(--gold-glow);border:1px solid rgba(201,168,76,0.2);border-radius:4px;padding:3px 8px;">🗂 選修課表</span>
           <div style="flex:1;height:1px;background:var(--border);"></div>
+          <!-- 管理者新增按鈕 -->
+          <button id="schedule-admin-add-btn" onclick="openScheduleAddModal()" style="display:none;background:var(--gold-glow);border:1px solid var(--gold-dim);border-radius:6px;color:var(--gold);font-size:12px;padding:5px 12px;cursor:pointer;white-space:nowrap;">＋ 新增課程</button>
         </div>
-        <!-- 月會內容卡片 -->
-        <div id="monthly-meetings-list">
-          <div class="sop-card">
-            <div class="sop-header" style="padding:14px 18px;">
-              <div class="sop-title" style="font-size:15px;">2026 年月會</div>
-            </div>
-            <!-- 月會項目列表，草草可直接在這裡新增 -->
-            <div class="course-item" style="padding:12px 18px;">
-              <div class="course-item-left">
-                <span class="course-date">2026.01</span>
-                <div class="course-name">一月月會</div>
-              </div>
-              <div class="course-links">
-                <span class="btn-video pending">⏳ 資料待補</span>
-              </div>
-            </div>
-            <div class="course-item" style="padding:12px 18px;">
-              <div class="course-item-left">
-                <span class="course-date">2026.02</span>
-                <div class="course-name">二月月會</div>
-              </div>
-              <div class="course-links">
-                <span class="btn-video pending">⏳ 資料待補</span>
-              </div>
-            </div>
-            <div class="course-item" style="padding:12px 18px;border-bottom:none;">
-              <div class="course-item-left">
-                <span class="course-date">2026.03</span>
-                <div class="course-name">三月月會</div>
-              </div>
-              <div class="course-links">
-                <span class="btn-video pending">⏳ 資料待補</span>
-              </div>
-            </div>
+
+        <!-- 分頁切換：本月份 / 已完成課程 -->
+        <div style="display:flex;gap:0;margin-bottom:16px;border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+          <button class="sched-tab-btn active" id="stab-upcoming" onclick="switchSchedTab('upcoming')" style="flex:1;padding:9px 12px;background:var(--gold-glow);border:none;border-right:1px solid var(--border);color:var(--gold);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font-body);transition:all 0.2s;">📅 本月份課程</button>
+          <button class="sched-tab-btn" id="stab-done" onclick="switchSchedTab('done')" style="flex:1;padding:9px 12px;background:transparent;border:none;color:var(--text-muted);font-size:13px;cursor:pointer;font-family:var(--font-body);transition:all 0.2s;">✅ 已完成課程</button>
+        </div>
+
+        <!-- 本月份課程列表 -->
+        <div id="sched-pane-upcoming">
+          <div id="sched-list-upcoming" class="sop-card">
+            <!-- 由 JS renderSchedule() 動態產生 -->
+            <div style="padding:32px;text-align:center;color:var(--text-muted);font-size:13px;">載入中…</div>
+          </div>
+        </div>
+
+        <!-- 已完成課程列表 -->
+        <div id="sched-pane-done" style="display:none;">
+          <div id="sched-list-done" class="sop-card">
+            <div style="padding:32px;text-align:center;color:var(--text-muted);font-size:13px;">載入中…</div>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- ② 上岸選修課表（移植自 course.zoe11761.workers.dev） -->
-      <div id="activity-sub-schedule">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-          <span style="font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);background:var(--gold-glow);border:1px solid rgba(201,168,76,0.2);border-radius:4px;padding:3px 8px;">🗂 上岸選修課表</span>
-          <div style="flex:1;height:1px;background:var(--border);"></div>
+    <!-- ── 課程詳情 Modal ── -->
+    <div class="modal-backdrop" id="sched-detail-modal" onclick="closeSchedModal(event)">
+      <div class="modal-box" style="max-width:520px;">
+        <div class="modal-header">
+          <div class="modal-title" id="sched-modal-title">課程詳情</div>
+          <button class="modal-close" onclick="document.getElementById('sched-detail-modal').classList.remove('open')">✕</button>
         </div>
+        <div class="modal-body" id="sched-modal-body"></div>
+      </div>
+    </div>
 
-        <!-- 課表篩選列 -->
-        <div id="schedule-filter-bar" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;">
-          <button class="sched-filter-btn active" data-filter="all" onclick="schedFilter('all')">全部</button>
-          <button class="sched-filter-btn" data-filter="壽險" onclick="schedFilter('壽險')">壽險</button>
-          <button class="sched-filter-btn" data-filter="產險" onclick="schedFilter('產險')">產險</button>
-          <button class="sched-filter-btn" data-filter="投資" onclick="schedFilter('投資')">投資型</button>
-          <button class="sched-filter-btn" data-filter="業務" onclick="schedFilter('業務')">業務技能</button>
-          <button class="sched-filter-btn" data-filter="稅務" onclick="schedFilter('稅務')">稅務資產</button>
+    <!-- ── 新增/編輯課程 Modal（管理者）── -->
+    <div class="modal-backdrop" id="sched-edit-modal" onclick="closeSchedEditModal(event)">
+      <div class="modal-box" style="max-width:520px;">
+        <div class="modal-header">
+          <div class="modal-title" id="sched-edit-modal-title">新增課程</div>
+          <button class="modal-close" onclick="document.getElementById('sched-edit-modal').classList.remove('open')">✕</button>
         </div>
-
-        <!-- 課表卡片區 -->
-        <div id="schedule-cards-wrap">
-          <!-- 2026 第三季 -->
-          <div class="sched-season-block" data-tags="壽險,投資,業務,產險,稅務">
-            <div class="inline-divider">2026・第三季</div>
-            <div class="sop-card" style="margin-bottom:12px;">
-              <div class="sop-header" style="padding:12px 18px;">
-                <div class="sop-title" style="font-size:14px;">每週四 19:00–21:00｜線上課程</div>
+        <div class="modal-body">
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <input type="hidden" id="se-id">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <div><label class="se-label">課程日期 *</label><input class="se-input" id="se-date" type="date"></div>
+              <div><label class="se-label">課程時間 *</label><input class="se-input" id="se-time" type="text" placeholder="例：19:00–21:00"></div>
+            </div>
+            <div><label class="se-label">課程名稱 *</label><input class="se-input" id="se-name" type="text" placeholder="例：壽險商品解析"></div>
+            <div><label class="se-label">講師姓名</label><input class="se-input" id="se-speaker" type="text" placeholder="例：張晏榕"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <div><label class="se-label">上課地點</label><input class="se-input" id="se-location" type="text" placeholder="例：線上 / 信安台北"></div>
+              <div><label class="se-label">主辦單位</label><input class="se-input" id="se-organizer" type="text" placeholder="例：北四營運中心"></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <div>
+                <label class="se-label">是否需要報名</label>
+                <select class="se-input" id="se-needreg">
+                  <option value="0">不需要</option>
+                  <option value="1">需要報名</option>
+                </select>
               </div>
-
-              <div class="course-item" style="padding:11px 18px;" data-tags="業務">
-                <div class="course-item-left">
-                  <span class="course-date">2026.07.03</span>
-                  <div class="course-name">業務開發策略</div>
-                </div>
-                <div class="course-links"><span class="btn-video pending">⏳ 報名中</span></div>
-              </div>
-              <div class="course-item" style="padding:11px 18px;" data-tags="壽險">
-                <div class="course-item-left">
-                  <span class="course-date">2026.07.10</span>
-                  <div class="course-name">壽險商品解析</div>
-                </div>
-                <div class="course-links"><span class="btn-video pending">⏳ 報名中</span></div>
-              </div>
-              <div class="course-item" style="padding:11px 18px;border-bottom:none;" data-tags="投資">
-                <div class="course-item-left">
-                  <span class="course-date">2026.07.17</span>
-                  <div class="course-name">投資型保單實務</div>
-                </div>
-                <div class="course-links"><span class="btn-video pending">⏳ 報名中</span></div>
+              <div><label class="se-label">報名連結</label><input class="se-input" id="se-regurl" type="url" placeholder="https://..."></div>
+            </div>
+            <div><label class="se-label">視訊會議連結</label><input class="se-input" id="se-meeturl" type="url" placeholder="https://..."></div>
+            <div><label class="se-label">視訊會議密碼</label><input class="se-input" id="se-meetpw" type="text" placeholder="（選填）"></div>
+            <div>
+              <label class="se-label">課程海報（貼上圖片網址）</label>
+              <input class="se-input" id="se-poster" type="url" placeholder="https://...（選填，可貼 imgur 等圖床連結）">
+              <div id="se-poster-preview" style="margin-top:8px;display:none;">
+                <img id="se-poster-img" src="" style="max-width:100%;border-radius:6px;border:1px solid var(--border);">
               </div>
             </div>
-          </div>
-
-          <!-- 2026 第二季 -->
-          <div class="sched-season-block" data-tags="壽險,投資,業務,產險,稅務">
-            <div style="height:4px;"></div>
-            <button class="toggle-group-btn" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')" style="border-radius:8px;">
-              <span>2026・第二季</span><span class="toggle-arrow">▾</span>
-            </button>
-            <div class="toggle-group-content" style="border-radius:0 0 8px 8px;">
-              <div style="grid-column:1/-1;">
-                <div class="inline-course-list">
-                  <div class="course-item" data-tags="產險">
-                    <div class="course-item-left"><span class="course-date">2026.04.03</span><div class="course-name">徐靖柔・產險基礎</div></div>
-                    <div class="course-links"><span class="btn-video pending">⏳ 影片待補</span></div>
-                  </div>
-                  <div class="course-item" data-tags="業務">
-                    <div class="course-item-left"><span class="course-date">2026.04.10</span><div class="course-name">張晏榕・業務心法</div></div>
-                    <div class="course-links"><span class="btn-video pending">⏳ 影片待補</span></div>
-                  </div>
-                  <div class="course-item" data-tags="投資">
-                    <div class="course-item-left"><span class="course-date">2026.04.17</span><div class="course-name">鄭俊凱・投資型保單架構</div></div>
-                    <div class="course-links"><a class="btn-video" href="https://youtu.be/YTHBaIL4xDw" target="_blank">▶ 觀看影片</a></div>
-                  </div>
-                  <div class="course-item" style="border-bottom:none;" data-tags="稅務">
-                    <div class="course-item-left"><span class="course-date">2026.04.24</span><div class="course-name">許柏彥・分紅保單的節稅佈局及資產保全</div></div>
-                    <div class="course-links"><span class="btn-video pending">⏳ 影片待補</span></div>
-                  </div>
-                </div>
-              </div>
+            <div style="display:flex;gap:10px;margin-top:4px;">
+              <button onclick="closeSchedEditModal(null,true)" style="flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text-muted);font-size:13px;padding:10px;cursor:pointer;">取消</button>
+              <button onclick="saveSchedCourse()" style="flex:2;background:linear-gradient(135deg,#c9a84c,#a07830);border:none;border-radius:8px;color:#1a1208;font-weight:700;font-size:13px;padding:10px;cursor:pointer;">儲存課程</button>
             </div>
           </div>
-        </div>
-
-        <!-- 管理者：新增課程按鈕 -->
-        <div id="schedule-admin-bar" style="display:none;margin-top:12px;">
-          <button onclick="openScheduleAddModal()" style="width:100%;background:var(--gold-glow);border:1px solid var(--gold-dim);border-radius:8px;color:var(--gold);font-size:13px;padding:9px;cursor:pointer;">＋ 新增課程排程</button>
         </div>
       </div>
     </div>
@@ -1395,7 +1439,8 @@ const LINKS = {
   'course-new':      { href: '#', label: '新人帶狀課程' },
   'course-double10': { href: 'https://youtu.be/amvcZQvxC7U', label: '醫療雙十字教學' },
   'course-benz':     { href: 'https://youtu.be/4RnmIsdXG4M', label: '三益法則|賓士理論' },
-  'monthly-meeting': { href: '#', label: '上岸月會' },
+  'monthly-meeting': { href: 'https://www.youtube.com/playlist?list=PLDF5-xse-9XDQVQIC7h7JNLXfFxCPdExE', label: '上岸月會' },
+  'beisi-course':    { href: 'https://www.youtube.com/playlist?list=PLDF5-xse-9XBuBpYhIHtoePNEjMg-YkSv', label: '北四課程' },
   'all-courses':     { href: 'https://course.zoe11761.workers.dev', label: '上岸課程統整' },
   'chubb-travel':    { href: 'https://reurl.cc/R283p9', label: '安達旅平報價' },
   'accident-claim':  { href: '#', label: '車禍求償明細' },
@@ -1651,39 +1696,322 @@ function saveCalEvent() {
   showToast('✓ 排程已新增');
 }
 
-// 課表子頁切換（保留相容舊呼叫）
+// ═══════════════════════════════════════
+// 選修課表系統
+// ═══════════════════════════════════════
+
+// 課程資料（由 Firebase 載入，本地預設示範資料）
+let SCHED_COURSES = [];
+let _schedTab = 'upcoming'; // 'upcoming' | 'done'
+
+// 預設示範課程（草草可直接在後台新增，或刪除這段示範）
+const SCHED_DEMO = [
+  {
+    id: 'demo_1',
+    date: '2026-06-19',
+    time: '19:00–21:00',
+    name: '鄭俊凱・投資型保單架構',
+    speaker: '鄭俊凱',
+    location: '線上',
+    organizer: '北四營運中心',
+    needReg: false,
+    regUrl: '',
+    meetUrl: 'https://youtu.be/YTHBaIL4xDw',
+    meetPw: '',
+    poster: ''
+  },
+  {
+    id: 'demo_2',
+    date: '2026-06-25',
+    time: '19:00–21:00',
+    name: '許柏彥・分紅保單的節稅佈局及資產保全',
+    speaker: '許柏彥',
+    location: '線上',
+    organizer: '北四營運中心',
+    needReg: true,
+    regUrl: '',
+    meetUrl: '',
+    meetPw: '',
+    poster: ''
+  },
+  {
+    id: 'demo_3',
+    date: '2026-07-03',
+    time: '19:00–21:00',
+    name: '業務開發策略',
+    speaker: '',
+    location: '線上',
+    organizer: '北四營運中心',
+    needReg: true,
+    regUrl: '',
+    meetUrl: '',
+    meetPw: '',
+    poster: ''
+  }
+];
+
+async function schedLoadCourses() {
+  if (window._firebaseReady && window._db) {
+    try {
+      const snap = await window._fsGetDoc(window._fsDoc(window._db, 'settings', 'schedCourses'));
+      if (snap.exists() && snap.data().courses) {
+        SCHED_COURSES = snap.data().courses;
+      } else {
+        SCHED_COURSES = [...SCHED_DEMO];
+      }
+    } catch(e) {
+      SCHED_COURSES = [...SCHED_DEMO];
+    }
+  } else {
+    SCHED_COURSES = [...SCHED_DEMO];
+  }
+  renderSchedule();
+}
+
+async function schedSaveCourses() {
+  try { localStorage.setItem('shangang_sched', JSON.stringify(SCHED_COURSES)); } catch(e) {}
+  if (window._firebaseReady && window._db && currentUser && currentUser.isAdmin) {
+    try {
+      await window._fsSetDoc(window._fsDoc(window._db, 'settings', 'schedCourses'), { courses: SCHED_COURSES });
+    } catch(e) { console.error('課表儲存失敗', e); }
+  }
+}
+
+function schedIsDone(course) {
+  // 以「課程日期」當天結束後即視為已完成
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const courseDate = new Date(course.date + 'T00:00:00');
+  return courseDate < today;
+}
+
+function renderSchedule() {
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  const upcoming = SCHED_COURSES.filter(c => !schedIsDone(c)).sort((a,b)=>a.date.localeCompare(b.date));
+  const done     = SCHED_COURSES.filter(c =>  schedIsDone(c)).sort((a,b)=>b.date.localeCompare(a.date));
+
+  renderSchedList('sched-list-upcoming', upcoming, false);
+  renderSchedList('sched-list-done', done, true);
+}
+
+function renderSchedList(elId, courses, isDoneList) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  const isAdmin = currentUser && currentUser.isAdmin;
+
+  if (courses.length === 0) {
+    el.innerHTML = `<div style="padding:32px;text-align:center;color:var(--text-muted);font-size:13px;">${isDoneList ? '尚無已完成課程' : '本月目前無排定課程'}</div>`;
+    return;
+  }
+
+  el.innerHTML = courses.map((c, idx) => {
+    const dateDisp = c.date ? c.date.replace(/-/g,'.') : '—';
+    const speakerDisp = c.speaker ? `・${c.speaker}` : '';
+    const metaParts = [];
+    if (c.time) metaParts.push(c.time);
+    if (c.location) metaParts.push(c.location);
+    if (c.organizer) metaParts.push(c.organizer);
+    const metaStr = metaParts.join('　');
+    const regBadge = c.needReg
+      ? `<span class="sched-row-badge need-reg">需報名</span>`
+      : `<span class="sched-row-badge no-reg">免報名</span>`;
+    const adminBtns = isAdmin ? `
+      <div class="sched-admin-actions" onclick="event.stopPropagation()">
+        <button class="sched-admin-btn" onclick="openSchedEdit('${c.id}')">✎ 編輯</button>
+        <button class="sched-admin-btn del" onclick="deleteSchedCourse('${c.id}')">✕</button>
+      </div>` : '';
+    return `
+      <div class="sched-row" onclick="openSchedDetail('${c.id}')">
+        <div class="sched-row-date">${dateDisp}</div>
+        <div class="sched-row-info">
+          <div class="sched-row-name">${c.name}</div>
+          ${metaStr ? `<div class="sched-row-meta">${metaStr}</div>` : ''}
+        </div>
+        ${regBadge}
+        ${adminBtns}
+        <div class="sched-row-arrow">›</div>
+      </div>`;
+  }).join('');
+}
+
+function switchSchedTab(tab) {
+  _schedTab = tab;
+  const upBtn  = document.getElementById('stab-upcoming');
+  const doneBtn= document.getElementById('stab-done');
+  const upPane = document.getElementById('sched-pane-upcoming');
+  const donePane=document.getElementById('sched-pane-done');
+  if (!upBtn) return;
+
+  if (tab === 'upcoming') {
+    upBtn.style.cssText   = 'flex:1;padding:9px 12px;background:var(--gold-glow);border:none;border-right:1px solid var(--border);color:var(--gold);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font-body);transition:all 0.2s;';
+    doneBtn.style.cssText = 'flex:1;padding:9px 12px;background:transparent;border:none;color:var(--text-muted);font-size:13px;cursor:pointer;font-family:var(--font-body);transition:all 0.2s;';
+    upPane.style.display   = 'block';
+    donePane.style.display = 'none';
+  } else {
+    doneBtn.style.cssText = 'flex:1;padding:9px 12px;background:var(--gold-glow);border:none;border-left:1px solid var(--border);color:var(--gold);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font-body);transition:all 0.2s;';
+    upBtn.style.cssText   = 'flex:1;padding:9px 12px;background:transparent;border:none;border-right:1px solid var(--border);color:var(--text-muted);font-size:13px;cursor:pointer;font-family:var(--font-body);transition:all 0.2s;';
+    upPane.style.display   = 'none';
+    donePane.style.display = 'block';
+  }
+}
+
+function openSchedDetail(id) {
+  const c = SCHED_COURSES.find(x => x.id === id);
+  if (!c) return;
+  const isAdmin = currentUser && currentUser.isAdmin;
+
+  const field = (label, val, asLink) => {
+    if (!val) return '';
+    return `<div class="sched-detail-field">
+      <div class="sched-detail-label">${label}</div>
+      <div class="sched-detail-value">${asLink ? `<a class="sched-detail-link" href="${val}" target="_blank">${val}</a>` : val}</div>
+    </div>`;
+  };
+
+  let posterHtml = '';
+  if (c.poster) {
+    posterHtml = `<img class="sched-poster-thumb" src="${c.poster}" alt="課程海報" onclick="zoomPoster('${c.poster}')">`;
+  }
+
+  const regSection = c.needReg
+    ? `<div class="sched-detail-field"><div class="sched-detail-label">報名狀態</div><div class="sched-detail-value" style="color:var(--gold);">⚠ 此課程需要報名</div></div>
+       ${field('報名連結', c.regUrl, true)}`
+    : `<div class="sched-detail-field"><div class="sched-detail-label">報名狀態</div><div class="sched-detail-value" style="color:var(--green);">✓ 免報名</div></div>`;
+
+  const meetSection = (c.meetUrl || c.meetPw)
+    ? `${field('視訊會議連結', c.meetUrl, true)}${c.meetPw ? field('視訊會議密碼', c.meetPw, false) : ''}`
+    : '';
+
+  const adminBar = isAdmin ? `
+    <div style="display:flex;gap:8px;margin-top:4px;padding-top:16px;border-top:1px solid var(--border);">
+      <button onclick="document.getElementById('sched-detail-modal').classList.remove('open');openSchedEdit('${c.id}')" style="flex:1;background:var(--gold-glow);border:1px solid var(--gold-dim);border-radius:8px;color:var(--gold);font-size:13px;padding:9px;cursor:pointer;">✎ 編輯課程</button>
+      <button onclick="document.getElementById('sched-detail-modal').classList.remove('open');deleteSchedCourse('${c.id}')" style="background:transparent;border:1px solid rgba(224,92,92,0.3);border-radius:8px;color:var(--red);font-size:13px;padding:9px 14px;cursor:pointer;">刪除</button>
+    </div>` : '';
+
+  document.getElementById('sched-modal-title').textContent = c.name;
+  document.getElementById('sched-modal-body').innerHTML = `
+    ${posterHtml}
+    ${field('課程日期', c.date ? c.date.replace(/-/g,'.') : '', false)}
+    ${field('課程時間', c.time, false)}
+    ${field('講師', c.speaker, false)}
+    ${field('上課地點', c.location, false)}
+    ${field('主辦單位', c.organizer, false)}
+    ${regSection}
+    ${meetSection}
+    ${adminBar}
+  `;
+  document.getElementById('sched-detail-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSchedModal(e) {
+  if (!e || e.target === document.getElementById('sched-detail-modal')) {
+    document.getElementById('sched-detail-modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+}
+
+function zoomPoster(src) {
+  document.getElementById('poster-zoom-img').src = src;
+  document.getElementById('poster-zoom-overlay').classList.add('open');
+}
+
+// 管理者：新增 / 編輯
+function openScheduleAddModal() { openSchedEdit(null); }
+
+function openSchedEdit(id) {
+  const c = id ? SCHED_COURSES.find(x => x.id === id) : null;
+  document.getElementById('sched-edit-modal-title').textContent = c ? '編輯課程' : '新增課程';
+  document.getElementById('se-id').value       = c ? c.id : '';
+  document.getElementById('se-date').value     = c ? c.date : '';
+  document.getElementById('se-time').value     = c ? c.time : '';
+  document.getElementById('se-name').value     = c ? c.name : '';
+  document.getElementById('se-speaker').value  = c ? c.speaker : '';
+  document.getElementById('se-location').value = c ? c.location : '';
+  document.getElementById('se-organizer').value= c ? c.organizer : '';
+  document.getElementById('se-needreg').value  = c ? (c.needReg ? '1' : '0') : '0';
+  document.getElementById('se-regurl').value   = c ? c.regUrl : '';
+  document.getElementById('se-meeturl').value  = c ? c.meetUrl : '';
+  document.getElementById('se-meetpw').value   = c ? c.meetPw : '';
+  document.getElementById('se-poster').value   = c ? c.poster : '';
+  updatePosterPreview();
+  document.getElementById('sched-edit-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSchedEditModal(e, force) {
+  if (force || !e || e.target === document.getElementById('sched-edit-modal')) {
+    document.getElementById('sched-edit-modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+}
+
+function updatePosterPreview() {
+  const url = document.getElementById('se-poster').value.trim();
+  const preview = document.getElementById('se-poster-preview');
+  const img = document.getElementById('se-poster-img');
+  if (url) { img.src = url; preview.style.display = 'block'; }
+  else { preview.style.display = 'none'; }
+}
+// 海報輸入欄即時預覽
+document.addEventListener('DOMContentLoaded', () => {
+  const posterInput = document.getElementById('se-poster');
+  if (posterInput) posterInput.addEventListener('input', updatePosterPreview);
+});
+
+async function saveSchedCourse() {
+  const id   = document.getElementById('se-id').value;
+  const date = document.getElementById('se-date').value;
+  const name = document.getElementById('se-name').value.trim();
+  if (!date || !name) { showToast('⚠ 請填寫日期與課程名稱'); return; }
+
+  const course = {
+    id: id || ('sc_' + Date.now()),
+    date,
+    time:      document.getElementById('se-time').value.trim(),
+    name,
+    speaker:   document.getElementById('se-speaker').value.trim(),
+    location:  document.getElementById('se-location').value.trim(),
+    organizer: document.getElementById('se-organizer').value.trim(),
+    needReg:   document.getElementById('se-needreg').value === '1',
+    regUrl:    document.getElementById('se-regurl').value.trim(),
+    meetUrl:   document.getElementById('se-meeturl').value.trim(),
+    meetPw:    document.getElementById('se-meetpw').value.trim(),
+    poster:    document.getElementById('se-poster').value.trim()
+  };
+
+  if (id) {
+    const idx = SCHED_COURSES.findIndex(c => c.id === id);
+    if (idx >= 0) SCHED_COURSES[idx] = course;
+    else SCHED_COURSES.push(course);
+  } else {
+    SCHED_COURSES.push(course);
+  }
+
+  await schedSaveCourses();
+  renderSchedule();
+  closeSchedEditModal(null, true);
+  showToast('✓ 課程已儲存');
+}
+
+async function deleteSchedCourse(id) {
+  if (!confirm('確定要刪除此課程？')) return;
+  SCHED_COURSES = SCHED_COURSES.filter(c => c.id !== id);
+  await schedSaveCourses();
+  renderSchedule();
+  showToast('已刪除課程');
+}
+
+// ─── 保留相容舊呼叫 ─────────────────────
 function switchActivitySub(sub) {
-  // 新版月會和課表都在同一頁面顯示，這裡只做捲動定位
   const target = sub === 'monthly'
     ? document.getElementById('activity-sub-monthly')
     : document.getElementById('activity-sub-schedule');
   if (target) setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
 }
-
-// 課表篩選
-let _schedCurrentFilter = 'all';
-function schedFilter(tag) {
-  _schedCurrentFilter = tag;
-  // 更新 filter button active 狀態
-  document.querySelectorAll('.sched-filter-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.filter === tag);
-  });
-  // 顯示/隱藏課程項目
-  document.querySelectorAll('#schedule-cards-wrap [data-tags]').forEach(el => {
-    const elTags = el.getAttribute('data-tags') || '';
-    if (tag === 'all' || elTags.includes(tag)) {
-      el.style.display = '';
-    } else {
-      el.style.display = 'none';
-    }
-  });
-  // 如果 season block 內所有項目都隱藏，隱藏整個 block
-  document.querySelectorAll('.sched-season-block').forEach(block => {
-    const items = block.querySelectorAll('[data-tags]');
-    const anyVisible = Array.from(items).some(i => i.style.display !== 'none');
-    block.style.display = (tag === 'all' || anyVisible) ? '' : 'none';
-  });
-}
+function schedFilter() {} // 舊版已移除，保留空函式防報錯
 
 function bootstrap() {
   const s = loadSession();
@@ -1792,10 +2120,13 @@ function showApp() {
     document.getElementById('admin-btn').style.display = 'inline-block';
     document.getElementById('view-toggle-btn').style.display = 'inline-block';
     document.getElementById('admin-section').style.display = 'block';
-    const schedAdminBar = document.getElementById('schedule-admin-bar');
-    if (schedAdminBar) schedAdminBar.style.display = 'block';
+    const schedAdminBar = document.getElementById('schedule-admin-add-btn');
+    if (schedAdminBar) schedAdminBar.style.display = 'inline-block';
     loadAdminData();
   }
+
+  // 載入選修課表
+  schedLoadCourses();
 
   // Member tools unlock
   applyMemberAccess();
@@ -2202,6 +2533,9 @@ function closeCourseModal(e) {
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
     document.getElementById('course-modal').classList.remove('open');
+    document.getElementById('sched-detail-modal')?.classList.remove('open');
+    document.getElementById('sched-edit-modal')?.classList.remove('open');
+    document.getElementById('poster-zoom-overlay')?.classList.remove('open');
     document.body.style.overflow = '';
   }
 });
@@ -2236,6 +2570,11 @@ window.addEventListener('scroll', function() {
   else btn.classList.remove('show');
 });
 </script>
+
+<!-- 海報放大 Overlay -->
+<div id="poster-zoom-overlay" onclick="this.classList.remove('open')">
+  <img id="poster-zoom-img" src="" alt="課程海報">
+</div>
 
 <button class="scroll-top-btn" id="scroll-top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">▲</button>
 </body>
