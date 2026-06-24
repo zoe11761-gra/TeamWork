@@ -277,8 +277,14 @@ body {
 
 /* ─── SOP Sub-tabs ─── */
 .sop-tabs-wrap {
-  display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap;
+  display: flex; gap: 6px; margin-bottom: 16px;
+  overflow-x: auto; overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  padding-bottom: 4px;
+  flex-wrap: nowrap;
 }
+.sop-tabs-wrap::-webkit-scrollbar { display: none; }
 .sop-tab-btn {
   background: transparent; border: 1px solid var(--border);
   border-radius: 8px; padding: 8px 16px; font-size: 16px;
@@ -680,9 +686,9 @@ select.se-input { cursor: pointer; }
   .users-table { font-size: 14px; }
   .users-table th, .users-table td { padding: 8px 6px; }
 
-  /* SOP tabs */
-  .sop-tabs-wrap { flex-wrap: wrap; gap: 4px; }
-  .sop-tab-btn { flex: 1 0 auto; min-width: 72px; font-size: 13px; padding: 7px 8px; }
+  /* SOP tabs — horizontal scroll */
+  .sop-tabs-wrap { flex-wrap: nowrap; gap: 6px; }
+  .sop-tab-btn { flex: 0 0 auto; font-size: 13px; padding: 7px 12px; white-space: nowrap; }
 
   /* 首頁激勵短句 */
   #quote-text { font-size: 17px !important; padding: 0 4px; }
@@ -815,7 +821,7 @@ select.se-input { cursor: pointer; }
 
     <!-- ── 首頁 ── -->
     <div class="tab-page fade-section" id="tab-home">
-      <div class="section-label"><span class="tag">首頁</span><div class="line"></div></div>
+      <div class="section-label"><span class="tag">Fighting</span><div class="line"></div></div>
 
       <!-- 激勵短句輪播 -->
       <div id="quote-card" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 24px;text-align:center;min-height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
@@ -1312,7 +1318,7 @@ select.se-input { cursor: pointer; }
 
     <!-- ── 常態課程 ── -->
     <div class="tab-page fade-section" id="tab-activity" style="display:none;">
-      <div class="section-label"><span class="tag">常態課程</span><div class="line"></div></div>
+      <div class="section-label"><span class="tag">影片資源</span><div class="line"></div></div>
 
       <!-- ① 上方 2 columns：北四課程 + 上岸學習 -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px;">
@@ -1320,15 +1326,15 @@ select.se-input { cursor: pointer; }
         <a class="link-card" href="https://www.youtube.com/playlist?list=PLDF5-xse-9XBuBpYhIHtoePNEjMg-YkSv" target="_blank" onclick="trackClick('beisi-course')" style="display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:18px 16px 16px;position:relative;">
           <span style="color:var(--gold);font-size:13px;position:absolute;top:14px;right:14px;">→</span>
           <span style="font-size:26px;line-height:1;margin-bottom:2px;">🎓</span>
-          <div class="card-title" style="margin:0;font-size:15px;">北四課程</div>
-          <div style="font-size:11px;color:var(--text-muted);letter-spacing:0.04em;line-height:1.4;">週課程回放影片</div>
+          <div class="card-title" style="margin:0;">北四課程</div>
+          <div class="card-desc" style="letter-spacing:0.04em;">週課程回放影片</div>
         </a>
         <!-- 上岸學習 -->
         <a class="link-card" href="https://www.youtube.com/playlist?list=PLDF5-xse-9XDQVQIC7h7JNLXfFxCPdExE" target="_blank" onclick="trackClick('monthly-meeting')" style="display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:18px 16px 16px;position:relative;">
           <span style="color:var(--gold);font-size:13px;position:absolute;top:14px;right:14px;">→</span>
           <span style="font-size:26px;line-height:1;margin-bottom:2px;">🌊</span>
-          <div class="card-title" style="margin:0;font-size:15px;">上岸學習</div>
-          <div style="font-size:11px;color:var(--text-muted);letter-spacing:0.04em;line-height:1.4;">月學習回放影片</div>
+          <div class="card-title" style="margin:0;">上岸學習</div>
+          <div class="card-desc" style="letter-spacing:0.04em;">月學習回放影片</div>
         </a>
       </div>
 
@@ -1469,7 +1475,7 @@ select.se-input { cursor: pointer; }
     <!-- ── 夥伴限定工具區 ── -->
     <div class="tab-page fade-section" id="tab-member" style="display:none;">
       <div class="section-label">
-        <span class="tag member-tag">草草 Team</span>
+        <span class="tag member-tag">獨家資源</span>
         <div class="line"></div>
         <span class="lock-icon" id="member-lock-icon">🔒</span>
       </div>
@@ -1482,16 +1488,16 @@ select.se-input { cursor: pointer; }
         </div>
         <!-- Actual cards (blurred until unlocked) -->
         <div class="cards-grid" id="member-cards" style="filter:blur(4px);pointer-events:none;user-select:none;">
-          <a class="link-card member-card" href="https://zoe11761-gra.github.io/car-accident-claim/" target="_blank" onclick="trackClick('accident-claim')">
-            <span class="card-icon">🚗</span>
-            <div class="card-title">車禍求償明細產生器</div>
-            <div class="card-desc">自動整理求償項目與金額明細</div>
-            <div class="card-arrow">→</div>
-          </a>
           <a class="link-card member-card" href="https://finfo.tw/" target="_blank" onclick="trackClick('finfo')">
             <span class="card-icon">📊</span>
             <div class="card-title">Finfo 保單檢視/新契約搭配</div>
             <div class="card-desc">帳號密碼請跟草草拿</div>
+            <div class="card-arrow">→</div>
+          </a>
+          <a class="link-card member-card" href="https://zoe11761-gra.github.io/car-accident-claim/" target="_blank" onclick="trackClick('accident-claim')">
+            <span class="card-icon">🚗</span>
+            <div class="card-title">車禍求償明細產生器</div>
+            <div class="card-desc">自動整理求償項目與金額明細</div>
             <div class="card-arrow">→</div>
           </a>
           <!-- 草草可在此繼續新增夥伴限定工具卡片 -->
