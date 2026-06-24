@@ -807,15 +807,15 @@ select.se-input { cursor: pointer; }
 
 
       <!-- ── 首頁行事曆 ── -->
-      <div id="home-calendar" style="margin-top:16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;">
+      <div id="home-calendar" style="margin-top:16px;background:var(--surface);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);overflow:hidden;">
         <!-- 行事曆標題列 -->
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px 10px;border-bottom:1px solid var(--border);">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px 10px;border-bottom:1px solid rgba(255,255,255,0.06);">
           <button onclick="calChangeMonth(-1)" style="background:none;border:none;color:var(--gold);font-size:18px;cursor:pointer;padding:4px 8px;line-height:1;">‹</button>
           <div id="cal-title" style="font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--gold);letter-spacing:0.08em;"></div>
           <button onclick="calChangeMonth(1)" style="background:none;border:none;color:var(--gold);font-size:18px;cursor:pointer;padding:4px 8px;line-height:1;">›</button>
         </div>
         <!-- 星期標題 -->
-        <div style="display:grid;grid-template-columns:repeat(7,1fr);text-align:center;padding:8px 10px 4px;border-bottom:1px solid var(--border);">
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);text-align:center;padding:8px 10px 4px;border-bottom:1px solid rgba(255,255,255,0.06);">
           <div style="font-size:11px;color:var(--red);padding:4px 0;font-weight:500;letter-spacing:0.05em;">日</div>
           <div style="font-size:11px;color:var(--text-muted);padding:4px 0;letter-spacing:0.05em;">一</div>
           <div style="font-size:11px;color:var(--text-muted);padding:4px 0;letter-spacing:0.05em;">二</div>
@@ -827,7 +827,7 @@ select.se-input { cursor: pointer; }
         <!-- 日期格子 -->
         <div id="cal-grid"></div>
         <!-- 管理者新增按鈕 -->
-        <div id="cal-admin-bar" style="display:none;padding:10px 16px 14px;border-top:1px solid var(--border);">
+        <div id="cal-admin-bar" style="display:none;padding:10px 16px 14px;border-top:1px solid rgba(255,255,255,0.06);">
           <button onclick="openCalAddModal()" style="width:100%;background:var(--gold-glow);border:1px solid var(--gold-dim);border-radius:8px;color:var(--gold);font-size:13px;padding:9px;cursor:pointer;">＋ 新增行事曆排程</button>
         </div>
       </div>
@@ -1315,22 +1315,40 @@ select.se-input { cursor: pointer; }
     <div class="tab-page fade-section" id="tab-activity" style="display:none;">
       <div class="section-label"><span class="tag">常態課程</span><div class="line"></div></div>
 
-      <!-- ① 上方 2 columns：北四課程 + 上岸月會 -->
+      <!-- ① 上方 2 columns：北四課程 + 上岸學習 -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px;">
         <!-- 北四課程 -->
-        <a class="link-card" href="https://www.youtube.com/playlist?list=PLDF5-xse-9XBuBpYhIHtoePNEjMg-YkSv" target="_blank" onclick="trackClick('beisi-course')">
-          <span class="card-icon">🎓</span>
-          <div class="card-title">北四課程</div>
-          <div class="card-desc">北四營運中心課程影片播放清單</div>
-          <div class="card-arrow">→</div>
-        </a>
-        <!-- 上岸月會 -->
-        <a class="link-card" href="https://www.youtube.com/playlist?list=PLDF5-xse-9XDQVQIC7h7JNLXfFxCPdExE" target="_blank" onclick="trackClick('monthly-meeting')">
-          <span class="card-icon">🗓</span>
-          <div class="card-title">上岸月會</div>
-          <div class="card-desc">歷次月會影片播放清單</div>
-          <div class="card-arrow">→</div>
-        </a>
+        <div class="link-card" style="cursor:default;padding:0;overflow:hidden;">
+          <div style="padding:16px 18px 12px;border-bottom:1px solid rgba(255,255,255,0.06);">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;">
+              <span style="font-size:18px;">🎓</span>
+              <div class="card-title" style="margin:0;">北四課程</div>
+            </div>
+          </div>
+          <a href="https://www.youtube.com/playlist?list=PLDF5-xse-9XBuBpYhIHtoePNEjMg-YkSv" target="_blank" onclick="trackClick('beisi-course')" style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;text-decoration:none;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.04)'" onmouseout="this.style.background=''">
+            <div>
+              <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px;">📹 週課程回放影片</div>
+              <div style="font-size:12px;color:var(--text-dim);">北四營運中心課程播放清單</div>
+            </div>
+            <span style="color:var(--gold);font-size:14px;flex-shrink:0;margin-left:8px;">→</span>
+          </a>
+        </div>
+        <!-- 上岸學習 -->
+        <div class="link-card" style="cursor:default;padding:0;overflow:hidden;">
+          <div style="padding:16px 18px 12px;border-bottom:1px solid rgba(255,255,255,0.06);">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;">
+              <span style="font-size:18px;">🌊</span>
+              <div class="card-title" style="margin:0;">上岸學習</div>
+            </div>
+          </div>
+          <a href="https://www.youtube.com/playlist?list=PLDF5-xse-9XDQVQIC7h7JNLXfFxCPdExE" target="_blank" onclick="trackClick('monthly-meeting')" style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;text-decoration:none;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.04)'" onmouseout="this.style.background=''">
+            <div>
+              <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px;">🗓 月學習回放影片</div>
+              <div style="font-size:12px;color:var(--text-dim);">歷次月會影片播放清單</div>
+            </div>
+            <span style="color:var(--gold);font-size:14px;flex-shrink:0;margin-left:8px;">→</span>
+          </a>
+        </div>
       </div>
 
       <!-- ② 選修課表 -->
@@ -1393,10 +1411,23 @@ select.se-input { cursor: pointer; }
             <div><label class="se-label">課程名稱 *</label><input class="se-input" id="se-name" type="text" placeholder="例：壽險商品解析"></div>
             <div><label class="se-label">講師姓名</label><input class="se-input" id="se-speaker" type="text" placeholder="例：張晏榕"></div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-              <div><label class="se-label">主辦單位</label><input class="se-input" id="se-organizer" type="text" placeholder="例：北四營運中心"></div>
+              <div>
+                <label class="se-label">主辦單位</label>
+                <select class="se-input" id="se-organizer">
+                  <option value="">（請選擇）</option>
+                  <option value="信安保經">信安保經</option>
+                  <option value="海川大系統">海川大系統</option>
+                  <option value="信安北四">信安北四</option>
+                  <option value="上岸團隊">上岸團隊</option>
+                </select>
+              </div>
               <div><label class="se-label">上課地點</label><input class="se-input" id="se-location" type="text" placeholder="例：線上 / 信安台北"></div>
             </div>
             <div><label class="se-label">地點 Google Maps 連結 <span style="font-size:10px;color:var(--text-muted);font-style:italic;">（選填，線上課程可留空）</span></label><input class="se-input" id="se-locationurl" type="url" placeholder="https://maps.app.goo.gl/..."></div>
+            <div>
+              <label class="se-label">課程簡介 <span style="font-size:10px;color:var(--text-muted);font-style:italic;">（選填）</span></label>
+              <textarea class="se-input" id="se-desc" rows="3" placeholder="課程內容簡介、注意事項…" style="resize:vertical;min-height:72px;line-height:1.6;"></textarea>
+            </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
               <div>
                 <label class="se-label">是否需要報名</label>
@@ -1970,9 +2001,10 @@ function renderSchedList(elId, courses, isDoneList) {
         ? `<span class="speaker-tag">${c.speaker}</span><span class="sched-meta-sep">｜</span>${c.name}`
         : c.name;
 
+      // 報名 badge（只顯示「需報名」）
       const regBadge = c.needReg
         ? `<span class="sched-row-badge need-reg">需報名</span>`
-        : `<span class="sched-row-badge no-reg">免報名</span>`;
+        : '';
 
       const adminBtns = isAdmin ? `
         <div class="sched-admin-actions" onclick="event.stopPropagation()">
@@ -2055,7 +2087,7 @@ function openSchedDetail(id) {
       <div class="sched-detail-value" style="color:var(--gold);">✦ ${c.speaker}</div>
     </div>` : '';
 
-  // ── 主辦單位 / 地點（地點有 Google Maps 連結）──
+  // ── 主辦單位｜上課地點 ──
   let locationBlock = '';
   if (c.organizer || c.location) {
     const mapsUrl = c.locationUrl || '';
@@ -2064,16 +2096,23 @@ function openSchedDetail(id) {
       : '';
     locationBlock = `
       <div class="sched-detail-field">
-        <div class="sched-detail-label">主辦單位 / 上課地點</div>
+        <div class="sched-detail-label">主辦單位｜上課地點</div>
         <div class="sched-detail-value">
           ${c.organizer ? `<span>${c.organizer}</span>` : ''}
-          ${c.organizer && c.location ? '<span style="color:var(--text-muted);margin:0 6px;">／</span>' : ''}
+          ${c.organizer && c.location ? '<span style="color:var(--text-muted);margin:0 6px;">｜</span>' : ''}
           ${locationVal}
         </div>
       </div>`;
   }
 
-  // ── 報名狀態 / 我要報名按鈕 ──
+  // ── 課程簡介 ──
+  const descBlock = c.desc ? `
+    <div class="sched-detail-field">
+      <div class="sched-detail-label">課程簡介</div>
+      <div class="sched-detail-value" style="white-space:pre-line;line-height:1.7;font-size:13px;color:var(--text-dim);">${c.desc}</div>
+    </div>` : '';
+
+  // ── 報名狀態（免報名不顯示）──
   let regBlock = '';
   if (c.needReg) {
     regBlock = `
@@ -2083,12 +2122,6 @@ function openSchedDetail(id) {
           <div class="sched-detail-value" style="color:var(--gold);">⚠ 此課程需要報名</div>
           ${c.regUrl ? `<a href="${c.regUrl}" target="_blank" style="display:inline-block;background:linear-gradient(135deg,#c9a84c,#a07830);color:#1a1208;font-weight:700;font-size:12px;padding:6px 16px;border-radius:6px;text-decoration:none;white-space:nowrap;letter-spacing:0.05em;">→ 我要報名</a>` : ''}
         </div>
-      </div>`;
-  } else {
-    regBlock = `
-      <div class="sched-detail-field">
-        <div class="sched-detail-label">報名狀態</div>
-        <div class="sched-detail-value" style="color:var(--green);">✓ 免報名</div>
       </div>`;
   }
 
@@ -2121,7 +2154,7 @@ function openSchedDetail(id) {
 
   document.getElementById('sched-modal-title').textContent = c.name;
   document.getElementById('sched-modal-body').innerHTML =
-    dateTimeBlock + speakerBlock + locationBlock + regBlock + meetBlock + posterBlock + adminBar;
+    dateTimeBlock + speakerBlock + locationBlock + descBlock + regBlock + meetBlock + posterBlock + adminBar;
 
   document.getElementById('sched-detail-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -2152,7 +2185,8 @@ function openSchedEdit(id) {
   document.getElementById('se-speaker').value     = c ? c.speaker : '';
   document.getElementById('se-location').value    = c ? c.location : '';
   document.getElementById('se-locationurl').value = c ? (c.locationUrl || '') : '';
-  document.getElementById('se-organizer').value   = c ? c.organizer : '';
+  document.getElementById('se-organizer').value   = c ? (c.organizer || '') : '';
+  document.getElementById('se-desc').value        = c ? (c.desc || '') : '';
   document.getElementById('se-needreg').value     = c ? (c.needReg ? '1' : '0') : '0';
   document.getElementById('se-regurl').value      = c ? c.regUrl : '';
   document.getElementById('se-meeturl').value     = c ? c.meetUrl : '';
@@ -2228,7 +2262,8 @@ async function saveSchedCourse() {
     speaker:     document.getElementById('se-speaker').value.trim(),
     location:    document.getElementById('se-location').value.trim(),
     locationUrl: document.getElementById('se-locationurl').value.trim(),
-    organizer:   document.getElementById('se-organizer').value.trim(),
+    organizer:   document.getElementById('se-organizer').value,
+    desc:        document.getElementById('se-desc').value.trim(),
     needReg:     document.getElementById('se-needreg').value === '1',
     regUrl:      document.getElementById('se-regurl').value.trim(),
     meetUrl:     document.getElementById('se-meeturl').value.trim(),
