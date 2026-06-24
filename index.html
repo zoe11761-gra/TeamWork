@@ -1593,10 +1593,19 @@ function renderCalendar() {
   const months = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
   titleEl.textContent = calYear + ' · ' + months[calMonth];
 
-  // 管理者顯示新增按鈕
   if (adminBar) adminBar.style.display = (currentUser && currentUser.isAdmin) ? 'block' : 'none';
 
-  const firstDay = new Date(calYear, calMonth, 1).getDay(); // 0=日
+  // ── 合併手動行事曆事件 + 選修課表課程 ──
+  const schedAsEvents = (SCHED_COURSES || []).map(c => ({
+    date:    c.date,
+    title:   c.name,
+    time:    c.time || '',
+    schedId: c.id,        // 用來識別是課表課程
+    linkTarget: 'sched'
+  }));
+  const allEvents = [...calEvents, ...schedAsEvents];
+
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
   const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
   const daysInPrevMonth = new Date(calYear, calMonth, 0).getDate();
   const today = new Date();
@@ -1614,24 +1623,30 @@ function renderCalendar() {
       ? calYear + '-' + String(calMonth + 1).padStart(2,'0') + '-' + String(dayNum).padStart(2,'0')
       : '';
 
-    const dayEvents = isCurrentMonth ? calEvents.filter(e => e.date === dateStr) : [];
+    const dayEvents = isCurrentMonth ? allEvents.filter(e => e.date === dateStr) : [];
     const isToday = isCurrentMonth && today.getFullYear() === calYear && today.getMonth() === calMonth && today.getDate() === dayNum;
     const hasEvents = dayEvents.length > 0;
 
     const dayColor = isToday ? 'color:var(--gold);font-weight:700;' : isCurrentMonth ? 'color:var(--text);' : 'color:var(--text-muted);opacity:0.35;';
     const cellBg = isToday
-      ? 'background:linear-gradient(135deg,rgba(201,168,76,0.18),rgba(201,168,76,0.08));border-color:var(--gold-dim);'
-      : 'background:var(--surface2);border-color:var(--border);';
+      ? 'background:linear-gradient(135deg,rgba(201,168,76,0.15),rgba(201,168,76,0.06));border-color:rgba(201,168,76,0.45);'
+      : isCurrentMonth
+        ? 'background:rgba(255,255,255,0.025);border-color:rgba(255,255,255,0.06);'
+        : 'background:transparent;border-color:rgba(255,255,255,0.03);';
 
-    html += `<div onclick="${hasEvents ? "calDayClick('" + dateStr + "')" : ''}" style="${cellBg}border:1px solid;border-radius:8px;padding:6px 4px 5px;cursor:${hasEvents ? 'pointer' : 'default'};position:relative;min-height:52px;transition:border-color 0.15s,background 0.15s;" ${hasEvents ? 'class="cal-cell-has-event"' : ''}>`;
+    html += `<div style="${cellBg}border:1px solid;border-radius:8px;padding:6px 4px 5px;cursor:default;position:relative;min-height:52px;transition:border-color 0.15s,background 0.15s;" ${hasEvents ? 'class="cal-cell-has-event"' : ''}>`;
     html += `<div style="font-size:12px;${dayColor}text-align:left;padding:0 2px;line-height:1;">${displayDay}</div>`;
     if (hasEvents) {
       html += '<div style="margin-top:3px;display:flex;flex-direction:column;gap:2px;">';
       dayEvents.slice(0, 2).forEach(ev => {
-        html += `<div style="font-size:9px;background:rgba(92,168,201,0.18);border:1px solid rgba(92,168,201,0.3);border-radius:3px;padding:1px 4px;color:var(--teal);line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;">${ev.title}</div>`;
+        const clickHandler = ev.schedId
+          ? `calSchedChipClick(event,'${ev.schedId}')`
+          : `calChipClick(event,'${dateStr}')`;
+        const timeLabel = ev.time ? ev.time.split('–')[0].split('—')[0].trim() + ' ' : '';
+        html += `<div onclick="${clickHandler}" style="font-size:9px;background:rgba(92,168,201,0.15);border:1px solid rgba(92,168,201,0.28);border-radius:3px;padding:1px 4px;color:var(--teal);line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;cursor:pointer;" title="${ev.title}">${timeLabel}${ev.title}</div>`;
       });
       if (dayEvents.length > 2) {
-        html += `<div style="font-size:9px;color:var(--text-muted);padding-left:2px;">+${dayEvents.length - 2} 更多</div>`;
+        html += `<div onclick="calChipClick(event,'${dateStr}')" style="font-size:9px;color:var(--text-muted);padding-left:2px;cursor:pointer;">+${dayEvents.length - 2} 更多</div>`;
       }
       html += '</div>';
     }
@@ -1639,35 +1654,36 @@ function renderCalendar() {
   }
   gridEl.innerHTML = html;
 
-  // hover style via JS (no stylesheet injection needed)
+  // hover style
   gridEl.querySelectorAll('.cal-cell-has-event').forEach(el => {
-    el.addEventListener('mouseenter', () => { el.style.borderColor = 'var(--teal)'; });
+    el.addEventListener('mouseenter', () => { el.style.borderColor = 'rgba(92,168,201,0.5)'; el.style.background = 'rgba(92,168,201,0.06)'; });
     el.addEventListener('mouseleave', () => {
-      const isTodayCell = el.querySelector('[style*="color:var(--gold)"]');
-      el.style.borderColor = isTodayCell ? 'var(--gold-dim)' : 'var(--border)';
+      const isGold = el.style.borderColor && el.style.borderColor.includes('201,168,76');
+      el.style.borderColor = isGold ? 'rgba(201,168,76,0.45)' : 'rgba(255,255,255,0.06)';
+      el.style.background  = isGold ? 'linear-gradient(135deg,rgba(201,168,76,0.15),rgba(201,168,76,0.06))' : 'rgba(255,255,255,0.025)';
     });
   });
 }
 
-function calDayClick(dateStr) {
-  const dayEvents = calEvents.filter(e => e.date === dateStr);
-  if (dayEvents.length === 0) return;
-  // 跳轉到「團隊常態課程」分頁
+// 點擊選修課表課程 chip → 跳至常態課程並開啟詳情
+function calSchedChipClick(e, schedId) {
+  e.stopPropagation();
+  switchTab('activity');
+  setTimeout(() => openSchedDetail(schedId), 280);
+}
+
+// 點擊手動行事曆事件 chip（或「+N 更多」）→ 跳至常態課程
+function calChipClick(e, dateStr) {
+  e.stopPropagation();
   switchTab('activity');
   setTimeout(() => {
-    if (dayEvents.length === 1 && dayEvents[0].linkTarget) {
-      // 有指定連結目標：切換到對應子分頁
-      if (dayEvents[0].linkTarget === 'schedule-monthly') {
-        switchActivitySub('monthly');
-      } else {
-        switchActivitySub('schedule');
-      }
-    }
-    // 無論如何都捲動到分頁頂端
     const activityEl = document.getElementById('tab-activity');
     if (activityEl) activityEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, 200);
 }
+
+// 保留舊函式名稱防報錯
+function calDayClick(dateStr) { calChipClick({ stopPropagation:()=>{} }, dateStr); }
 
 function openCalAddModal() {
   const today = new Date();
@@ -1794,6 +1810,9 @@ function renderSchedule() {
 
   renderSchedList('sched-list-upcoming', upcoming, false);
   renderSchedList('sched-list-done', done, true);
+
+  // 同步更新首頁行事曆
+  renderCalendar();
 }
 
 function renderSchedList(elId, courses, isDoneList) {
