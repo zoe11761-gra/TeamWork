@@ -851,6 +851,13 @@ select.se-input { cursor: pointer; }
             <div class="stat-box"><div class="stat-num" id="stat-logins">—</div><div class="stat-label">總登入次數</div></div>
             <div class="stat-box"><div class="stat-num" id="stat-clicks">—</div><div class="stat-label">總功能點擊</div></div>
           </div>
+
+          <!-- 常用功能排行 -->
+          <div style="margin:18px 0 14px;">
+            <div style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">📊 常用功能排行（全員累計）</div>
+            <div id="feature-chart" style="display:flex;flex-direction:column;gap:7px;"></div>
+          </div>
+
           <div style="overflow-x:auto;">
             <table class="users-table">
               <thead><tr><th>使用者</th><th>身份</th><th>最後登入</th><th>登入次</th><th>最常用功能</th></tr></thead>
@@ -1283,37 +1290,23 @@ select.se-input { cursor: pointer; }
       <!-- ① 上方 2 columns：北四課程 + 上岸學習 -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px;">
         <!-- 北四課程 -->
-        <div class="link-card" style="cursor:default;padding:0;overflow:hidden;">
-          <div style="padding:16px 18px 12px;border-bottom:1px solid rgba(255,255,255,0.06);">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;">
-              <span style="font-size:18px;">🎓</span>
-              <div class="card-title" style="margin:0;">北四課程</div>
-            </div>
+        <a class="link-card" href="https://www.youtube.com/playlist?list=PLDF5-xse-9XBuBpYhIHtoePNEjMg-YkSv" target="_blank" onclick="trackClick('beisi-course')" style="display:flex;flex-direction:column;gap:6px;padding:16px 18px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:18px;">🎓</span>
+            <div class="card-title" style="margin:0;">北四課程</div>
+            <span style="color:var(--gold);font-size:13px;margin-left:auto;">→</span>
           </div>
-          <a href="https://www.youtube.com/playlist?list=PLDF5-xse-9XBuBpYhIHtoePNEjMg-YkSv" target="_blank" onclick="trackClick('beisi-course')" style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;text-decoration:none;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.04)'" onmouseout="this.style.background=''">
-            <div>
-              <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px;">📹 週課程回放影片</div>
-              <div style="font-size:12px;color:var(--text-dim);">北四營運中心課程播放清單</div>
-            </div>
-            <span style="color:var(--gold);font-size:14px;flex-shrink:0;margin-left:8px;">→</span>
-          </a>
-        </div>
+          <div style="font-size:11px;color:var(--text-muted);letter-spacing:0.05em;">📹 週課程回放影片</div>
+        </a>
         <!-- 上岸學習 -->
-        <div class="link-card" style="cursor:default;padding:0;overflow:hidden;">
-          <div style="padding:16px 18px 12px;border-bottom:1px solid rgba(255,255,255,0.06);">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;">
-              <span style="font-size:18px;">🌊</span>
-              <div class="card-title" style="margin:0;">上岸學習</div>
-            </div>
+        <a class="link-card" href="https://www.youtube.com/playlist?list=PLDF5-xse-9XDQVQIC7h7JNLXfFxCPdExE" target="_blank" onclick="trackClick('monthly-meeting')" style="display:flex;flex-direction:column;gap:6px;padding:16px 18px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="font-size:18px;">🌊</span>
+            <div class="card-title" style="margin:0;">上岸學習</div>
+            <span style="color:var(--gold);font-size:13px;margin-left:auto;">→</span>
           </div>
-          <a href="https://www.youtube.com/playlist?list=PLDF5-xse-9XDQVQIC7h7JNLXfFxCPdExE" target="_blank" onclick="trackClick('monthly-meeting')" style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;text-decoration:none;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.04)'" onmouseout="this.style.background=''">
-            <div>
-              <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px;">🗓 月學習回放影片</div>
-              <div style="font-size:12px;color:var(--text-dim);">歷次月會影片播放清單</div>
-            </div>
-            <span style="color:var(--gold);font-size:14px;flex-shrink:0;margin-left:8px;">→</span>
-          </a>
-        </div>
+          <div style="font-size:11px;color:var(--text-muted);letter-spacing:0.05em;">🗓 月學習回放影片</div>
+        </a>
       </div>
 
       <!-- ② 選修課表 -->
@@ -1731,7 +1724,7 @@ function renderCalendar() {
     const cellBg = isToday
       ? 'background:linear-gradient(135deg,rgba(201,168,76,0.15),rgba(201,168,76,0.06));border-color:rgba(201,168,76,0.6);'
       : isCurrentMonth
-        ? 'background:rgba(255,255,255,0.02);border-color:rgba(255,255,255,0.035);'
+        ? 'background:rgba(255,255,255,0.02);border-color:rgba(255,255,255,0.005);'
         : 'background:transparent;border:none;';
 
     const borderStyle = (!isCurrentMonth) ? 'border:none;' : 'border:1px solid;';
@@ -2632,7 +2625,49 @@ async function loadAdminData() {
 
     renderStatsTable();
     renderMembersTable();
+    renderFeatureChart(snap);
   } catch(e) { console.error(e); }
+}
+
+function renderFeatureChart(snap) {
+  const el = document.getElementById('feature-chart');
+  if (!el) return;
+
+  // 合計所有使用者的 featureClicks
+  const totals = {};
+  snap.forEach(doc => {
+    const fc = doc.data().featureClicks || {};
+    Object.entries(fc).forEach(([k, v]) => {
+      totals[k] = (totals[k] || 0) + v;
+    });
+  });
+
+  const sorted = Object.entries(totals).sort((a, b) => b[1] - a[1]);
+  if (sorted.length === 0) {
+    el.innerHTML = '<div style="font-size:12px;color:var(--text-muted);padding:8px 0;">尚無點擊記錄</div>';
+    return;
+  }
+
+  const max = sorted[0][1];
+  const colors = [
+    'rgba(201,168,76,0.85)', 'rgba(201,168,76,0.65)', 'rgba(201,168,76,0.5)',
+    'rgba(201,168,76,0.38)', 'rgba(201,168,76,0.28)'
+  ];
+
+  el.innerHTML = sorted.slice(0, 8).map(([key, cnt], i) => {
+    const label = LINKS[key]?.label || key;
+    const pct = Math.round((cnt / max) * 100);
+    const barColor = colors[Math.min(i, colors.length - 1)];
+    return `
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="font-size:11px;color:var(--text-dim);min-width:110px;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right;flex-shrink:0;">${label}</div>
+        <div style="flex:1;background:rgba(255,255,255,0.05);border-radius:4px;height:18px;overflow:hidden;">
+          <div style="height:100%;width:${pct}%;background:${barColor};border-radius:4px;transition:width 0.6s ease;display:flex;align-items:center;padding-left:6px;box-sizing:border-box;min-width:26px;">
+            <span style="font-size:10px;font-weight:600;color:rgba(0,0,0,0.75);white-space:nowrap;">${cnt}</span>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
 }
 
 function renderStatsTable() {
