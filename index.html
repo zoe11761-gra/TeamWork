@@ -822,45 +822,10 @@ select.se-input { cursor: pointer; }
           <div style="font-size:11px;color:var(--text-muted);padding:4px 0;letter-spacing:0.05em;">三</div>
           <div style="font-size:11px;color:var(--text-muted);padding:4px 0;letter-spacing:0.05em;">四</div>
           <div style="font-size:11px;color:var(--text-muted);padding:4px 0;letter-spacing:0.05em;">五</div>
-          <div style="font-size:11px;color:var(--teal);padding:4px 0;font-weight:500;letter-spacing:0.05em;">六</div>
+          <div style="font-size:11px;color:var(--red);padding:4px 0;font-weight:500;letter-spacing:0.05em;">六</div>
         </div>
         <!-- 日期格子 -->
         <div id="cal-grid"></div>
-        <!-- 管理者新增按鈕 -->
-        <div id="cal-admin-bar" style="display:none;padding:10px 16px 14px;border-top:1px solid rgba(255,255,255,0.06);">
-          <button onclick="openCalAddModal()" style="width:100%;background:var(--gold-glow);border:1px solid var(--gold-dim);border-radius:8px;color:var(--gold);font-size:13px;padding:9px;cursor:pointer;">＋ 新增行事曆排程</button>
-        </div>
-      </div>
-
-      <!-- 行事曆新增 Modal -->
-      <div id="cal-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:9999;align-items:center;justify-content:center;">
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px 20px;width:min(92vw,380px);max-height:90vh;overflow-y:auto;">
-          <div style="font-family:var(--font-display);font-size:16px;font-weight:700;color:var(--gold);margin-bottom:16px;">📅 新增排程</div>
-          <div style="display:flex;flex-direction:column;gap:12px;">
-            <div>
-              <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:4px;">日期</label>
-              <input id="cal-input-date" type="date" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-size:14px;outline:none;box-sizing:border-box;">
-            </div>
-            <div>
-              <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:4px;">標題</label>
-              <input id="cal-input-title" type="text" placeholder="例如：6月份月會" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-size:14px;outline:none;box-sizing:border-box;">
-            </div>
-            <div>
-              <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:4px;">連結到課程（選填）</label>
-              <select id="cal-input-link" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-size:13px;outline:none;box-sizing:border-box;">
-                <option value="">不連結</option>
-                <option value="schedule-weekly">每週例會</option>
-                <option value="schedule-training">新人培訓</option>
-                <option value="schedule-product">商品說明會</option>
-                <option value="schedule-monthly">月會</option>
-              </select>
-            </div>
-            <div style="display:flex;gap:10px;margin-top:4px;">
-              <button onclick="closeCalModal()" style="flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text-muted);font-size:13px;padding:10px;cursor:pointer;">取消</button>
-              <button onclick="saveCalEvent()" style="flex:2;background:linear-gradient(135deg,#c9a84c,#a07830);border:none;border-radius:8px;color:#1a1208;font-weight:700;font-size:13px;padding:10px;cursor:pointer;">儲存</button>
-            </div>
-          </div>
-        </div>
       </div>
 
     </div>
@@ -1710,13 +1675,10 @@ function calChangeMonth(dir) {
 function renderCalendar() {
   const titleEl = document.getElementById('cal-title');
   const gridEl  = document.getElementById('cal-grid');
-  const adminBar = document.getElementById('cal-admin-bar');
   if (!titleEl || !gridEl) return;
 
   const months = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
   titleEl.textContent = calYear + ' · ' + months[calMonth];
-
-  if (adminBar) adminBar.style.display = (currentUser && currentUser.isAdmin) ? 'block' : 'none';
 
   // ── 合併手動行事曆事件 + 選修課表課程 ──
   const schedAsEvents = (SCHED_COURSES || []).map(c => ({
@@ -1750,7 +1712,22 @@ function renderCalendar() {
     const isToday = isCurrentMonth && today.getFullYear() === calYear && today.getMonth() === calMonth && today.getDate() === dayNum;
     const hasEvents = dayEvents.length > 0;
 
-    const dayColor = isToday ? 'color:var(--gold);font-weight:700;' : isCurrentMonth ? 'color:var(--text);' : 'color:var(--text-muted);opacity:0.35;';
+    // cell 在 grid 中的欄位（0=日, 6=六）
+    const colIndex = cell % 7;
+    const isWeekend = colIndex === 0 || colIndex === 6; // 日 or 六
+
+    // 日期數字顏色：今天=金色, 週六週日=紅色, 一般=白, 非當月=淡出
+    let dayColor;
+    if (!isCurrentMonth) {
+      dayColor = 'color:var(--text-muted);opacity:0.3;';
+    } else if (isToday) {
+      dayColor = 'color:var(--gold);font-weight:700;';
+    } else if (isWeekend) {
+      dayColor = 'color:var(--red);font-weight:500;';
+    } else {
+      dayColor = 'color:var(--text);';
+    }
+
     const cellBg = isToday
       ? 'background:linear-gradient(135deg,rgba(201,168,76,0.15),rgba(201,168,76,0.06));border-color:rgba(201,168,76,0.45);'
       : isCurrentMonth
