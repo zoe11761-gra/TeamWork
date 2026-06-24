@@ -631,6 +631,10 @@ select.se-input { cursor: pointer; }
   letter-spacing: 0.02em;
 }
 .sched-name-with-speaker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 4px;
   font-size: 14px;
   font-weight: 500;
   color: var(--text);
@@ -709,6 +713,9 @@ select.se-input { cursor: pointer; }
   .sop-step-content { font-size: 14px !important; }
 
   /* 選修課表列表 */
+  .sched-name-with-speaker { flex-direction: column !important; align-items: flex-start !important; gap: 2px !important; }
+  .sched-name-with-speaker .speaker-tag { display: block !important; }
+  .sched-meta-sep { display: none !important; }
   .sched-day-num { font-size: 22px !important; }
   .sched-day-week { font-size: 13px !important; }
   .sched-time-range { font-size: 13px !important; }
@@ -923,7 +930,6 @@ select.se-input { cursor: pointer; }
 
     <!-- ── SOP ── -->
     <div class="tab-page fade-section" id="tab-sop" style="display:none;">
-      <div class="section-label"><span class="tag">新人報聘/登錄</span><div class="line"></div></div>
 
       <!-- SOP 三分頁 tabs -->
       <div class="sop-tabs-wrap">
@@ -941,26 +947,26 @@ select.se-input { cursor: pointer; }
             <div class="sop-title">所需文件</div>
           </div>
           <div class="sop-step">
-            <span class="sop-step-num" style="color:var(--gold);font-weight:700;font-size:14px;min-width:24px;">➊</span>
+            <span class="sop-step-num" style="color:var(--gold);font-weight:700;font-size:12px;min-width:40px;">➊</span>
             <div class="sop-body">
               <div class="sop-step-title">身分證正反面（影本）</div>
             </div>
           </div>
           <div class="sop-step">
-            <span class="sop-step-num" style="color:var(--gold);font-weight:700;font-size:14px;min-width:24px;">➋</span>
+            <span class="sop-step-num" style="color:var(--gold);font-weight:700;font-size:12px;min-width:40px;">➋</span>
             <div class="sop-body">
               <div class="sop-step-title">大頭照（放在登錄証上的照片）</div>
             </div>
           </div>
           <div class="sop-step">
-            <span class="sop-step-num" style="color:var(--gold);font-weight:700;font-size:14px;min-width:24px;">➌</span>
+            <span class="sop-step-num" style="color:var(--gold);font-weight:700;font-size:12px;min-width:40px;">➌</span>
             <div class="sop-body">
               <div class="sop-step-title">薪轉帳戶（三家銀行擇一）</div>
               <div class="sop-step-content">中國信託 ／ 永豐銀行 ／ 台北富邦</div>
             </div>
           </div>
           <div class="sop-step" style="border-bottom:none;">
-            <span class="sop-step-num" style="color:var(--gold);font-weight:700;font-size:14px;min-width:24px;">➍</span>
+            <span class="sop-step-num" style="color:var(--gold);font-weight:700;font-size:12px;min-width:40px;">➍</span>
             <div class="sop-body">
               <div class="sop-step-title">同業三年內最高薪資證明</div>
               <div class="sop-step-content">※ 同業直聘需提供</div>
@@ -1028,7 +1034,7 @@ select.se-input { cursor: pointer; }
         <div class="sop-card">
           <div class="sop-header" style="display:flex;align-items:center;justify-content:flex-start;gap:10px;flex-wrap:wrap;">
             <div class="sop-title" style="margin:0;">登錄流程</div>
-            <span style="font-size:11px;white-space:nowrap;color:var(--teal);background:var(--teal-glow);border:1px solid rgba(92,168,201,0.25);border-radius:6px;padding:3px 10px;line-height:1.4;">✅ 登錄完成即有銷售資格</span>
+            <span style="font-size:12px;white-space:nowrap;color:var(--teal);background:var(--teal-glow);border:1px solid rgba(92,168,201,0.25);border-radius:6px;padding:3px 10px;line-height:1.4;">登錄完成即有銷售資格</span>
           </div>
 
           <div class="sop-step">
@@ -1341,7 +1347,7 @@ select.se-input { cursor: pointer; }
       <!-- ② 選修課表 -->
       <div id="activity-sub-schedule">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-          <span style="font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);background:var(--gold-glow);border:1px solid rgba(201,168,76,0.2);border-radius:4px;padding:3px 8px;">🗂 選修課表</span>
+          <span style="font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);background:var(--gold-glow);border:1px solid rgba(201,168,76,0.2);border-radius:4px;padding:3px 8px;">選修課表</span>
           <div style="flex:1;height:1px;background:var(--border);"></div>
           <!-- 管理者新增按鈕 -->
           <button id="schedule-admin-add-btn" onclick="openScheduleAddModal()" style="display:none;background:var(--gold-glow);border:1px solid var(--gold-dim);border-radius:6px;color:var(--gold);font-size:12px;padding:5px 12px;cursor:pointer;white-space:nowrap;">＋ 新增課程</button>
@@ -1349,8 +1355,8 @@ select.se-input { cursor: pointer; }
 
         <!-- 分頁切換：本月份 / 已完成課程 -->
         <div style="display:flex;gap:0;margin-bottom:16px;border:1px solid var(--border);border-radius:8px;overflow:hidden;">
-          <button class="sched-tab-btn active" id="stab-upcoming" onclick="switchSchedTab('upcoming')" style="flex:1;padding:9px 12px;background:var(--gold-glow);border:none;border-right:1px solid var(--border);color:var(--gold);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font-body);transition:all 0.2s;">📅 本月份課程</button>
-          <button class="sched-tab-btn" id="stab-done" onclick="switchSchedTab('done')" style="flex:1;padding:9px 12px;background:transparent;border:none;color:var(--text-muted);font-size:13px;cursor:pointer;font-family:var(--font-body);transition:all 0.2s;">✅ 已完成課程</button>
+          <button class="sched-tab-btn active" id="stab-upcoming" onclick="switchSchedTab('upcoming')" style="flex:1;padding:9px 12px;background:var(--gold-glow);border:none;border-right:1px solid var(--border);color:var(--gold);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font-body);transition:all 0.2s;">本月份課程</button>
+          <button class="sched-tab-btn" id="stab-done" onclick="switchSchedTab('done')" style="flex:1;padding:9px 12px;background:transparent;border:none;color:var(--text-muted);font-size:13px;cursor:pointer;font-family:var(--font-body);transition:all 0.2s;">已完成課程</button>
         </div>
 
         <!-- 本月份課程列表 -->
