@@ -8,7 +8,7 @@
 <!-- Firebase SDK -->
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-  import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, serverTimestamp, increment } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+  import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, deleteDoc, serverTimestamp, increment } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
   const firebaseConfig = {
     apiKey: "AIzaSyCx5NowSXXuNHZ4vlagL6dkmbKst3ZzrX0",
@@ -31,6 +31,7 @@
     window._fsCollection = collection;
     window._fsGetDocs = getDocs;
     window._fsUpdateDoc = updateDoc;
+    window._fsDeleteDoc = deleteDoc;
     window._fsServerTimestamp = serverTimestamp;
     window._fsIncrement = increment;
     window._firebaseReady = true;
@@ -676,37 +677,47 @@ select.se-input { cursor: pointer; }
   .stats-grid { grid-template-columns: 1fr 1fr; }
   .sop-step { padding: 12px 14px; }
   .header-user { display: none; }
-  .users-table { font-size: 12px; }
+  .users-table { font-size: 14px; }
   .users-table th, .users-table td { padding: 8px 6px; }
 
-  /* SOP tabs：允許 wrap，讓按鈕可以換行 */
+  /* SOP tabs */
   .sop-tabs-wrap { flex-wrap: wrap; gap: 4px; }
-  .sop-tab-btn { flex: 1 0 auto; min-width: 72px; font-size: 11px; padding: 7px 8px; }
+  .sop-tab-btn { flex: 1 0 auto; min-width: 72px; font-size: 13px; padding: 7px 8px; }
 
-  /* 首頁激勵短句：縮小字體 */
-  #quote-text { font-size: 15px !important; padding: 0 4px; }
+  /* 首頁激勵短句 */
+  #quote-text { font-size: 17px !important; padding: 0 4px; }
 
   /* 課程卡片 row：強制直排 */
   .course-item { flex-direction: column; align-items: flex-start !important; gap: 8px; }
   .course-links { flex-wrap: wrap; }
 
-  /* nav-pill 縮小 */
-  .nav-pill { font-size: 12px; padding: 6px 10px; }
+  /* nav-pill */
+  .nav-pill { font-size: 14px; padding: 6px 10px; }
 
   /* link-card 字體調整 */
-  .card-title { font-size: 14px; }
-  .card-desc { font-size: 11px; }
+  .card-title { font-size: 16px !important; }
+  .card-desc { font-size: 13px !important; }
+
+  /* SOP 步驟內文 */
+  .sop-step-title { font-size: 15px !important; }
+  .sop-step-content { font-size: 14px !important; }
+
+  /* 選修課表列表 */
+  .sched-day-num { font-size: 22px !important; }
+  .sched-day-week { font-size: 13px !important; }
+  .sched-time-range { font-size: 13px !important; }
+  .sched-top-meta { font-size: 13px !important; }
+  .sched-name-with-speaker { font-size: 16px !important; }
+  .sched-name-with-speaker .speaker-tag { font-size: 15px !important; }
+  .sched-month-header { font-size: 13px !important; }
 
   /* 行事曆手機版 */
   #cal-grid { gap: 2px; padding: 4px 5px 10px; grid-auto-rows: 72px; }
   #cal-grid > div { height: 72px; }
   #home-calendar { margin-top: 10px; }
-  /* 星期標題手機縮小 */
-  #home-calendar .cal-weekday { font-size: 9px !important; padding: 3px 0 !important; }
-  /* 日期數字手機縮小 */
-  #cal-grid .cal-day-num { font-size: 10px !important; }
-  /* chip 手機縮小 */
-  #cal-grid .cal-chip { font-size: 8px !important; padding: 1px 2px !important; }
+  #home-calendar .cal-weekday { font-size: 11px !important; padding: 3px 0 !important; }
+  #cal-grid .cal-day-num { font-size: 12px !important; }
+  #cal-grid .cal-chip { font-size: 9px !important; padding: 1px 2px !important; }
 
   /* 課表 iframe 手機版高度 */
   #schedule-iframe { height: 70vh !important; }
@@ -715,7 +726,7 @@ select.se-input { cursor: pointer; }
   .section-label { margin-bottom: 14px; }
 
   /* admin tab */
-  .admin-tab { font-size: 12px; padding: 7px 10px; }
+  .admin-tab { font-size: 14px; padding: 7px 10px; }
 }
 @media (min-width: 601px) and (max-width: 900px) {
   .cards-grid { grid-template-columns: 1fr 1fr; }
@@ -876,12 +887,12 @@ select.se-input { cursor: pointer; }
         <!-- Members tab -->
         <div class="admin-tab-content" id="tab-members">
           <p style="font-size:13px;color:var(--text-dim);margin-bottom:16px;line-height:1.7;">
-            將使用者設為「<span style="color:var(--green);">團隊夥伴</span>」後，他們可以使用夥伴限定功能區的工具。<br>
+            將使用者設為「<span style="color:var(--green);">草草Team</span>」後，他們可以使用草草Team限定功能區的工具。<br>
             點擊下方按鈕可切換身份。
           </p>
           <div style="overflow-x:auto;">
             <table class="users-table">
-              <thead><tr><th>使用者</th><th>目前身份</th><th>操作</th></tr></thead>
+              <thead><tr><th>使用者</th><th>目前身份</th><th>身份切換</th><th>踢除</th></tr></thead>
               <tbody id="members-table-body"><tr><td colspan="3" style="color:var(--text-muted);text-align:center;padding:20px;">載入中…</td></tr></tbody>
             </table>
           </div>
@@ -1467,7 +1478,7 @@ select.se-input { cursor: pointer; }
         <div class="locked-overlay" id="locked-overlay">
           <div class="lock-icon-big">🔒</div>
           <div class="lock-msg">此區域僅供團隊夥伴使用</div>
-          <div style="font-size:12px;color:var(--text-muted);">請聯繫草草申請夥伴權限</div>
+          <div style="font-size:12px;color:var(--text-muted);">請聯繫草草申請草草Team權限</div>
         </div>
         <!-- Actual cards (blurred until unlocked) -->
         <div class="cards-grid" id="member-cards" style="filter:blur(4px);pointer-events:none;user-select:none;">
@@ -2396,7 +2407,7 @@ function showApp() {
   // Role badge
   const badge = document.getElementById('role-badge');
   if (currentUser.isAdmin) { badge.textContent = '管理者'; badge.className = 'role-badge admin'; }
-  else if (currentUser.isMember) { badge.textContent = '團隊夥伴'; badge.className = 'role-badge member'; }
+  else if (currentUser.isMember) { badge.textContent = '草草Team'; badge.className = 'role-badge member'; }
   else { badge.textContent = '一般成員'; badge.className = 'role-badge general'; }
 
   // Admin
@@ -2699,7 +2710,7 @@ function renderStatsTable() {
     ? allUsers.map(u => `
       <tr>
         <td>${u.username}</td>
-        <td><span class="role-badge ${u.isMember?'member':'general'}" style="font-size:10px;">${u.isMember?'夥伴':'一般'}</span></td>
+        <td><span class="role-badge ${u.isMember?'member':'general'}" style="font-size:10px;">${u.isMember?'草草Team':'一般'}</span></td>
         <td>${u.lastLogin ? u.lastLogin.slice(0,10) : '—'}</td>
         <td><span class="click-badge">${u.loginCount}</span></td>
         <td>${u.topFeature}</td>
@@ -2711,16 +2722,21 @@ function renderMembersTable() {
   document.getElementById('members-table-body').innerHTML = allUsers.length
     ? allUsers.map(u => `
       <tr>
-        <td>${u.username}</td>
-        <td><span class="role-badge ${u.isMember?'member':'general'}">${u.isMember?'✓ 團隊夥伴':'一般成員'}</span></td>
+        <td style="font-weight:500;">${u.username}</td>
+        <td><span class="role-badge ${u.isMember?'member':'general'}">${u.isMember?'✓ 草草Team':'一般成員'}</span></td>
         <td>
           <button class="toggle-member-btn ${u.isMember?'is-member':''}"
             onclick="toggleMember('${u.username}', ${u.isMember})">
-            ${u.isMember ? '取消夥伴' : '設為夥伴'}
+            ${u.isMember ? '取消草草Team' : '設為草草Team'}
+          </button>
+        </td>
+        <td>
+          <button class="sched-admin-btn del" onclick="kickUser('${u.username}')" style="font-size:12px;padding:3px 10px;">
+            🚫 踢除
           </button>
         </td>
       </tr>`).join('')
-    : '<tr><td colspan="3" style="color:var(--text-muted);text-align:center;padding:20px;">尚無使用者資料</td></tr>';
+    : '<tr><td colspan="4" style="color:var(--text-muted);text-align:center;padding:20px;">尚無使用者資料</td></tr>';
 }
 
 async function toggleMember(username, currentlyMember) {
@@ -2734,8 +2750,23 @@ async function toggleMember(username, currentlyMember) {
     renderStatsTable();
     // update stat box
     document.getElementById('stat-members').textContent = allUsers.filter(x=>x.isMember).length;
-    showToast(newVal ? `✓ 已將 ${username} 設為團隊夥伴` : `已移除 ${username} 的夥伴身份`);
+    showToast(newVal ? `✓ 已將 ${username} 設為草草Team` : `已移除 ${username} 的草草Team身份`);
   } catch(e) { showToast('更新失敗，請重試'); console.error(e); }
+}
+
+async function kickUser(username) {
+  if (!firebaseReady) return;
+  if (!confirm(`確定要踢除使用者「${username}」嗎？
+此操作將刪除該帳號，無法復原。`)) return;
+  try {
+    await window._fsDeleteDoc(window._fsDoc(db, 'users', username));
+    allUsers = allUsers.filter(x => x.username !== username);
+    renderMembersTable();
+    renderStatsTable();
+    document.getElementById('stat-members').textContent = allUsers.filter(x=>x.isMember).length;
+    document.getElementById('stat-users').textContent = allUsers.length;
+    showToast(`🚫 已踢除使用者 ${username}`);
+  } catch(e) { showToast('踢除失敗，請重試'); console.error(e); }
 }
 
 // ═══════════════════════════════════════
