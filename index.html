@@ -657,13 +657,13 @@ select.se-input { cursor: pointer; }
 #cal-grid {
   display: grid;
   grid-template-columns: repeat(7,1fr);
-  grid-auto-rows: 68px;
+  grid-auto-rows: 92px;
   gap: 3px;
   padding: 5px 8px 12px;
 }
 #cal-grid > div {
   overflow: hidden;
-  height: 68px;
+  height: 92px;
   box-sizing: border-box;
 }
 
@@ -698,8 +698,8 @@ select.se-input { cursor: pointer; }
   .card-desc { font-size: 11px; }
 
   /* 行事曆手機版 */
-  #cal-grid { gap: 1px; padding: 3px 4px 8px; grid-auto-rows: 46px; }
-  #cal-grid > div { height: 46px; }
+  #cal-grid { gap: 2px; padding: 4px 5px 10px; grid-auto-rows: 72px; }
+  #cal-grid > div { height: 72px; }
   #home-calendar { margin-top: 10px; }
   /* 星期標題手機縮小 */
   #home-calendar .cal-weekday { font-size: 9px !important; padding: 3px 0 !important; }
@@ -813,7 +813,8 @@ select.se-input { cursor: pointer; }
 
 
       <!-- ── 首頁行事曆 ── -->
-      <div id="home-calendar" style="margin-top:16px;background:var(--surface);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);overflow:hidden;">
+      <div class="section-label" style="margin-top:20px;"><span class="tag">行事曆</span><div class="line"></div></div>
+      <div id="home-calendar" style="background:var(--surface);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);overflow:hidden;">
         <!-- 行事曆標題列 -->
         <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px 10px;border-bottom:1px solid rgba(255,255,255,0.06);">
           <button onclick="calChangeMonth(-1)" style="background:none;border:none;color:var(--gold);font-size:18px;cursor:pointer;padding:4px 8px;line-height:1;">‹</button>
@@ -1749,7 +1750,7 @@ function renderCalendar() {
     html += `<div class="cal-day-num" style="font-size:11px;${dayColor}text-align:left;padding:0 2px;line-height:1;">${displayDay}</div>`;
     if (hasEvents) {
       html += '<div style="margin-top:3px;display:flex;flex-direction:column;gap:2px;">';
-      dayEvents.slice(0, 2).forEach(ev => {
+      dayEvents.slice(0, 3).forEach(ev => {
         const clickHandler = ev.schedId
           ? `calSchedChipClick(event,'${ev.schedId}')`
           : `calChipClick(event,'${dateStr}')`;
@@ -1764,8 +1765,8 @@ function renderCalendar() {
         const titleShort = ev.title.length > 3 ? ev.title.slice(0, 3) + '…' : ev.title;
         html += `<div class="cal-chip" onclick="${clickHandler}" style="font-size:9px;background:rgba(201,168,76,0.18);border:1px solid rgba(201,168,76,0.4);border-radius:3px;padding:1px 4px;color:var(--gold);line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;cursor:pointer;" title="${ev.title}">${timeStr}${titleShort}</div>`;
       });
-      if (dayEvents.length > 2) {
-        html += `<div onclick="calChipClick(event,'${dateStr}')" style="font-size:9px;color:var(--text-muted);padding-left:2px;cursor:pointer;">+${dayEvents.length - 2} 更多</div>`;
+      if (dayEvents.length > 3) {
+        html += `<div onclick="calChipClick(event,'${dateStr}')" style="font-size:9px;color:var(--text-muted);padding-left:2px;cursor:pointer;">+${dayEvents.length - 3} 更多</div>`;
       }
       html += '</div>';
     }
