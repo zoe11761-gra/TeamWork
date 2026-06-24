@@ -1729,12 +1729,13 @@ function renderCalendar() {
     }
 
     const cellBg = isToday
-      ? 'background:linear-gradient(135deg,rgba(201,168,76,0.15),rgba(201,168,76,0.06));border-color:rgba(201,168,76,0.45);'
+      ? 'background:linear-gradient(135deg,rgba(201,168,76,0.15),rgba(201,168,76,0.06));border-color:rgba(201,168,76,0.6);'
       : isCurrentMonth
-        ? 'background:rgba(255,255,255,0.025);border-color:rgba(255,255,255,0.06);'
-        : 'background:transparent;border-color:rgba(255,255,255,0.03);';
+        ? 'background:rgba(255,255,255,0.02);border-color:rgba(255,255,255,0.035);'
+        : 'background:transparent;border:none;';
 
-    html += `<div style="${cellBg}border:1px solid;border-radius:8px;padding:6px 4px 5px;cursor:default;position:relative;min-height:52px;transition:border-color 0.15s,background 0.15s;" ${hasEvents ? 'class="cal-cell-has-event"' : ''}>`;
+    const borderStyle = (!isCurrentMonth) ? 'border:none;' : 'border:1px solid;';
+    html += `<div style="${cellBg}${borderStyle}border-radius:8px;padding:6px 4px 5px;cursor:default;position:relative;height:72px;box-sizing:border-box;overflow:hidden;transition:border-color 0.15s,background 0.15s;" ${hasEvents ? 'class="cal-cell-has-event"' : ''}>`;
     html += `<div style="font-size:12px;${dayColor}text-align:left;padding:0 2px;line-height:1;">${displayDay}</div>`;
     if (hasEvents) {
       html += '<div style="margin-top:3px;display:flex;flex-direction:column;gap:2px;">';
@@ -1751,7 +1752,7 @@ function renderCalendar() {
         }
         // 課程名稱只顯示前三個字，後接 …
         const titleShort = ev.title.length > 3 ? ev.title.slice(0, 3) + '…' : ev.title;
-        html += `<div onclick="${clickHandler}" style="font-size:9px;background:rgba(92,168,201,0.15);border:1px solid rgba(92,168,201,0.28);border-radius:3px;padding:1px 4px;color:var(--teal);line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;cursor:pointer;" title="${ev.title}">${timeStr}${titleShort}</div>`;
+        html += `<div onclick="${clickHandler}" style="font-size:9px;background:rgba(201,168,76,0.18);border:1px solid rgba(201,168,76,0.4);border-radius:3px;padding:1px 4px;color:var(--gold);line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;cursor:pointer;" title="${ev.title}">${timeStr}${titleShort}</div>`;
       });
       if (dayEvents.length > 2) {
         html += `<div onclick="calChipClick(event,'${dateStr}')" style="font-size:9px;color:var(--text-muted);padding-left:2px;cursor:pointer;">+${dayEvents.length - 2} 更多</div>`;
@@ -1764,11 +1765,11 @@ function renderCalendar() {
 
   // hover style
   gridEl.querySelectorAll('.cal-cell-has-event').forEach(el => {
-    el.addEventListener('mouseenter', () => { el.style.borderColor = 'rgba(92,168,201,0.5)'; el.style.background = 'rgba(92,168,201,0.06)'; });
+    el.addEventListener('mouseenter', () => { el.style.borderColor = 'rgba(201,168,76,0.5)'; el.style.background = 'rgba(201,168,76,0.06)'; });
     el.addEventListener('mouseleave', () => {
-      const isGold = el.style.borderColor && el.style.borderColor.includes('201,168,76');
-      el.style.borderColor = isGold ? 'rgba(201,168,76,0.45)' : 'rgba(255,255,255,0.06)';
-      el.style.background  = isGold ? 'linear-gradient(135deg,rgba(201,168,76,0.15),rgba(201,168,76,0.06))' : 'rgba(255,255,255,0.025)';
+      const isGold = el.style.borderColor && el.style.borderColor.includes('201,168,76,0.6');
+      el.style.borderColor = isGold ? 'rgba(201,168,76,0.6)' : 'rgba(255,255,255,0.035)';
+      el.style.background  = isGold ? 'linear-gradient(135deg,rgba(201,168,76,0.15),rgba(201,168,76,0.06))' : 'rgba(255,255,255,0.02)';
     });
   });
 }
