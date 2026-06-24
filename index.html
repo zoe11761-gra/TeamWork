@@ -1297,22 +1297,18 @@ select.se-input { cursor: pointer; }
       <!-- ① 上方 2 columns：北四課程 + 上岸學習 -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px;">
         <!-- 北四課程 -->
-        <a class="link-card" href="https://www.youtube.com/playlist?list=PLDF5-xse-9XBuBpYhIHtoePNEjMg-YkSv" target="_blank" onclick="trackClick('beisi-course')" style="display:flex;flex-direction:column;gap:6px;padding:16px 18px;">
-          <div style="display:flex;align-items:center;gap:8px;">
-            <span style="font-size:18px;">🎓</span>
-            <div class="card-title" style="margin:0;">北四課程</div>
-            <span style="color:var(--gold);font-size:13px;margin-left:auto;">→</span>
-          </div>
-          <div style="font-size:11px;color:var(--text-muted);letter-spacing:0.05em;">📹 週課程回放影片</div>
+        <a class="link-card" href="https://www.youtube.com/playlist?list=PLDF5-xse-9XBuBpYhIHtoePNEjMg-YkSv" target="_blank" onclick="trackClick('beisi-course')" style="display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:18px 16px 16px;position:relative;">
+          <span style="color:var(--gold);font-size:13px;position:absolute;top:14px;right:14px;">→</span>
+          <span style="font-size:26px;line-height:1;margin-bottom:2px;">🎓</span>
+          <div class="card-title" style="margin:0;font-size:15px;">北四課程</div>
+          <div style="font-size:11px;color:var(--text-muted);letter-spacing:0.04em;line-height:1.4;">週課程回放影片</div>
         </a>
         <!-- 上岸學習 -->
-        <a class="link-card" href="https://www.youtube.com/playlist?list=PLDF5-xse-9XDQVQIC7h7JNLXfFxCPdExE" target="_blank" onclick="trackClick('monthly-meeting')" style="display:flex;flex-direction:column;gap:6px;padding:16px 18px;">
-          <div style="display:flex;align-items:center;gap:8px;">
-            <span style="font-size:18px;">🌊</span>
-            <div class="card-title" style="margin:0;">上岸學習</div>
-            <span style="color:var(--gold);font-size:13px;margin-left:auto;">→</span>
-          </div>
-          <div style="font-size:11px;color:var(--text-muted);letter-spacing:0.05em;">🗓 月學習回放影片</div>
+        <a class="link-card" href="https://www.youtube.com/playlist?list=PLDF5-xse-9XDQVQIC7h7JNLXfFxCPdExE" target="_blank" onclick="trackClick('monthly-meeting')" style="display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:18px 16px 16px;position:relative;">
+          <span style="color:var(--gold);font-size:13px;position:absolute;top:14px;right:14px;">→</span>
+          <span style="font-size:26px;line-height:1;margin-bottom:2px;">🌊</span>
+          <div class="card-title" style="margin:0;font-size:15px;">上岸學習</div>
+          <div style="font-size:11px;color:var(--text-muted);letter-spacing:0.04em;line-height:1.4;">月學習回放影片</div>
         </a>
       </div>
 
