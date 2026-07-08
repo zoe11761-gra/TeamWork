@@ -147,7 +147,7 @@ body {
 /* ─── App ─── */
 #app { display: none; min-height: 100vh; }
 
-.app-header {
+.app-header { position:relative;
   position: sticky; top: 0; z-index: 100;
   background: rgba(13,13,13,0.92); backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
@@ -680,7 +680,7 @@ select.se-input { cursor: pointer; }
 
 /* ─── Responsive ─── */
 @media (max-width: 600px) {
-  .app-header { padding: 0 14px; }
+  .app-header { position:relative; padding: 0 14px; }
   .app-main { padding: 20px 14px 80px; }
   .cards-grid { grid-template-columns: 1fr; }
   .cards-group { grid-template-columns: 1fr 1fr; }
@@ -799,10 +799,25 @@ select.se-input { cursor: pointer; }
   <header class="app-header">
     <div class="header-brand">草草Team｜資源地圖</div>
     <div class="header-right">
-      <span class="header-user">您好，<span id="header-name"></span></span>
+      <span class="header-user" id="header-greeting">安安您好！</span>
       <span class="role-badge" id="role-badge"></span>
       <button class="btn-sm" id="view-toggle-btn" style="display:none!important;" onclick="toggleViewMode()">👁 切換夥伴視角</button>
-      <button class="btn-sm" onclick="handleLogout()">登出</button>
+      <!-- ⚙️ 管理者登入/登出 -->
+      <button class="btn-sm" id="admin-gear-btn" onclick="toggleAdminLogin()" title="管理者登入">⚙️</button>
+      <!-- 管理者密碼 popup -->
+      <div id="admin-login-popup" style="display:none;position:absolute;top:52px;right:12px;background:var(--surface);border:1px solid rgba(201,168,76,0.35);border-radius:10px;padding:14px 16px;z-index:999;min-width:200px;box-shadow:0 8px 24px rgba(0,0,0,0.5);">
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;letter-spacing:0.05em;">管理者密碼</div>
+        <div style="display:flex;gap:8px;">
+          <input id="admin-pw-input" type="password" placeholder="輸入密碼" maxlength="20"
+            style="flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-size:13px;outline:none;width:100px;"
+            onkeydown="if(event.key==='Enter') confirmAdminLogin()">
+          <button onclick="confirmAdminLogin()" style="background:var(--gold-glow);border:1px solid rgba(201,168,76,0.4);border-radius:6px;padding:7px 12px;color:var(--gold);font-size:13px;cursor:pointer;">確認</button>
+        </div>
+        <div id="admin-pw-error" style="display:none;font-size:11px;color:#e07070;margin-top:6px;"></div>
+        <div id="admin-logout-wrap" style="display:none;margin-top:10px;border-top:1px solid var(--border);padding-top:10px;">
+          <button onclick="handleLogout()" style="width:100%;background:transparent;border:1px solid var(--border);border-radius:6px;padding:6px;color:var(--text-muted);font-size:12px;cursor:pointer;">登出管理者</button>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -2336,7 +2351,80 @@ async function handleRegister() {
   }
 }
 
-function handleLogout() { clearSession(); location.reload(); }
+function handleLogout() {
+  currentUser = { username: 'guest', displayName: '訪客', isAdmin: false, isMember: true };
+  saveSession(currentUser);
+  closeAdminPopup();
+  // 更新 greeting 和 badge
+  const greet = document.getElementById('header-greeting');
+  if (greet) greet.textContent = '安安您好！';
+  const badge = document.getElementById('role-badge');
+  if (badge) badge.style.display = 'none';
+  // 隱藏課程新增按鈕
+  const schedBar = document.getElementById('schedule-admin-add-btn');
+  if (schedBar) schedBar.style.display = 'none';
+  showToast('已退出管理者模式');
+}
+
+function toggleAdminLogin() {
+  const popup = document.getElementById('admin-login-popup');
+  if (!popup) return;
+  const isOpen = popup.style.display !== 'none';
+  if (isOpen) { closeAdminPopup(); return; }
+  // 若已是管理者，直接顯示登出選項
+  const pwWrap = popup.querySelector('div:nth-child(2)');
+  const logoutWrap = document.getElementById('admin-logout-wrap');
+  const errEl = document.getElementById('admin-pw-error');
+  if (errEl) errEl.style.display = 'none';
+  if (currentUser && currentUser.isAdmin) {
+    if (pwWrap) pwWrap.style.display = 'none';
+    if (logoutWrap) logoutWrap.style.display = 'block';
+  } else {
+    if (pwWrap) pwWrap.style.display = 'flex';
+    if (logoutWrap) logoutWrap.style.display = 'none';
+    const inp = document.getElementById('admin-pw-input');
+    if (inp) { inp.value = ''; setTimeout(() => inp.focus(), 50); }
+  }
+  popup.style.display = 'block';
+}
+
+function closeAdminPopup() {
+  const popup = document.getElementById('admin-login-popup');
+  if (popup) popup.style.display = 'none';
+}
+
+function confirmAdminLogin() {
+  const p = document.getElementById('admin-pw-input').value;
+  const errEl = document.getElementById('admin-pw-error');
+  if (p !== ADMIN_PASSWORD) {
+    if (errEl) { errEl.textContent = '密碼錯誤'; errEl.style.display = 'block'; }
+    return;
+  }
+  currentUser = { username: ADMIN_USERNAME, displayName: ADMIN_DISPLAY, isAdmin: true, isMember: true };
+  saveSession(currentUser);
+  closeAdminPopup();
+  // 更新 UI
+  const greet = document.getElementById('header-greeting');
+  if (greet) greet.textContent = '安安管理者！';
+  const badge = document.getElementById('role-badge');
+  if (badge) { badge.textContent = '管理者'; badge.className = 'role-badge admin'; badge.style.display = 'inline-block'; }
+  // 顯示課程新增按鈕
+  const schedBar = document.getElementById('schedule-admin-add-btn');
+  if (schedBar) schedBar.style.display = 'inline-block';
+  loadAdminData();
+  // 重新載入課表（管理者可見編輯按鈕）
+  schedLoadCourses();
+  showToast('✓ 已切換為管理者模式');
+}
+
+// 點擊 popup 外部關閉
+document.addEventListener('click', function(e) {
+  const popup = document.getElementById('admin-login-popup');
+  const btn = document.getElementById('admin-gear-btn');
+  if (popup && popup.style.display !== 'none') {
+    if (!popup.contains(e.target) && e.target !== btn) closeAdminPopup();
+  }
+});
 
 // ═══════════════════════════════════════
 // SHOW APP
@@ -2350,7 +2438,10 @@ function showApp() {
   try { document.getElementById('login-screen').style.display = 'none'; } catch{}
   try { document.getElementById('app').style.display = 'block'; } catch{}
 
-  try { document.getElementById('header-name').textContent = currentUser.displayName || currentUser.username; } catch{}
+  try {
+    const greet = document.getElementById('header-greeting');
+    if (greet) greet.textContent = currentUser.isAdmin ? '安安管理者！' : '安安您好！';
+  } catch{}
 
   // Role badge
   const badge = document.getElementById('role-badge');
