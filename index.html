@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>上岸好榕逸｜資源地圖</title><!-- build:1348 -->
+<title>草草Team｜資源地圖</title>
 
 <!-- Firebase SDK -->
 <script type="module">
@@ -750,7 +750,7 @@ select.se-input { cursor: pointer; }
 
 <div class="loading-overlay" id="loading-overlay">
   <div class="spinner"></div>
-  <div class="loading-text">上岸好榕逸</div>
+  <div class="loading-text">草草Team</div>
 </div>
 <script>
   // 保底：若 Firebase module 3秒內未完成，強制執行 bootstrap
@@ -771,7 +771,7 @@ select.se-input { cursor: pointer; }
 <div id="login-screen" style="display:none;">
   <div class="login-card">
     <div class="login-logo">
-      <span class="brand">上岸好榕逸</span>
+      <span class="brand">草草Team</span>
       <div class="login-divider"></div>
       <span class="sub">Team Portal</span>
     </div>
@@ -797,7 +797,7 @@ select.se-input { cursor: pointer; }
 <!-- ═══ APP ═══ -->
 <div id="app">
   <header class="app-header">
-    <div class="header-brand">上岸好榕逸｜資源地圖</div>
+    <div class="header-brand">草草Team｜資源地圖</div>
     <div class="header-right">
       <span class="header-user">您好，<span id="header-name"></span></span>
       <span class="role-badge" id="role-badge"></span>
@@ -819,8 +819,7 @@ select.se-input { cursor: pointer; }
     <button class="nav-pill" id="pill-sop" onclick="switchTab('sop')">新人報聘/登錄</button>
     <button class="nav-pill" id="pill-course" onclick="switchTab('course')">新人搶先跑</button>
     <button class="nav-pill" id="pill-activity" onclick="switchTab('activity')">常態課程</button>
-    <button class="nav-pill" id="pill-tools" onclick="switchTab('tools')">資料庫小工具</button>
-    <button class="nav-pill nav-pill-member" id="pill-member" onclick="switchTab('member')" style="display:none;">草草 Team</button>
+    <button class="nav-pill" id="pill-tools" onclick="switchTab('tools')">AI工具箱</button>
   </div>
 
   <main class="app-main">
@@ -837,7 +836,7 @@ select.se-input { cursor: pointer; }
 
       <!-- ── 首頁行事曆 ── -->
       <div class="section-label" style="margin-top:20px;"><span class="tag">行事曆</span><div class="line"></div></div>
-      <div style="font-size:13px;color:var(--text-muted);margin-bottom:14px;padding:9px 13px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:2px solid rgba(201,168,76,0.35);line-height:1.7;">
+      <div style="font-size:13px;color:#4a90d9;margin-bottom:14px;padding:9px 13px;background:rgba(74,144,217,0.06);border-radius:8px;border-left:2px solid rgba(74,144,217,0.5);line-height:1.7;">
         每週二 17:00–20:00 為團隊廂型輔導時間，有案件問題歡迎自由參加
       </div>
       <div id="home-calendar" style="background:var(--surface);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);overflow:hidden;">
@@ -863,72 +862,6 @@ select.se-input { cursor: pointer; }
 
     </div>
 
-    <!-- ── Admin ── -->
-    <div class="fade-section" id="admin-section" style="display:none;">
-      <div class="section-label">
-        <span class="tag">管理者</span><div class="line"></div>
-      </div>
-      <div class="admin-panel">
-        <div class="admin-panel-title">⚙ 管理後台</div>
-        <div class="admin-tabs">
-          <button class="admin-tab active" onclick="switchAdminTab('stats')">使用統計</button>
-          <button class="admin-tab" onclick="switchAdminTab('members')">夥伴管理</button>
-          <button class="admin-tab" onclick="switchAdminTab('quotes')">激勵短句</button>
-        </div>
-
-        <!-- Stats tab -->
-        <div class="admin-tab-content active" id="tab-stats">
-          <div class="stats-grid">
-            <div class="stat-box"><div class="stat-num" id="stat-users">—</div><div class="stat-label">總使用者</div></div>
-            <div class="stat-box"><div class="stat-num" id="stat-members">—</div><div class="stat-label">團隊夥伴</div></div>
-            <div class="stat-box"><div class="stat-num" id="stat-logins">—</div><div class="stat-label">總登入次數</div></div>
-            <div class="stat-box"><div class="stat-num" id="stat-clicks">—</div><div class="stat-label">總功能點擊</div></div>
-          </div>
-
-          <!-- 常用功能排行 -->
-          <div style="margin:18px 0 14px;">
-            <div style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">📊 常用功能排行（全員累計）</div>
-            <div id="feature-chart" style="display:flex;flex-direction:column;gap:7px;"></div>
-          </div>
-
-          <div style="overflow-x:auto;">
-            <table class="users-table">
-              <thead><tr><th>使用者</th><th>身份</th><th>最後登入</th><th>登入次</th><th>最常用功能</th></tr></thead>
-              <tbody id="stats-table-body"><tr><td colspan="5" style="color:var(--text-muted);text-align:center;padding:20px;">載入中…</td></tr></tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Members tab -->
-        <div class="admin-tab-content" id="tab-members">
-          <p style="font-size:13px;color:var(--text-dim);margin-bottom:16px;line-height:1.7;">
-            將使用者設為「<span style="color:var(--green);">草草Team</span>」後，他們可以使用草草Team限定功能區的工具。<br>
-            點擊下方按鈕可切換身份。
-          </p>
-          <div style="overflow-x:auto;">
-            <table class="users-table">
-              <thead><tr><th>使用者</th><th>目前身份</th><th>身份切換</th><th>踢除</th></tr></thead>
-              <tbody id="members-table-body"><tr><td colspan="3" style="color:var(--text-muted);text-align:center;padding:20px;">載入中…</td></tr></tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Quotes tab -->
-        <div class="admin-tab-content" id="tab-quotes">
-          <p style="font-size:13px;color:var(--text-dim);margin-bottom:16px;line-height:1.7;">
-            管理首頁輪播的<span style="color:var(--gold);">激勵短句</span>，每句輪播 3 秒。<br>
-            新增或刪除後自動儲存於本機。
-          </p>
-          <div style="display:flex;gap:8px;margin-bottom:16px;">
-            <input id="quote-input" type="text" placeholder="輸入新短句…" style="flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-size:13px;outline:none;">
-            <button onclick="adminAddQuote()" style="background:var(--gold-glow);border:1px solid rgba(201,168,76,0.4);border-radius:8px;padding:8px 16px;color:var(--gold);font-size:13px;cursor:pointer;white-space:nowrap;">＋ 新增</button>
-          </div>
-          <div id="quotes-list" style="display:flex;flex-direction:column;gap:6px;"></div>
-          <button onclick="adminResetQuotes()" style="margin-top:14px;background:transparent;border:1px solid var(--border);border-radius:8px;padding:7px 14px;color:var(--text-muted);font-size:12px;cursor:pointer;">↩ 還原預設短句</button>
-        </div>
-
-      </div>
-    </div>
 
     <!-- ── SOP ── -->
     <div class="tab-page fade-section" id="tab-sop" style="display:none;">
@@ -1461,14 +1394,20 @@ select.se-input { cursor: pointer; }
       </div>
     </div>
 
-    <!-- ── 工具（所有人）── -->
+    <!-- ── AI工具箱（合併）── -->
     <div class="tab-page fade-section" id="tab-tools" style="display:none;">
-      <div class="section-label"><span class="tag">資料庫小工具</span><div class="line"></div></div>
-      <div class="cards-grid">
+      <div class="section-label"><span class="tag">AI工具箱</span><div class="line"></div></div>
+      <div class="cards-grid" id="member-cards">
         <a class="link-card" href="https://precious-moose-90a.notion.site/9e63e5cf9447476ea901352969f01664?v=8402d2b68c2149bab8512287d91596a6&source=copy_link" target="_blank" onclick="trackClick('notion-db')">
           <span class="card-icon">📂</span>
           <div class="card-title">Notion 資料庫</div>
           <div class="card-desc">團隊知識庫與資料整理中心</div>
+          <div class="card-arrow">→</div>
+        </a>
+        <a class="link-card" href="https://finfo.tw/" target="_blank" onclick="trackClick('finfo')">
+          <span class="card-icon">📊</span>
+          <div class="card-title">Finfo 保單檢視/新契約搭配</div>
+          <div class="card-desc">帳號密碼請跟草草拿</div>
           <div class="card-arrow">→</div>
         </a>
         <a class="link-card" href="https://reurl.cc/R283p9" target="_blank" onclick="trackClick('chubb-travel')">
@@ -1477,41 +1416,18 @@ select.se-input { cursor: pointer; }
           <div class="card-desc">CHUBB 旅行平安險快速試算系統</div>
           <div class="card-arrow">→</div>
         </a>
+        <a class="link-card" href="https://zoe11761-gra.github.io/car-accident-claim/" target="_blank" onclick="trackClick('accident-claim')">
+          <span class="card-icon">🚗</span>
+          <div class="card-title">車禍求償明細產生器</div>
+          <div class="card-desc">自動整理求償項目與金額明細</div>
+          <div class="card-arrow">→</div>
+        </a>
       </div>
     </div>
-
-    <!-- ── 夥伴限定工具區 ── -->
-    <div class="tab-page fade-section" id="tab-member" style="display:none;">
-      <div class="section-label">
-        <span class="tag member-tag">獨家資源</span>
-        <div class="line"></div>
-        <span class="lock-icon" id="member-lock-icon">🔒</span>
-      </div>
-      <div style="position:relative;">
-        <!-- Locked overlay (shown for non-members) -->
-        <div class="locked-overlay" id="locked-overlay">
-          <div class="lock-icon-big">🔒</div>
-          <div class="lock-msg">此區域僅供團隊夥伴使用</div>
-          <div style="font-size:12px;color:var(--text-muted);">請聯繫草草申請草草Team權限</div>
-        </div>
-        <!-- Actual cards (blurred until unlocked) -->
-        <div class="cards-grid" id="member-cards" style="filter:blur(4px);pointer-events:none;user-select:none;">
-          <a class="link-card member-card" href="https://finfo.tw/" target="_blank" onclick="trackClick('finfo')">
-            <span class="card-icon">📊</span>
-            <div class="card-title">Finfo 保單檢視/新契約搭配</div>
-            <div class="card-desc">帳號密碼請跟草草拿</div>
-            <div class="card-arrow">→</div>
-          </a>
-          <a class="link-card member-card" href="https://zoe11761-gra.github.io/car-accident-claim/" target="_blank" onclick="trackClick('accident-claim')">
-            <span class="card-icon">🚗</span>
-            <div class="card-title">車禍求償明細產生器</div>
-            <div class="card-desc">自動整理求償項目與金額明細</div>
-            <div class="card-arrow">→</div>
-          </a>
-          <!-- 草草可在此繼續新增夥伴限定工具卡片 -->
-        </div>
-      </div>
-    </div>
+    <!-- tab-member 已合併至 tab-tools，保留空 div 防 JS 報錯 -->
+    <div id="tab-member" style="display:none;"></div>
+    <div id="locked-overlay" style="display:none;"></div>
+    <span id="member-lock-icon" style="display:none;"></span>
 
   </main>
 </div>
@@ -2455,9 +2371,7 @@ function showApp() {
   renderSOP();
   loadSOPProgress();
 
-  // 草草Team 按鈕全面開放
-  const memberPill = document.getElementById('pill-member');
-  if (memberPill) memberPill.style.display = 'inline-block';
+  // pill-member 已移除，無需顯示
 
   // 預設顯示首頁 tab
   switchTab('home');
@@ -2468,16 +2382,7 @@ function showApp() {
 // ═══════════════════════════════════════
 // MEMBER ACCESS
 // ═══════════════════════════════════════
-function applyMemberAccess() {
-  const overlay = document.getElementById('locked-overlay');
-  const cards   = document.getElementById('member-cards');
-  const lockIcon = document.getElementById('member-lock-icon');
-
-  // 全面開放
-  if (overlay) overlay.style.display = 'none';
-  if (cards) { cards.style.filter = 'none'; cards.style.pointerEvents = 'auto'; cards.style.userSelect = 'auto'; }
-  if (lockIcon) lockIcon.style.display = 'none';
-}
+function applyMemberAccess() { /* 全面開放，無需鎖定 */ }
 
 // ═══════════════════════════════════════
 // LINKS
