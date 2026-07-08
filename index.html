@@ -2174,17 +2174,29 @@ function closeSchedEditModal(e, force) {
   }
 }
 
-// 拖曳海報上傳
+// 海報上傳：自動壓縮至寬度 ≤ 800px，JPEG quality 0.75（確保 base64 < 400KB）
 function handlePosterFile(input) {
   const file = input.files[0];
   if (!file) return;
-  if (file.size > 5 * 1024 * 1024) { showToast('⚠ 圖片大小請在 5MB 以內'); return; }
+  if (file.size > 10 * 1024 * 1024) { showToast('⚠ 圖片大小請在 10MB 以內'); return; }
   const reader = new FileReader();
-  reader.onload = e => {
-    const dataUrl = e.target.result;
-    document.getElementById('se-poster-data').value = dataUrl;
-    document.getElementById('se-poster-img').src = dataUrl;
-    document.getElementById('se-poster-preview').style.display = 'block';
+  reader.onload = ev => {
+    const img = new Image();
+    img.onload = () => {
+      const MAX_W = 800;
+      let w = img.width, h = img.height;
+      if (w > MAX_W) { h = Math.round(h * MAX_W / w); w = MAX_W; }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.75);
+      document.getElementById('se-poster-data').value = dataUrl;
+      document.getElementById('se-poster-img').src = dataUrl;
+      document.getElementById('se-poster-preview').style.display = 'block';
+      const kb = Math.round(dataUrl.length * 0.75 / 1024);
+      if (kb > 500) showToast(`⚠ 海報壓縮後仍有 ${kb}KB，建議換小一點的圖`);
+    };
+    img.src = ev.target.result;
   };
   reader.readAsDataURL(file);
 }
@@ -2214,40 +2226,59 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function saveSchedCourse() {
-  const id   = document.getElementById('se-id').value;
-  const date = document.getElementById('se-date').value;
-  const name = document.getElementById('se-name').value.trim();
-  if (!date || !name) { showToast('⚠ 請填寫日期與課程名稱'); return; }
+  try {
+    const id   = document.getElementById('se-id').value;
+    const date = document.getElementById('se-date').value;
+    const name = document.getElementById('se-name').value.trim();
+    if (!date || !name) { showToast('⚠ 請填寫日期與課程名稱'); return; }
 
-  const course = {
-    id:          id || ('sc_' + Date.now()),
-    date,
-    time:        document.getElementById('se-time').value.trim(),
-    name,
-    speaker:     document.getElementById('se-speaker').value.trim(),
-    location:    document.getElementById('se-location').value.trim(),
-    locationUrl: document.getElementById('se-locationurl').value.trim(),
-    organizer:   document.getElementById('se-organizer').value,
-    desc:        document.getElementById('se-desc').value.trim(),
-    needReg:     document.getElementById('se-needreg').value === '1',
-    regUrl:      document.getElementById('se-regurl').value.trim(),
-    meetUrl:     document.getElementById('se-meeturl').value.trim(),
-    meetPw:      document.getElementById('se-meetpw').value.trim(),
-    poster:      document.getElementById('se-poster-data').value || ''
-  };
+    // 海報大小檢查：base64 > 700KB 則捨棄（Firestore 文件限制 1MB）
+    let poster = document.getElementById('se-poster-data').value || '';
+    if (poster.length > 700000) {
+      showToast('⚠ 海報圖片太大，已自動略過（請壓縮後再上傳）');
+      poster = '';
+    }
 
-  if (id) {
-    const idx = SCHED_COURSES.findIndex(c => c.id === id);
-    if (idx >= 0) SCHED_COURSES[idx] = course;
-    else SCHED_COURSES.push(course);
-  } else {
-    SCHED_COURSES.push(course);
+    const course = {
+      id:          id || ('sc_' + Date.now()),
+      date,
+      time:        document.getElementById('se-time').value.trim(),
+      name,
+      speaker:     document.getElementById('se-speaker').value.trim(),
+      location:    document.getElementById('se-location').value.trim(),
+      locationUrl: document.getElementById('se-locationurl').value.trim(),
+      organizer:   document.getElementById('se-organizer').value,
+      desc:        document.getElementById('se-desc').value.trim(),
+      needReg:     document.getElementById('se-needreg').value === '1',
+      regUrl:      document.getElementById('se-regurl').value.trim(),
+      meetUrl:     document.getElementById('se-meeturl').value.trim(),
+      meetPw:      document.getElementById('se-meetpw').value.trim(),
+      poster
+    };
+
+    if (id) {
+      const idx = SCHED_COURSES.findIndex(c => c.id === id);
+      if (idx >= 0) SCHED_COURSES[idx] = course;
+      else SCHED_COURSES.push(course);
+    } else {
+      SCHED_COURSES.push(course);
+    }
+
+    // 先關 modal 讓使用者感覺流暢，再背景儲存
+    closeSchedEditModal(null, true);
+    renderSchedule();
+    showToast('✓ 課程已儲存');
+
+    // 背景同步 Firebase（不阻塞 UI）
+    schedSaveCourses().catch(e => {
+      console.error('課表背景儲存失敗', e);
+      showToast('⚠ Firebase 同步失敗，資料已存於本機');
+    });
+
+  } catch(e) {
+    console.error('saveSchedCourse error:', e);
+    showToast('⚠ 儲存失敗：' + e.message);
   }
-
-  await schedSaveCourses();
-  renderSchedule();
-  closeSchedEditModal(null, true);
-  showToast('✓ 課程已儲存');
 }
 
 async function deleteSchedCourse(id) {
