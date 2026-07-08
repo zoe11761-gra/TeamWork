@@ -801,7 +801,6 @@ select.se-input { cursor: pointer; }
     <div class="header-right">
       <span class="header-user">您好，<span id="header-name"></span></span>
       <span class="role-badge" id="role-badge"></span>
-      <button class="btn-sm gold" id="admin-btn" style="display:none;" onclick="toggleAdminSection()">管理後台</button>
       <button class="btn-sm" id="view-toggle-btn" style="display:none!important;" onclick="toggleViewMode()">👁 切換夥伴視角</button>
       <button class="btn-sm" onclick="handleLogout()">登出</button>
     </div>
@@ -838,6 +837,9 @@ select.se-input { cursor: pointer; }
 
       <!-- ── 首頁行事曆 ── -->
       <div class="section-label" style="margin-top:20px;"><span class="tag">行事曆</span><div class="line"></div></div>
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:14px;padding:9px 13px;background:rgba(255,255,255,0.03);border-radius:8px;border-left:2px solid rgba(201,168,76,0.35);line-height:1.7;">
+        每週二 17:00–20:00 為團隊廂型輔導時間，有案件問題歡迎自由參加
+      </div>
       <div id="home-calendar" style="background:var(--surface);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);overflow:hidden;">
         <!-- 行事曆標題列 -->
         <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px 10px;border-bottom:1px solid rgba(255,255,255,0.06);">
@@ -1520,7 +1522,7 @@ select.se-input { cursor: pointer; }
 // ═══════════════════════════════════════
 const ADMIN_USERNAME = 'grass';
 const ADMIN_DISPLAY  = '草草';
-const ADMIN_PASSWORD = 'grass';
+const ADMIN_PASSWORD = '0000';
 
 const SESSION_KEY = 'shangang_session';
 const SESSION_MS  = 30 * 24 * 60 * 60 * 1000; // 30天
@@ -1614,6 +1616,13 @@ const SOP_STEPS = [
     title: '加入 Line@ 機器人【海川KM】',
     content: '※ 幫助你更有效率的好工具',
     link: 'https://lin.ee/GL3sxDJ', linkText: '加入好友'
+  },
+  {
+    id: 'sop_9',
+    title: '加入上岸團隊「【期間限定】小菜雞培養中🦅」社群',
+    content: '※ 討論案例、商品，反對問題示範處理',
+    link: 'https://line.me/ti/g2/LgK-50QK463KlOrCj17BYnf47KOaO7FJ5JbyvQ?utm_source=invitation&utm_medium=link_copy&utm_campaign=default',
+    linkText: '加入社群'
   }
 ];
 
@@ -2321,9 +2330,17 @@ function switchActivitySub(sub) {
 function schedFilter() {} // 舊版已移除，保留空函式防報錯
 
 function bootstrap() {
+  // 直接開放，不需登入
   const s = loadSession();
-  if (s) { currentUser = s; showApp(); }
-  else showLogin();
+  if (s) {
+    currentUser = s;
+  } else {
+    currentUser = { username: 'guest', displayName: '訪客', isAdmin: false, isMember: true };
+    saveSession(currentUser);
+  }
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  showApp();
   document.getElementById('loading-overlay').style.display = 'none';
 }
 
@@ -2418,15 +2435,12 @@ function showApp() {
 
   // Role badge
   const badge = document.getElementById('role-badge');
-  if (currentUser.isAdmin) { badge.textContent = '管理者'; badge.className = 'role-badge admin'; }
-  else if (currentUser.isMember) { badge.textContent = '草草Team'; badge.className = 'role-badge member'; }
-  else { badge.textContent = '一般成員'; badge.className = 'role-badge general'; }
+  if (currentUser.isAdmin) { badge.textContent = '管理者'; badge.className = 'role-badge admin'; badge.style.display='inline-block'; }
+  else { badge.style.display = 'none'; }
 
   // Admin
   if (currentUser.isAdmin) {
-    document.getElementById('admin-btn').style.display = 'inline-block';
-    // view-toggle-btn 已移除，不再顯示
-    document.getElementById('admin-section').style.display = 'block';
+    // 管理後台已從首頁移除，只保留課程管理功能
     const schedAdminBar = document.getElementById('schedule-admin-add-btn');
     if (schedAdminBar) schedAdminBar.style.display = 'inline-block';
     loadAdminData();
@@ -2441,11 +2455,9 @@ function showApp() {
   renderSOP();
   loadSOPProgress();
 
-  // 顯示草草Team按鈕（成員或管理者才顯示）
-  if (currentUser.isAdmin || currentUser.isMember) {
-    const memberPill = document.getElementById('pill-member');
-    if (memberPill) memberPill.style.display = 'inline-block';
-  }
+  // 草草Team 按鈕全面開放
+  const memberPill = document.getElementById('pill-member');
+  if (memberPill) memberPill.style.display = 'inline-block';
 
   // 預設顯示首頁 tab
   switchTab('home');
@@ -2461,14 +2473,10 @@ function applyMemberAccess() {
   const cards   = document.getElementById('member-cards');
   const lockIcon = document.getElementById('member-lock-icon');
 
-  if (currentUser.isAdmin || currentUser.isMember) {
-    overlay.style.display = 'none';
-    cards.style.filter = 'none';
-    cards.style.pointerEvents = 'auto';
-    cards.style.userSelect = 'auto';
-    if (lockIcon) lockIcon.style.display = 'none';
-  }
-  // else stays locked
+  // 全面開放
+  if (overlay) overlay.style.display = 'none';
+  if (cards) { cards.style.filter = 'none'; cards.style.pointerEvents = 'auto'; cards.style.userSelect = 'auto'; }
+  if (lockIcon) lockIcon.style.display = 'none';
 }
 
 // ═══════════════════════════════════════
@@ -2601,7 +2609,7 @@ function toggleViewMode() {
     // 模擬夥伴視角
     switchTab('home');
     adminSection.style.display = 'none';
-    adminBtn.style.display = 'none';
+    if (adminBtn) adminBtn.style.display = 'none';
     btn.textContent = '↩ 返回管理者視角';
     btn.style.borderColor = 'var(--teal)';
     btn.style.color = 'var(--teal)';
@@ -2617,7 +2625,7 @@ function toggleViewMode() {
   } else {
     // 回到管理者視角
     adminSection.style.display = 'block';
-    adminBtn.style.display = 'inline-block';
+    if (adminBtn) adminBtn.style.display = 'inline-block';
     btn.textContent = '👁 切換夥伴視角';
     btn.style.borderColor = '';
     btn.style.color = '';
