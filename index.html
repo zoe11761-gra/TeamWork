@@ -2134,30 +2134,37 @@ function zoomPoster(src) {
 function openScheduleAddModal() { openSchedEdit(null); }
 
 function openSchedEdit(id) {
-  const c = id ? SCHED_COURSES.find(x => x.id === id) : null;
-  document.getElementById('sched-edit-modal-title').textContent = c ? '編輯課程' : '新增課程';
-  document.getElementById('se-id').value          = c ? c.id : '';
-  document.getElementById('se-date').value        = c ? c.date : '';
-  document.getElementById('se-time').value        = c ? c.time : '';
-  document.getElementById('se-name').value        = c ? c.name : '';
-  document.getElementById('se-speaker').value     = c ? c.speaker : '';
-  document.getElementById('se-location').value    = c ? c.location : '';
-  document.getElementById('se-locationurl').value = c ? (c.locationUrl || '') : '';
-  document.getElementById('se-organizer').value   = c ? (c.organizer || '') : '';
-  document.getElementById('se-desc').value        = c ? (c.desc || '') : '';
-  document.getElementById('se-needreg').value     = c ? (c.needReg ? '1' : '0') : '0';
-  document.getElementById('se-regurl').value      = c ? c.regUrl : '';
-  document.getElementById('se-meeturl').value     = c ? c.meetUrl : '';
-  document.getElementById('se-meetpw').value      = c ? c.meetPw : '';
-  // 海報
-  document.getElementById('se-poster-data').value = c ? (c.poster || '') : '';
-  document.getElementById('se-poster-file').value = '';
-  const preview = document.getElementById('se-poster-preview');
-  const img     = document.getElementById('se-poster-img');
-  if (c && c.poster) { img.src = c.poster; preview.style.display = 'block'; }
-  else { preview.style.display = 'none'; img.src = ''; }
-  document.getElementById('sched-edit-modal').classList.add('open');
-  document.body.style.overflow = 'hidden';
+  try {
+    const c = id ? SCHED_COURSES.find(x => x.id === id) : null;
+    const g = (eid) => { const el = document.getElementById(eid); if (!el) throw new Error('Missing element: ' + eid); return el; };
+    g('sched-edit-modal-title').textContent = c ? '編輯課程' : '新增課程';
+    g('se-id').value          = c ? c.id : '';
+    g('se-date').value        = c ? c.date : '';
+    g('se-time').value        = c ? c.time : '';
+    g('se-name').value        = c ? c.name : '';
+    g('se-speaker').value     = c ? (c.speaker || '') : '';
+    g('se-location').value    = c ? (c.location || '') : '';
+    g('se-locationurl').value = c ? (c.locationUrl || '') : '';
+    g('se-organizer').value   = c ? (c.organizer || '') : '';
+    g('se-desc').value        = c ? (c.desc || '') : '';
+    g('se-needreg').value     = c ? (c.needReg ? '1' : '0') : '0';
+    g('se-regurl').value      = c ? (c.regUrl || '') : '';
+    g('se-meeturl').value     = c ? (c.meetUrl || '') : '';
+    g('se-meetpw').value      = c ? (c.meetPw || '') : '';
+    g('se-poster-data').value = c ? (c.poster || '') : '';
+    g('se-poster-file').value = '';
+    const preview = document.getElementById('se-poster-preview');
+    const img     = document.getElementById('se-poster-img');
+    if (preview && img) {
+      if (c && c.poster) { img.src = c.poster; preview.style.display = 'block'; }
+      else { preview.style.display = 'none'; img.src = ''; }
+    }
+    g('sched-edit-modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  } catch(err) {
+    console.error('openSchedEdit error:', err);
+    showToast('⚠ 開啟表單失敗：' + err.message);
+  }
 }
 
 function closeSchedEditModal(e, force) {
@@ -2672,10 +2679,10 @@ async function loadAdminData() {
       if (d.isMember) memberCount++;
     });
 
-    document.getElementById('stat-users').textContent   = allUsers.length;
-    document.getElementById('stat-members').textContent = memberCount;
-    document.getElementById('stat-logins').textContent  = totalLogins;
-    document.getElementById('stat-clicks').textContent  = totalClicks;
+    const _su = document.getElementById('stat-users');   if (_su) _su.textContent = allUsers.length;
+    const _sm = document.getElementById('stat-members'); if (_sm) _sm.textContent = memberCount;
+    const _sl = document.getElementById('stat-logins');  if (_sl) _sl.textContent = totalLogins;
+    const _sc = document.getElementById('stat-clicks');  if (_sc) _sc.textContent = totalClicks;
 
     renderStatsTable();
     renderMembersTable();
@@ -2725,7 +2732,8 @@ function renderFeatureChart(snap) {
 }
 
 function renderStatsTable() {
-  document.getElementById('stats-table-body').innerHTML = allUsers.length
+  const _stb = document.getElementById('stats-table-body'); if (!_stb) return;
+  _stb.innerHTML = allUsers.length
     ? allUsers.map(u => `
       <tr>
         <td>${u.username}</td>
@@ -2738,7 +2746,8 @@ function renderStatsTable() {
 }
 
 function renderMembersTable() {
-  document.getElementById('members-table-body').innerHTML = allUsers.length
+  const _mtb = document.getElementById('members-table-body'); if (!_mtb) return;
+  _mtb.innerHTML = allUsers.length
     ? allUsers.map(u => `
       <tr>
         <td style="font-weight:500;">${u.username}</td>
@@ -2768,7 +2777,7 @@ async function toggleMember(username, currentlyMember) {
     renderMembersTable();
     renderStatsTable();
     // update stat box
-    document.getElementById('stat-members').textContent = allUsers.filter(x=>x.isMember).length;
+    const _sm3 = document.getElementById('stat-members'); if (_sm3) _sm3.textContent = allUsers.filter(x=>x.isMember).length;
     showToast(newVal ? `✓ 已將 ${username} 設為草草Team` : `已移除 ${username} 的草草Team身份`);
   } catch(e) { showToast('更新失敗，請重試'); console.error(e); }
 }
@@ -2782,8 +2791,8 @@ async function kickUser(username) {
     allUsers = allUsers.filter(x => x.username !== username);
     renderMembersTable();
     renderStatsTable();
-    document.getElementById('stat-members').textContent = allUsers.filter(x=>x.isMember).length;
-    document.getElementById('stat-users').textContent = allUsers.length;
+    const _sm2 = document.getElementById('stat-members'); if (_sm2) _sm2.textContent = allUsers.filter(x=>x.isMember).length;
+    const _su2 = document.getElementById('stat-users'); if (_su2) _su2.textContent = allUsers.length;
     showToast(`🚫 已踢除使用者 ${username}`);
   } catch(e) { showToast('踢除失敗，請重試'); console.error(e); }
 }
