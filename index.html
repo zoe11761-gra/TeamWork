@@ -762,7 +762,7 @@ select.se-input { cursor: pointer; }
       if (typeof bootstrap === 'function') bootstrap();
       else overlay.style.display = 'none';
     }
-  }, 3000);
+  }, 1500);
 </script>
 
 <div class="toast" id="toast"></div>
@@ -2245,19 +2245,22 @@ function switchActivitySub(sub) {
 }
 function schedFilter() {} // 舊版已移除，保留空函式防報錯
 
+let _bootstrapped = false;
 function bootstrap() {
+  if (_bootstrapped) return;
+  _bootstrapped = true;
   // 直接開放，不需登入
-  const s = loadSession();
-  if (s) {
-    currentUser = s;
-  } else {
-    currentUser = { username: 'guest', displayName: '訪客', isAdmin: false, isMember: true };
-    saveSession(currentUser);
+  try {
+    const s = loadSession();
+    currentUser = s || { username: 'guest', displayName: '訪客', isAdmin: false, isMember: true };
+    if (!s) saveSession(currentUser);
+    showApp();
+  } catch(e) {
+    console.error('bootstrap error', e);
+  } finally {
+    const ov = document.getElementById('loading-overlay');
+    if (ov) ov.style.display = 'none';
   }
-  document.getElementById('login-screen').style.display = 'none';
-  document.getElementById('app').style.display = 'block';
-  showApp();
-  document.getElementById('loading-overlay').style.display = 'none';
 }
 
 // ═══════════════════════════════════════
@@ -2344,10 +2347,10 @@ function showLogin() {
 }
 
 function showApp() {
-  document.getElementById('login-screen').style.display = 'none';
-  document.getElementById('app').style.display = 'block';
+  try { document.getElementById('login-screen').style.display = 'none'; } catch{}
+  try { document.getElementById('app').style.display = 'block'; } catch{}
 
-  document.getElementById('header-name').textContent = currentUser.displayName || currentUser.username;
+  try { document.getElementById('header-name').textContent = currentUser.displayName || currentUser.username; } catch{}
 
   // Role badge
   const badge = document.getElementById('role-badge');
@@ -2374,9 +2377,9 @@ function showApp() {
   // pill-member 已移除，無需顯示
 
   // 預設顯示首頁 tab
-  switchTab('home');
+  try { switchTab('home'); } catch(e) { console.error('switchTab error', e); }
   // 載入行事曆
-  calLoadEvents();
+  try { calLoadEvents(); } catch(e) { console.error('calLoadEvents error', e); }
 }
 
 // ═══════════════════════════════════════
